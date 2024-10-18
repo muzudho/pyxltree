@@ -11,6 +11,7 @@ import sys
 from tests.no_1 import execute as execute_no_1
 from tests.no_2 import execute as execute_no_2
 from tests.no_3 import execute as execute_no_3
+from tests.no_4 import execute as execute_no_4
 
 
 ########################################
@@ -31,6 +32,9 @@ if __name__ == '__main__':
 
             if args[1] == '3':
                 execute_no_3()
+
+            if args[1] == '4':
+                execute_no_4()
             
             else:
                 raise ValueError(f'unsupported {args[1]=}')

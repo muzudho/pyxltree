@@ -6,7 +6,7 @@ from src.xltree import Config, WorkbookControl
 def execute():
     """描画テスト"""
 
-    # ワークブック制御生成
+    # 出力先ワークブック指定
     wbc = WorkbookControl(target='./tests/temp/tree_multisheet.xlsx', mode='w')
 
     # ワークシート描画

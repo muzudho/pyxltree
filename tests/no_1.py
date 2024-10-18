@@ -52,7 +52,7 @@ Enter the export path to the Excel workbook(.xlsx) file
                 'column_header_separator_height':   13,     # 第２行。空行
             })
 
-    # ワークブック制御生成
+    # 出力先ワークブック指定
     wbc = WorkbookControl(target=wb_file_path, mode='w', config=config)
 
     # ワークシート描画
