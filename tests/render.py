@@ -53,7 +53,7 @@ Enter the export path to the Excel workbook(.xlsx) file
             })
 
     # ワークブック制御生成
-    wbc = WorkbookControl(target=wb_file_path, config=config, debug_write=True)
+    wbc = WorkbookControl(target=wb_file_path, config=config)
 
     # シート描画
     wbc.render_sheet(target='Tree', based_on=csv_file_path)

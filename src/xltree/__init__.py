@@ -1,4 +1,5 @@
 import os
+import datetime
 import openpyxl as xl
 
 from src.xltree.database import TreeTable
@@ -80,7 +81,7 @@ class WorkbookControl():
         return self._wb_file_path
 
 
-    def render_sheet(self, target, based_on):
+    def render_sheet(self, target, based_on, debug_write=False):
         """シート描画
 
         Parameters
@@ -89,6 +90,8 @@ class WorkbookControl():
             シート名
         based_on : str
             CSVファイルパス
+        debug_write : bool
+            デバッグライト
         """
 
         if self._wb is None:
@@ -100,18 +103,18 @@ class WorkbookControl():
         tree_table = TreeTable.from_csv(file_path=based_on)
 
         # ツリードロワーを用意、描画（都合上、要らない罫線が付いています）
-        tree_drawer = TreeDrawer(tree_table=tree_table, ws=self._ws, config=self._config)
+        tree_drawer = TreeDrawer(tree_table=tree_table, ws=self._ws, config=self._config, debug_write=debug_write)
         tree_drawer.render()
 
 
         # 要らない罫線を消す
         # DEBUG_TIPS: このコードを不活性にして、必要な線は全部描かれていることを確認してください
         if True:
-            tree_eraser = TreeEraser(tree_table=tree_table, ws=self._ws)
+            tree_eraser = TreeEraser(tree_table=tree_table, ws=self._ws, debug_write=debug_write)
             tree_eraser.render()
         else:
             if self._debug_write:
-                print(f"eraser disabled")
+                print(f"[{datetime.datetime.now()}] eraser disabled")
 
 
     def remove_worksheet(self, target):
@@ -123,10 +126,10 @@ class WorkbookControl():
             シート名
         """
 
-        if self._debug_write:
-            print(f"remove `{target}` sheet...")
-
         if self.exists_sheet(target=target):
+            if self._debug_write:
+                print(f"[{datetime.datetime.now()}] remove `{target}` sheet...")
+
             self._wb.remove(self._wb[target])
 
 
@@ -134,7 +137,7 @@ class WorkbookControl():
         """ワークブックの保存"""
 
         if self._debug_write:
-            print(f"save `{self._wb_file_path}` file...")
+            print(f"[{datetime.datetime.now()}] save `{self._wb_file_path}` file...")
 
         # ワークブックの保存            
         self._wb.save(self._wb_file_path)
@@ -146,14 +149,14 @@ class WorkbookControl():
         # 既存のファイルがあるなら読込
         if os.path.isfile(self._wb_file_path):
             if self._debug_write:
-                print(f"`{self._wb_file_path}` file exists, read.")
+                print(f"[{datetime.datetime.now()}] `{self._wb_file_path}` file exists, read.")
 
             self._wb = xl.load_workbook(filename=self._wb_file_path)
         
         # ワークブックを新規生成
         else:
             if self._debug_write:
-                print(f"`{self._wb_file_path}` file not exists, create.")
+                print(f"[{datetime.datetime.now()}] `{self._wb_file_path}` file not exists, create.")
 
             self._wb = xl.Workbook()
 
@@ -181,7 +184,7 @@ class WorkbookControl():
         # シートを作成
         if not self.exists_sheet(target):
             if self._debug_write:
-                print(f"create `{target}` sheet...")
+                print(f"[{datetime.datetime.now()}] create `{target}` sheet...")
 
             self._wb.create_sheet(target)
 

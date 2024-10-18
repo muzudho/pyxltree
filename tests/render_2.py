@@ -11,7 +11,7 @@ def test_render():
     """描画テスト"""
 
     # ワークブック制御生成
-    wbc = WorkbookControl(target='./tests/temp/tree_multisheet.xlsx', debug_write=True)
+    wbc = WorkbookControl(target='./tests/temp/tree_multisheet.xlsx')
 
     # シート描画
     wbc.render_sheet(target='Shiritori', based_on='./tests/data/tree.csv')

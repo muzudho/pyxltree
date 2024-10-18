@@ -302,7 +302,7 @@ class TreeTable():
 
         # データ型の設定
         dtype = clazz.create_dtype(specified_length_of_edges=specified_length_of_edges, specified_length_of_nodes=specified_length_of_nodes)
-        #print(f"setup_data_frame {dtype=}")
+        #print(f"[{datetime.datetime.now()}] setup_data_frame {dtype=}")
         df.astype(dtype)
 
 
