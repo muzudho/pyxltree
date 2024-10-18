@@ -11,17 +11,17 @@ def test_render():
     """描画テスト"""
 
     # ワークブック制御生成
-    wbc = WorkbookControl(target='./tests/temp/tree.xlsx')
+    wbc = WorkbookControl(target='./tests/temp/tree_multisheet.xlsx', debug_write=True)
 
     # シート描画
-    wbc.render_sheet(target='Tree_1', based_on='./tests/data/tree.csv')
+    wbc.render_sheet(target='Shiritori', based_on='./tests/data/tree.csv')
 
     # ２つ目のシート描画
-    wbc.render_sheet(target='Tree_2', based_on='./tests/data/tree_drive.csv')
+    wbc.render_sheet(target='Drive', based_on='./tests/data/tree_drive.csv')
 
     # 'Sheet' 以外のワークシートを生成したあとで、'Sheet' を削除
     wbc.remove_worksheet(target='Sheet')
 
     # 保存
     wbc.save_workbook()
-    print(f"[{datetime.datetime.now()}] Please look {wbc.wb_file_path}")
+    print(f"[{datetime.datetime.now()}] Please look {wbc.workbook_file_path}")

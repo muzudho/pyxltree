@@ -53,7 +53,7 @@ Enter the export path to the Excel workbook(.xlsx) file
             })
 
     # ワークブック制御生成
-    wbc = WorkbookControl(target=wb_file_path, config=config)
+    wbc = WorkbookControl(target=wb_file_path, config=config, debug_write=True)
 
     # シート描画
     wbc.render_sheet(target='Tree', based_on=csv_file_path)
@@ -63,4 +63,4 @@ Enter the export path to the Excel workbook(.xlsx) file
 
     # ワークブック保存
     wbc.save_workbook()
-    print(f"[{datetime.datetime.now()}] Please look {wbc.wb_file_path}")
+    print(f"[{datetime.datetime.now()}] Please look {wbc.workbook_file_path}")

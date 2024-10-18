@@ -1,3 +1,4 @@
+import os
 import openpyxl as xl
 
 from src.xltree.database import TreeTable
@@ -59,7 +60,7 @@ class WorkbookControl():
     """ワークブック制御"""
 
 
-    def __init__(self, target, config=Config()):
+    def __init__(self, target, config=Config(), debug_write=False):
         """初期化
 
         Parameters
@@ -69,12 +70,13 @@ class WorkbookControl():
         """
         self._wb_file_path = target
         self._config = config
+        self._debug_write = debug_write
         self._wb = None
         self._ws = None
 
 
     @property
-    def wb_file_path(self):
+    def workbook_file_path(self):
         return self._wb_file_path
 
 
@@ -108,32 +110,52 @@ class WorkbookControl():
             tree_eraser = TreeEraser(tree_table=tree_table, ws=self._ws)
             tree_eraser.render()
         else:
-            print(f"Eraser disabled")
+            if self._debug_write:
+                print(f"eraser disabled")
 
 
     def remove_worksheet(self, target):
-        """ワークシートの削除
+        """存在すれば、指定のワークシートの削除。存在しなければ無視
 
         Parameters
         ----------
         target : str
             シート名
         """
-        self._wb.remove(self._wb[target])
+
+        if self._debug_write:
+            print(f"remove `{target}` sheet...")
+
+        if self.exists_sheet(target=target):
+            self._wb.remove(self._wb[target])
 
 
     def save_workbook(self):
         """ワークブックの保存"""
 
-        # ワークブックの保存
+        if self._debug_write:
+            print(f"save `{self._wb_file_path}` file...")
+
+        # ワークブックの保存            
         self._wb.save(self._wb_file_path)
 
 
     def ready_workbook(self):
         """ワークブックを準備する"""
 
-        # ワークブックを生成
-        self._wb = xl.Workbook()
+        # 既存のファイルがあるなら読込
+        if os.path.isfile(self._wb_file_path):
+            if self._debug_write:
+                print(f"`{self._wb_file_path}` file exists, read.")
+
+            self._wb = xl.load_workbook(filename=self._wb_file_path)
+        
+        # ワークブックを新規生成
+        else:
+            if self._debug_write:
+                print(f"`{self._wb_file_path}` file not exists, create.")
+
+            self._wb = xl.Workbook()
 
 
     def exists_sheet(self, target):
@@ -158,5 +180,10 @@ class WorkbookControl():
 
         # シートを作成
         if not self.exists_sheet(target):
+            if self._debug_write:
+                print(f"create `{target}` sheet...")
+
             self._wb.create_sheet(target)
-            self._ws = self._wb[target]
+
+
+        self._ws = self._wb[target]
