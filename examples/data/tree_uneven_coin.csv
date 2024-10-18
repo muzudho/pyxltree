@@ -1,0 +1,28 @@
+no,result,node0,edge1,node1,edge2,node2,edge3,node3,edge4,node4
+1,Alice scored a goal,1,Head(×0.54) Alice=1pts,0.54,Head(×0.54) Bob=1pts,0.2916,Head(×0.54) Alice=2pts,0.157464,,
+2,Bob scored a goal,1,Head(×0.54) Alice=1pts,0.54,Head(×0.54) Bob=1pts,0.2916,Tail(×0.36) Bob=3pts,0.104976,,
+3,Bob scored a goal,1,Head(×0.54) Alice=1pts,0.54,Head(×0.54) Bob=1pts,0.2916,Failed(×0.1),0.02916,Head(×0.54) Bob=2pts,0.0157464
+4,Alice scored a goal,1,Head(×0.54) Alice=1pts,0.54,Head(×0.54) Bob=1pts,0.2916,Failed(×0.1),0.02916,Tail(×0.36) Alice=3pts,0.0104976
+5,no win match,1,Head(×0.54) Alice=1pts,0.54,Head(×0.54) Bob=1pts,0.2916,Failed(×0.1),0.02916,Failed(×0.1),0.002916
+6,Alice scored a goal,1,Head(×0.54) Alice=1pts,0.54,Tail(×0.36) Alice=3pts,0.1944,,,,
+7,Alice scored a goal,1,Head(×0.54) Alice=1pts,0.54,Failed(×0.1),0.054,Head(×0.54) Alice=2pts,0.02916,,
+8,Bob scored a goal,1,Head(×0.54) Alice=1pts,0.54,Failed(×0.1),0.054,Tail(×0.36) Bob=2pts,0.01944,,
+9,no win match,1,Head(×0.54) Alice=1pts,0.54,Failed(×0.1),0.054,Failed(×0.1),0.0054,Head(×0.54) Bob=1pts,0.002916
+10,Alice scored a goal,1,Head(×0.54) Alice=1pts,0.54,Failed(×0.1),0.054,Failed(×0.1),0.0054,Tail(×0.36) Alice=3pts,0.001944
+11,Alice wins by pts,1,Head(×0.54) Alice=1pts,0.54,Failed(×0.1),0.054,Failed(×0.1),0.0054,Failed(×0.1),0.00054
+12,Bob scored a goal,1,Tail(×0.36) Bob=2pts,0.36,,,,,,
+13,Bob scored a goal,1,Failed(×0.1),0.1,Head(×0.54) Bob=1pts,0.054,Head(×0.54) Alice=1pts,0.02916,Head(×0.54) Bob=2pts,0.0157464
+14,Alice scored a goal,1,Failed(×0.1),0.1,Head(×0.54) Bob=1pts,0.054,Head(×0.54) Alice=1pts,0.02916,Tail(×0.36) Alice=3pts,0.0104976
+15,no win match,1,Failed(×0.1),0.1,Head(×0.54) Bob=1pts,0.054,Head(×0.54) Alice=1pts,0.02916,Failed(×0.1),0.002916
+16,Bob scored a goal,1,Failed(×0.1),0.1,Head(×0.54) Bob=1pts,0.054,Tail(×0.36) Bob=3pts,0.01944,,
+17,Bob scored a goal,1,Failed(×0.1),0.1,Head(×0.54) Bob=1pts,0.054,Failed(×0.1),0.0054,Head(×0.54) Bob=2pts,0.002916
+18,Alice scored a goal,1,Failed(×0.1),0.1,Head(×0.54) Bob=1pts,0.054,Failed(×0.1),0.0054,Tail(×0.36) Alice=2pts,0.001944
+19,Bob wins by pts,1,Failed(×0.1),0.1,Head(×0.54) Bob=1pts,0.054,Failed(×0.1),0.0054,Failed(×0.1),0.00054
+20,Alice scored a goal,1,Failed(×0.1),0.1,Tail(×0.36) Alice=2pts,0.036,,,,
+21,no win match,1,Failed(×0.1),0.1,Failed(×0.1),0.01,Head(×0.54) Alice=1pts,0.0054,Head(×0.54) Bob=1pts,0.002916
+22,Alice scored a goal,1,Failed(×0.1),0.1,Failed(×0.1),0.01,Head(×0.54) Alice=1pts,0.0054,Tail(×0.36) Alice=3pts,0.001944
+23,Alice wins by pts,1,Failed(×0.1),0.1,Failed(×0.1),0.01,Head(×0.54) Alice=1pts,0.0054,Failed(×0.1),0.00054
+24,Bob scored a goal,1,Failed(×0.1),0.1,Failed(×0.1),0.01,Tail(×0.36) Bob=2pts,0.0036,,
+25,Bob wins by pts,1,Failed(×0.1),0.1,Failed(×0.1),0.01,Failed(×0.1),0.001,Head(×0.54) Bob=1pts,0.00054
+26,Alice scored a goal,1,Failed(×0.1),0.1,Failed(×0.1),0.01,Failed(×0.1),0.001,Tail(×0.36) Alice=2pts,0.00036
+27,no win match,1,Failed(×0.1),0.1,Failed(×0.1),0.01,Failed(×0.1),0.001,Failed(×0.1),0.0001
