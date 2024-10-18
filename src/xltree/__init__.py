@@ -55,43 +55,108 @@ class Config():
         return self._dictionary
 
 
-class Renderer():
-    """描画"""
+class WorkbookControl():
+    """ワークブック制御"""
 
 
-    def __init__(self, config=Config()):
-        """初期化"""
+    def __init__(self, target, config=Config()):
+        """初期化
+
+        Parameters
+        ----------
+        target : str
+            ワークブック（.xlsx）へのファイルパス
+        """
+        self._wb_file_path = target
         self._config = config
+        self._wb = None
+        self._ws = None
 
 
-    def render(self, csv_file_path, wb_file_path, sheet_name):
-        """描画"""
+    @property
+    def wb_file_path(self):
+        return self._wb_file_path
 
-        # ワークブックを生成
-        wb = xl.Workbook()
 
-        # シートを作成
-        wb.create_sheet(sheet_name)
+    def render_sheet(self, target, based_on):
+        """シート描画
 
-        # 既存の Sheet シートを削除
-        wb.remove(wb['Sheet'])
+        Parameters
+        ----------
+        target : str
+            シート名
+        based_on : str
+            CSVファイルパス
+        """
+
+        if self._wb is None:
+            self.ready_workbook()
+
+        self.ready_worksheet(target=target)
 
         # CSV読込
-        tree_table = TreeTable.from_csv(file_path=csv_file_path)
+        tree_table = TreeTable.from_csv(file_path=based_on)
 
         # ツリードロワーを用意、描画（都合上、要らない罫線が付いています）
-        tree_drawer = TreeDrawer(tree_table=tree_table, ws=wb[sheet_name], config=self._config)
+        tree_drawer = TreeDrawer(tree_table=tree_table, ws=self._ws, config=self._config)
         tree_drawer.render()
 
 
         # 要らない罫線を消す
         # DEBUG_TIPS: このコードを不活性にして、必要な線は全部描かれていることを確認してください
         if True:
-            tree_eraser = TreeEraser(tree_table=tree_table, ws=wb[sheet_name])
+            tree_eraser = TreeEraser(tree_table=tree_table, ws=self._ws)
             tree_eraser.render()
         else:
             print(f"Eraser disabled")
 
 
+    def remove_worksheet(self, target):
+        """ワークシートの削除
+
+        Parameters
+        ----------
+        target : str
+            シート名
+        """
+        self._wb.remove(self._wb[target])
+
+
+    def save_workbook(self):
+        """ワークブックの保存"""
+
         # ワークブックの保存
-        wb.save(wb_file_path)
+        self._wb.save(self._wb_file_path)
+
+
+    def ready_workbook(self):
+        """ワークブックを準備する"""
+
+        # ワークブックを生成
+        self._wb = xl.Workbook()
+
+
+    def exists_sheet(self, target):
+        """シートの存在確認
+        
+        Parameters
+        ----------
+        target : str
+            シート名
+        """
+        return target in self._wb.sheetnames
+
+
+    def ready_worksheet(self, target):
+        """ワークシートを準備する
+        
+        Parameters
+        ----------
+        target : str
+            シート名
+        """
+
+        # シートを作成
+        if not self.exists_sheet(target):
+            self._wb.create_sheet(target)
+            self._ws = self._wb[target]

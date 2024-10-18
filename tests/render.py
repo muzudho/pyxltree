@@ -2,9 +2,7 @@ import traceback
 import os
 import datetime
 
-from src.xltree import Config, Renderer
-
-SHEET_NAME = 'Tree'
+from src.xltree import Config, WorkbookControl
 
 
 def test_render():
@@ -54,11 +52,15 @@ Enter the export path to the Excel workbook(.xlsx) file
                 'column_header_separator_height':   13,     # 第２行。空行
             })
 
-    # レンダラー生成、描画
-    renderer = Renderer(config=config)
-    renderer.render(
-            csv_file_path=csv_file_path,
-            wb_file_path=wb_file_path,
-            sheet_name=SHEET_NAME)
+    # ワークブック制御生成
+    wbc = WorkbookControl(target=wb_file_path, config=config)
 
-    print(f"[{datetime.datetime.now()}] Please look {wb_file_path}")
+    # シート描画
+    wbc.render_sheet(target='Tree', based_on=csv_file_path)
+
+    # 'Sheet' 以外のワークシートを生成したあとで、'Sheet' を削除
+    wbc.remove_worksheet(target='Sheet')
+
+    # ワークブック保存
+    wbc.save_workbook()
+    print(f"[{datetime.datetime.now()}] Please look {wbc.wb_file_path}")
