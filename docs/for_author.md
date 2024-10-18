@@ -1,5 +1,24 @@
 # 作者本人向けドキュメント
 
+とりあえずこれを読め  
+
+* 📖 [Packaging Python Projects](https://packaging.python.org/en/latest/tutorials/packaging-projects/)
+
+```shell
+py -m pip install --upgrade pip
+```
+
+ディレクトリー階層は以下のようにする  
+
+```
+📁 pyxltree/    # GitHub のリポジトリー名に対応
+└─ 📄 src/
+    └─ 📄 xltree/    # Python パッケージ名に対応
+        ├─ 📄 __init__.py
+        └─ others...
+```
+
+
 # デプロイのためのオーバービュー
 
 次の３ステップ
@@ -26,6 +45,10 @@ pip freeze > requirements.txt
 
 * 📖 [pyproject.toml を書く](https://packaging.python.org/ja/latest/guides/writing-pyproject-toml/)
 * 📖 [【GitHub Actions】自作Pythonパッケージを自動ビルドしてPyPIとGitHubリリースまで一気にデプロイする](https://qiita.com/hanaosan/items/83194c4cd6c80fc3c377)
+
+## (Step 2) test.pypi.org に Python パッケージをアップロードし、動作確認する
+
+* test.pypi.org にアカウントを開設、２要素認証も設定
 
 # デプロイのための参考記事
 

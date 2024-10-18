@@ -1,7 +1,7 @@
 import openpyxl as xl
 
-from xltree.database import TreeTable
-from xltree.workbooks import TreeDrawer, TreeEraser
+from src.xltree.database import TreeTable
+from src.xltree.workbooks import TreeDrawer, TreeEraser
 
 
 class Config():
