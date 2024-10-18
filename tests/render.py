@@ -54,7 +54,7 @@ Enter the export path to the Excel workbook(.xlsx) file
                 'column_header_separator_height':   13,     # 第２行。空行
             })
 
-    # レンダラー生成
+    # レンダラー生成、描画
     renderer = Renderer(config=config)
     renderer.render(
             csv_file_path=csv_file_path,

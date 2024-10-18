@@ -6,8 +6,10 @@
 
 import traceback
 import datetime
+import sys
 
 from tests.render import test_render
+from tests.render_2 import test_render as test_render_2
 
 
 ########################################
@@ -17,8 +19,19 @@ if __name__ == '__main__':
     """コマンドから実行時"""
 
     try:
-        # テスト
-        test_render()
+        args = sys.argv
+
+        if 1 < len(args):
+            if args[1] == '2':
+                # テスト
+                test_render_2()
+            
+            else:
+                raise ValueError(f'unsupported {args[1]=}')
+        
+        else:
+            # テスト
+            test_render()
 
 
     except Exception as err:
