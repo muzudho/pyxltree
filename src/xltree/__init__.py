@@ -21,53 +21,61 @@ class Settings():
             設定
 
             列の幅設定。width はだいたい 'ＭＳ Ｐゴシック' サイズ11 の半角英文字の個数
-            * `no_width` - A列の幅。no列
-            * `row_header_separator_width` - B列の幅。空列
-            * `node_width` - 例：C, F, I ...列の幅。ノードの箱の幅
-            * `parent_side_edge_width` - 例：D, G, J ...列の幅。エッジの水平線のうち、親ノードの方
-            * `child_side_edge_width` - 例：E, H, K ...列の幅。エッジの水平線のうち、子ノードの方
+            * `column_width_of_no` - A列の幅。no列
+            * `column_width_of_row_header_separator` - B列の幅。空列
+            * `column_width_of_node` - 例：C, F, I ...列の幅。ノードの箱の幅
+            * `column_width_of_parent_side_edge` - 例：D, G, J ...列の幅。エッジの水平線のうち、親ノードの方
+            * `column_width_of_child_side_edge` - 例：E, H, K ...列の幅。エッジの水平線のうち、子ノードの方
 
             行の高さ設定。height の単位はポイント。既定値 8。昔のアメリカ人が椅子に座ってディスプレイを見たとき 1/72 インチに見える大きさが 1ポイント らしいが、そんなんワカラン。目視確認してほしい
-            * `header_height` - 第１行。ヘッダー
-            * `column_header_separator_height` - 第２行。空行
-
-            ヘッダー関連
-            * `header_bgcolor_1` - ヘッダーの背景色その１
-            * `header_bgcolor_2` - ヘッダーの背景色その２
-            * `header_fgcolor_1` - ヘッダーの文字色その１
-            * `header_fgcolor_2` - ヘッダーの文字色その２
+            * `row_height_of_header` - 第１行。ヘッダー
+            * `row_height_of_column_header_separator` - 第２行。空行
+            * `row_height_of_upper_side_of_node` - ノードの上側のセルの高さ
+            * `row_height_of_lower_side_of_node` - ノードの下側のセルの高さ
+            * `row_height_of_node_spacing` - ノード間の高さ
 
             * 色の参考： 📖 [Excels 56 ColorIndex Colors](https://www.excelsupersite.com/what-are-the-56-colorindex-colors-in-excel/)
 
-            ノード関連
-            * `node_bgcolor` - 背景色
-            * `node_horizontal_alignment` - 文字の水平方向の寄せ。規定値 None。'left', 'fill', 'centerContinuous', 'center', 'right', 'general', 'justify', 'distributed' のいずれか。指定しないなら None
-            * `node_vertical_alignment` - 文字の垂直方向の寄せ。規定値 None。'bottom', 'center', 'top', 'justify', 'distributed' のいずれか。指定しないなら None
+            背景色関連
+            * `bgcolor_of_header_1` - ヘッダーの背景色その１
+            * `bgcolor_of_header_2` - ヘッダーの背景色その２
+            * `bgcolor_of_node` - 背景色
+
+            文字色関連
+            * `fgcolor_of_header_1` - ヘッダーの文字色その１
+            * `fgcolor_of_header_2` - ヘッダーの文字色その２
+
+            文字寄せ関連
+            * `horizontal_alignment_of_node` - 文字の水平方向の寄せ。規定値 None。'left', 'fill', 'centerContinuous', 'center', 'right', 'general', 'justify', 'distributed' のいずれか。指定しないなら None
+            * `vertical_alignment_of_node` - 文字の垂直方向の寄せ。規定値 None。'bottom', 'center', 'top', 'justify', 'distributed' のいずれか。指定しないなら None
         """
 
         # 既定のディクショナリー
         self._dictionary = {
             # 列の幅
-            'no_width':                         4,
-            'row_header_separator_width':       3,
-            'node_width':                       20,
-            'parent_side_edge_width':           2,
-            'child_side_edge_width':            4,
+            'column_width_of_no':                         4,
+            'column_width_of_row_header_separator':       3,
+            'column_width_of_node':                       20,
+            'column_width_of_parent_side_edge':           2,
+            'column_width_of_child_side_edge':            4,
 
             # 行の高さ
-            'header_height':                    13,
-            'column_header_separator_height':   13,
+            'row_height_of_header':                    13,
+            'row_height_of_column_header_separator':   13,
+            'row_height_of_upper_side_of_node':     13,
+            'row_height_of_lower_side_of_node':     13,
+            'row_height_of_node_spacing':           6,
 
             # ヘッダー関連
-            'header_bgcolor_1':                 'CCCCCC',
-            'header_bgcolor_2':                 '333333',
-            'header_fgcolor_1':                 '111111',
-            'header_fgcolor_2':                 'EEEEEE',
+            'bgcolor_of_header_1':                 'CCCCCC',
+            'bgcolor_of_header_2':                 '333333',
+            'fgcolor_of_header_1':                 '111111',
+            'fgcolor_of_header_2':                 'EEEEEE',
 
             # ノード関連
-            'node_bgcolor':                     'FFFFCC',
-            'node_horizontal_alignment':        None,
-            'node_vertical_alignment':          None,
+            'bgcolor_of_node':                     'FFFFCC',
+            'horizontal_alignment_of_node':        None,
+            'vertical_alignment_of_node':          None,
         }
 
         # 上書き

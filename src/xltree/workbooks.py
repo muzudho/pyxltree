@@ -40,19 +40,19 @@ class TreeDrawer():
 
         # ヘッダー関連
         self._header_bgcolor_list = [
-            PatternFill(patternType='solid', fgColor=self._settings.dictionary['header_bgcolor_1']),
-            PatternFill(patternType='solid', fgColor=self._settings.dictionary['header_bgcolor_2'])]
+            PatternFill(patternType='solid', fgColor=self._settings.dictionary['bgcolor_of_header_1']),
+            PatternFill(patternType='solid', fgColor=self._settings.dictionary['bgcolor_of_header_2'])]
 
         self._header_fgcolor_list = [
-            Font(color=self._settings.dictionary['header_fgcolor_1']),
-            Font(color=self._settings.dictionary['header_fgcolor_2'])]
+            Font(color=self._settings.dictionary['fgcolor_of_header_1']),
+            Font(color=self._settings.dictionary['fgcolor_of_header_2'])]
 
         # ノード関連
         self._node_alignment = Alignment(
-                horizontal=self._settings.dictionary['node_horizontal_alignment'],
-                vertical=self._settings.dictionary['node_vertical_alignment'])
+                horizontal=self._settings.dictionary['horizontal_alignment_of_node'],
+                vertical=self._settings.dictionary['vertical_alignment_of_node'])
 
-        self._node_bgcolor = PatternFill(patternType='solid', fgColor=self._settings.dictionary['node_bgcolor'])
+        self._node_bgcolor = PatternFill(patternType='solid', fgColor=self._settings.dictionary['bgcolor_of_node'])
 
 
     def render(self):
@@ -92,15 +92,15 @@ class TreeDrawer():
 
         # 列の幅設定
         column_width_dict = {}
-        column_width_dict['A'] = self._settings.dictionary['no_width']                        # no
-        column_width_dict['B'] = self._settings.dictionary['row_header_separator_width']      # 空列
-        column_width_dict['C'] = self._settings.dictionary['node_width']                      # 根
+        column_width_dict['A'] = self._settings.dictionary['column_width_of_no']                        # no
+        column_width_dict['B'] = self._settings.dictionary['column_width_of_row_header_separator']      # 空列
+        column_width_dict['C'] = self._settings.dictionary['column_width_of_node']                      # 根
 
         head_column_th = 4
         for node_th in range(1, self._tree_table.length_of_nodes):
-            column_width_dict[xl.utils.get_column_letter(head_column_th    )] = self._settings.dictionary['parent_side_edge_width']   # 第n層  親側辺
-            column_width_dict[xl.utils.get_column_letter(head_column_th + 1)] = self._settings.dictionary['child_side_edge_width']    #        子側辺
-            column_width_dict[xl.utils.get_column_letter(head_column_th + 2)] = self._settings.dictionary['node_width']               #        節
+            column_width_dict[xl.utils.get_column_letter(head_column_th    )] = self._settings.dictionary['column_width_of_parent_side_edge']   # 第n層  親側辺
+            column_width_dict[xl.utils.get_column_letter(head_column_th + 1)] = self._settings.dictionary['column_width_of_child_side_edge']    #        子側辺
+            column_width_dict[xl.utils.get_column_letter(head_column_th + 2)] = self._settings.dictionary['column_width_of_node']               #        節
             head_column_th += 3
 
 
@@ -111,8 +111,8 @@ class TreeDrawer():
         # 行の高さ設定
         # height の単位はポイント。初期値 8。昔のアメリカ人が椅子に座ってディスプレイを見たとき 1/72 インチに見える大きさが 1ポイント らしいが、そんなんワカラン。目視確認してほしい
         row_height_dict = {
-            1: self._settings.dictionary['header_height'],
-            2: self._settings.dictionary['column_header_separator_height'],
+            1: self._settings.dictionary['row_height_of_header'],
+            2: self._settings.dictionary['row_height_of_column_header_separator'],
         }
 
         for row_number, height in row_height_dict.items():
@@ -192,9 +192,10 @@ class TreeDrawer():
 
             # 行の高さ設定
             # height の単位はポイント。昔のアメリカ人が椅子に座ってディスプレイを見たとき 1/72 インチに見える大きさが 1ポイント らしいが、そんなんワカラン。目視確認してほしい
-            ws.row_dimensions[row1_th].height = 13
-            ws.row_dimensions[row2_th].height = 13
-            ws.row_dimensions[row3_th].height = 6
+            ws.row_dimensions[row1_th].height = self._settings.dictionary['row_height_of_upper_side_of_node']
+            ws.row_dimensions[row2_th].height = self._settings.dictionary['row_height_of_lower_side_of_node']
+            ws.row_dimensions[row3_th].height = self._settings.dictionary['row_height_of_node_spacing']
+
 
             ws[f'A{row1_th}'].value = self._curr_record.no
             ws[f'A{row1_th}'].fill = self._header_bgcolor_list[0]
@@ -395,9 +396,9 @@ class TreeDrawer():
                 
                 ws[f'{cn3}{row1_th}'].value = nd.text
                 ws[f'{cn3}{row1_th}'].alignment = self._node_alignment
-
                 ws[f'{cn3}{row1_th}'].fill = self._node_bgcolor
                 ws[f'{cn3}{row1_th}'].border = upside_node_border
+
                 ws[f'{cn3}{row2_th}'].fill = self._node_bgcolor
                 ws[f'{cn3}{row2_th}'].border = downside_node_border
 

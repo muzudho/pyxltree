@@ -41,15 +41,15 @@ Enter the export path to the Excel workbook(.xlsx) file
             # 省略可能
             dictionary = {
                 # 列の幅
-                'no_width':                         4,      # A列の幅。no列
-                'row_header_separator_width':       3,      # B列の幅。空列
-                'node_width':                       20,     # 例：C, F, I ...列の幅。ノードの箱の幅
-                'parent_side_edge_width':           2,      # 例：D, G, J ...列の幅。エッジの水平線のうち、親ノードの方
-                'child_side_edge_width':            4,      # 例：E, H, K ...列の幅。エッジの水平線のうち、子ノードの方
+                'column_width_of_no':                         4,      # A列の幅。no列
+                'column_width_of_row_header_separator':       3,      # B列の幅。空列
+                'column_width_of_node':                       20,     # 例：C, F, I ...列の幅。ノードの箱の幅
+                'column_width_of_parent_side_edge':           2,      # 例：D, G, J ...列の幅。エッジの水平線のうち、親ノードの方
+                'column_width_of_child_side_edge':            4,      # 例：E, H, K ...列の幅。エッジの水平線のうち、子ノードの方
 
                 # 行の高さ
-                'header_height':                    13,     # 第１行。ヘッダー
-                'column_header_separator_height':   13,     # 第２行。空行
+                'row_height_of_header':                    13,     # 第１行。ヘッダー
+                'row_height_of_column_header_separator':   13,     # 第２行。空行
             })
 
     # 出力先ワークブック指定
