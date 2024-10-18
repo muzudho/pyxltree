@@ -40,6 +40,7 @@ class Settings():
             * 色の参考： 📖 [Excels 56 ColorIndex Colors](https://www.excelsupersite.com/what-are-the-56-colorindex-colors-in-excel/)
 
             ノード関連
+            * `node_bgcolor` - 背景色
             * `node_horizontal_alignment` - 文字の水平方向の寄せ。規定値 None。'left', 'fill', 'centerContinuous', 'center', 'right', 'general', 'justify', 'distributed' のいずれか。指定しないなら None
             * `node_vertical_alignment` - 文字の垂直方向の寄せ。規定値 None。'bottom', 'center', 'top', 'justify', 'distributed' のいずれか。指定しないなら None
         """
@@ -64,6 +65,7 @@ class Settings():
             'header_fgcolor_2':                 'EEEEEE',
 
             # ノード関連
+            'node_bgcolor':                     'FFFFCC',
             'node_horizontal_alignment':        None,
             'node_vertical_alignment':          None,
         }

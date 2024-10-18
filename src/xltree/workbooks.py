@@ -38,13 +38,21 @@ class TreeDrawer():
         self._curr_record = TreeRecord.new_empty(specified_length_of_nodes=self._tree_table.length_of_nodes)
         self._next_record = TreeRecord.new_empty(specified_length_of_nodes=self._tree_table.length_of_nodes)
 
-        self._bgcolor_list = [
+        # ヘッダー関連
+        self._header_bgcolor_list = [
             PatternFill(patternType='solid', fgColor=self._settings.dictionary['header_bgcolor_1']),
             PatternFill(patternType='solid', fgColor=self._settings.dictionary['header_bgcolor_2'])]
 
-        self._fgcolor_list = [
+        self._header_fgcolor_list = [
             Font(color=self._settings.dictionary['header_fgcolor_1']),
             Font(color=self._settings.dictionary['header_fgcolor_2'])]
+
+        # ノード関連
+        self._node_alignment = Alignment(
+                horizontal=self._settings.dictionary['node_horizontal_alignment'],
+                vertical=self._settings.dictionary['node_vertical_alignment'])
+
+        self._node_bgcolor = PatternFill(patternType='solid', fgColor=self._settings.dictionary['node_bgcolor'])
 
 
     def render(self):
@@ -120,25 +128,25 @@ class TreeDrawer():
         # NOTE データテーブルではなく、ビュー用途なので、テーブルとしての機能性は無視しています
         # A の代わりに {xl.utils.get_column_letter(1)} とも書ける
         ws[f'A{row_th}'] = 'No'
-        ws[f'A{row_th}'].fill = self._bgcolor_list[0]
-        ws[f'A{row_th}'].font = self._fgcolor_list[0]
+        ws[f'A{row_th}'].fill = self._header_bgcolor_list[0]
+        ws[f'A{row_th}'].font = self._header_fgcolor_list[0]
 
         # B列は空
-        ws[f'B{row_th}'].fill = self._bgcolor_list[0]
+        ws[f'B{row_th}'].fill = self._header_bgcolor_list[0]
 
         ws[f'C{row_th}'] = 'Root'
-        ws[f'C{row_th}'].fill = self._bgcolor_list[1]
-        ws[f'C{row_th}'].font = self._fgcolor_list[1]
+        ws[f'C{row_th}'].fill = self._header_bgcolor_list[1]
+        ws[f'C{row_th}'].font = self._header_fgcolor_list[1]
 
 
         flip = 0
         head_column_th = 4
 
         for node_th in range(1, self._tree_table.length_of_nodes):
-            ws[f'{xl.utils.get_column_letter(head_column_th    )}{row_th}'].fill = self._bgcolor_list[flip]
-            ws[f'{xl.utils.get_column_letter(head_column_th + 1)}{row_th}'].fill = self._bgcolor_list[flip]
-            ws[f'{xl.utils.get_column_letter(head_column_th + 2)}{row_th}'].fill = self._bgcolor_list[flip]
-            ws[f'{xl.utils.get_column_letter(head_column_th + 2)}{row_th}'].font = self._fgcolor_list[flip]
+            ws[f'{xl.utils.get_column_letter(head_column_th    )}{row_th}'].fill = self._header_bgcolor_list[flip]
+            ws[f'{xl.utils.get_column_letter(head_column_th + 1)}{row_th}'].fill = self._header_bgcolor_list[flip]
+            ws[f'{xl.utils.get_column_letter(head_column_th + 2)}{row_th}'].fill = self._header_bgcolor_list[flip]
+            ws[f'{xl.utils.get_column_letter(head_column_th + 2)}{row_th}'].font = self._header_fgcolor_list[flip]
 
             # 列名
             ws[f'{xl.utils.get_column_letter(head_column_th + 2)}{row_th}'] = nth(node_th)
@@ -151,7 +159,7 @@ class TreeDrawer():
         # ------
         # 空行にする
         row_th = 2
-        ws[f'A{row_th}'].fill = self._bgcolor_list[0]
+        ws[f'A{row_th}'].fill = self._header_bgcolor_list[0]
 
 
     def _on_each_record(self, next_row_number, next_record):
@@ -189,9 +197,9 @@ class TreeDrawer():
             ws.row_dimensions[row3_th].height = 6
 
             ws[f'A{row1_th}'].value = self._curr_record.no
-            ws[f'A{row1_th}'].fill = self._bgcolor_list[0]
-            ws[f'A{row2_th}'].fill = self._bgcolor_list[0]
-            ws[f'A{row3_th}'].fill = self._bgcolor_list[0]
+            ws[f'A{row1_th}'].fill = self._header_bgcolor_list[0]
+            ws[f'A{row2_th}'].fill = self._header_bgcolor_list[0]
+            ws[f'A{row3_th}'].fill = self._header_bgcolor_list[0]
             # B列は空
 
 
@@ -374,12 +382,6 @@ class TreeDrawer():
                 row2_th = three_row_numbers[1]
                 row3_th = three_row_numbers[2]
 
-                # 背景色
-                #
-                #   色の参考： 📖 [Excels 56 ColorIndex Colors](https://www.excelsupersite.com/what-are-the-56-colorindex-colors-in-excel/)
-                #
-                node_bgcolor = PatternFill(patternType='solid', fgColor='FFFFCC')
-
                 # 罫線、背景色
                 #
                 #   style に入るもの： 'dashDot', 'dashDotDot', 'double', 'hair', 'dotted', 'mediumDashDotDot', 'dashed', 'mediumDashed', 'slantDashDot', 'thick', 'thin', 'medium', 'mediumDashDot'
@@ -392,13 +394,11 @@ class TreeDrawer():
                     print(f"[{datetime.datetime.now()}] Pencil(Node) {self._curr_record.no} record > {nth(depth_th)} layer  □ {nd.text}")
                 
                 ws[f'{cn3}{row1_th}'].value = nd.text
-                ws[f'{cn3}{row1_th}'].alignment = Alignment(
-                        horizontal=self._settings.dictionary['node_horizontal_alignment'],
-                        vertical=self._settings.dictionary['node_vertical_alignment'])
+                ws[f'{cn3}{row1_th}'].alignment = self._node_alignment
 
-                ws[f'{cn3}{row1_th}'].fill = node_bgcolor
+                ws[f'{cn3}{row1_th}'].fill = self._node_bgcolor
                 ws[f'{cn3}{row1_th}'].border = upside_node_border
-                ws[f'{cn3}{row2_th}'].fill = node_bgcolor
+                ws[f'{cn3}{row2_th}'].fill = self._node_bgcolor
                 ws[f'{cn3}{row2_th}'].border = downside_node_border
 
 

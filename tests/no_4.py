@@ -19,14 +19,15 @@ def execute():
                 'column_header_separator_height':   13,     # 第２行。空行
 
                 # ヘッダー関連
-                'header_bgcolor_1':                 'CCCCFF',
-                'header_bgcolor_2':                 '333366',
-                'header_fgcolor_1':                 '111122',
-                'header_fgcolor_2':                 'EEEEFF',
+                'header_bgcolor_1':                 'CCCCFF',   # ヘッダーの背景色その１
+                'header_bgcolor_2':                 '333366',   # ヘッダーの背景色その２
+                'header_fgcolor_1':                 '111122',   # ヘッダーの文字色その１
+                'header_fgcolor_2':                 'EEEEFF',   # ヘッダーの文字色その２
 
                 # ノード関連
-                'node_horizontal_alignment':        'left',
-                'node_vertical_alignment':          None,
+                'node_bgcolor':                     'EEFFCC',   # 背景色
+                'node_horizontal_alignment':        'left',     # 文字の水平方向の寄せ。規定値 None。'left', 'fill', 'centerContinuous', 'center', 'right', 'general', 'justify', 'distributed' のいずれか。指定しないなら None
+                'node_vertical_alignment':          None,       # 文字の垂直方向の寄せ。規定値 None。'bottom', 'center', 'top', 'justify', 'distributed' のいずれか。指定しないなら None
             })
 
     # 出力先ワークブック指定
