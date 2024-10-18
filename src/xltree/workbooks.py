@@ -3,6 +3,7 @@ import pandas as pd
 import openpyxl as xl
 from openpyxl.styles import PatternFill, Font
 from openpyxl.styles.borders import Border, Side
+from openpyxl.styles.alignment import Alignment
 
 from .library import nth
 from .database import TreeNode, TreeRecord
@@ -26,7 +27,7 @@ class TreeDrawer():
         PatternFill(patternType='solid', fgColor='333333')]
 
 
-    def __init__(self, tree_table, ws, config, debug_write=False):
+    def __init__(self, tree_table, ws, settings, debug_write=False):
         """初期化
         
         Parameters
@@ -35,15 +36,15 @@ class TreeDrawer():
             ツリーテーブル
         ws : openpyxl.Worksheet
             ワークシート
-        config : Config
-            構成
+        settings : Settings
+            各種設定
         debug_write : bool
             デバッグライト
             DEBUG_TIPS: デバッグライトをオンにして、コンソールにログを表示すると不具合を調査しやすくなります
         """
         self._tree_table = tree_table
         self._ws = ws
-        self._config = config
+        self._settings = settings
         self._debug_write = debug_write
 
         self._prev_record = TreeRecord.new_empty(specified_length_of_nodes=self._tree_table.length_of_nodes)
@@ -88,15 +89,15 @@ class TreeDrawer():
 
         # 列の幅設定
         column_width_dict = {}
-        column_width_dict['A'] = self._config.dictionary['no_width']                        # no
-        column_width_dict['B'] = self._config.dictionary['row_header_separator_width']      # 空列
-        column_width_dict['C'] = self._config.dictionary['node_width']                      # 根
+        column_width_dict['A'] = self._settings.dictionary['no_width']                        # no
+        column_width_dict['B'] = self._settings.dictionary['row_header_separator_width']      # 空列
+        column_width_dict['C'] = self._settings.dictionary['node_width']                      # 根
 
         head_column_th = 4
         for node_th in range(1, self._tree_table.length_of_nodes):
-            column_width_dict[xl.utils.get_column_letter(head_column_th    )] = self._config.dictionary['parent_side_edge_width']   # 第n層  親側辺
-            column_width_dict[xl.utils.get_column_letter(head_column_th + 1)] = self._config.dictionary['child_side_edge_width']    #        子側辺
-            column_width_dict[xl.utils.get_column_letter(head_column_th + 2)] = self._config.dictionary['node_width']               #        節
+            column_width_dict[xl.utils.get_column_letter(head_column_th    )] = self._settings.dictionary['parent_side_edge_width']   # 第n層  親側辺
+            column_width_dict[xl.utils.get_column_letter(head_column_th + 1)] = self._settings.dictionary['child_side_edge_width']    #        子側辺
+            column_width_dict[xl.utils.get_column_letter(head_column_th + 2)] = self._settings.dictionary['node_width']               #        節
             head_column_th += 3
 
 
@@ -107,8 +108,8 @@ class TreeDrawer():
         # 行の高さ設定
         # height の単位はポイント。初期値 8。昔のアメリカ人が椅子に座ってディスプレイを見たとき 1/72 インチに見える大きさが 1ポイント らしいが、そんなんワカラン。目視確認してほしい
         row_height_dict = {
-            1: self._config.dictionary['header_height'],
-            2: self._config.dictionary['column_header_separator_height'],
+            1: self._settings.dictionary['header_height'],
+            2: self._settings.dictionary['column_header_separator_height'],
         }
 
         for row_number, height in row_height_dict.items():
@@ -133,6 +134,7 @@ class TreeDrawer():
         ws[f'C{row_th}'] = 'Root'
         ws[f'C{row_th}'].fill = TreeDrawer._bgcolor_list[1]
         ws[f'C{row_th}'].font = TreeDrawer._fgcolor_list[1]
+
 
         flip = 0
         head_column_th = 4
@@ -395,6 +397,10 @@ class TreeDrawer():
                     print(f"[{datetime.datetime.now()}] Pencil(Node) {self._curr_record.no} record > {nth(depth_th)} layer  □ {nd.text}")
                 
                 ws[f'{cn3}{row1_th}'].value = nd.text
+                ws[f'{cn3}{row1_th}'].alignment = Alignment(
+                        horizontal=self._settings.dictionary['node_horizontal_alignment'],
+                        vertical=self._settings.dictionary['node_vertical_alignment'])
+
                 ws[f'{cn3}{row1_th}'].fill = node_bgcolor
                 ws[f'{cn3}{row1_th}'].border = upside_node_border
                 ws[f'{cn3}{row2_th}'].fill = node_bgcolor

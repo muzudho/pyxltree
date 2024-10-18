@@ -1,6 +1,6 @@
 import datetime
 
-from src.xltree import Config, WorkbookControl
+from src.xltree import Settings, WorkbookControl
 
 
 def execute():

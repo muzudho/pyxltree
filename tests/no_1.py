@@ -2,7 +2,7 @@ import traceback
 import os
 import datetime
 
-from src.xltree import Config, WorkbookControl
+from src.xltree import Settings, WorkbookControl
 
 
 def execute():
@@ -36,8 +36,8 @@ Enter the export path to the Excel workbook(.xlsx) file
 
 > """)
 
-    # 構成
-    config = Config(
+    # 各種設定
+    settings = Settings(
             # 省略可能
             dictionary = {
                 # 列の幅
@@ -53,7 +53,7 @@ Enter the export path to the Excel workbook(.xlsx) file
             })
 
     # 出力先ワークブック指定
-    wbc = WorkbookControl(target=wb_file_path, mode='w', config=config)
+    wbc = WorkbookControl(target=wb_file_path, mode='w', settings=settings)
 
     # ワークシート描画
     wbc.render_worksheet(target='Tree', based_on=csv_file_path)

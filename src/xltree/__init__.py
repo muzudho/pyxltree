@@ -6,8 +6,8 @@ from .database import TreeTable
 from .workbooks import TreeDrawer, TreeEraser
 
 
-class Config():
-    """構成"""
+class Settings():
+    """各種設定"""
 
 
     def __init__(
@@ -30,6 +30,10 @@ class Config():
             行の高さ設定。height の単位はポイント。既定値 8。昔のアメリカ人が椅子に座ってディスプレイを見たとき 1/72 インチに見える大きさが 1ポイント らしいが、そんなんワカラン。目視確認してほしい
             * `header_height` - 第１行。ヘッダー
             * `column_header_separator_height` - 第２行。空行
+
+            ノード関連
+            * `node_horizontal_alignment` - 文字の水平方向の寄せ。規定値 None。'left', 'fill', 'centerContinuous', 'center', 'right', 'general', 'justify', 'distributed' のいずれか。指定しないなら None
+            * `node_vertical_alignment` - 文字の垂直方向の寄せ。規定値 None。'bottom', 'center', 'top', 'justify', 'distributed' のいずれか。指定しないなら None
         """
 
         # 既定のディクショナリー
@@ -44,6 +48,10 @@ class Config():
             # 行の高さ
             'header_height':                    13,
             'column_header_separator_height':   13,
+
+            # ノード関連
+            'node_horizontal_alignment':        None,
+            'node_vertical_alignment':          None,
         }
 
         # 上書き
@@ -61,7 +69,7 @@ class WorkbookControl():
     """ワークブック制御"""
 
 
-    def __init__(self, target, mode, config=Config(), debug_write=False):
+    def __init__(self, target, mode, settings=Settings(), debug_write=False):
         """初期化
 
         Parameters
@@ -70,12 +78,12 @@ class WorkbookControl():
             ワークブック（.xlsx）へのファイルパス
         mode : str
             既存のワークブックが有ったときの挙動。 'w' は新規作成して置換え、 'a' は追記
-        config : Config
-            構成
+        settings : Settings
+            各種設定
         """
         self._wb_file_path = target
         self._mode = mode
-        self._config = config
+        self._settings = settings
         self._debug_write = debug_write
         self._wb = None
         self._ws = None
@@ -108,7 +116,7 @@ class WorkbookControl():
         tree_table = TreeTable.from_csv(file_path=based_on)
 
         # ツリードロワーを用意、描画（都合上、要らない罫線が付いています）
-        tree_drawer = TreeDrawer(tree_table=tree_table, ws=self._ws, config=self._config, debug_write=debug_write)
+        tree_drawer = TreeDrawer(tree_table=tree_table, ws=self._ws, settings=self._settings, debug_write=debug_write)
         tree_drawer.render()
 
 
