@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "xltree"
-version = "0.0.1"
+version = "0.0.3"
 authors = [
   { name="Takahashi Satoshi", email="muzudho1@gmail.com" },
 ]
@@ -31,6 +31,7 @@ Repository = "https://github.com/muzudho/pyxltree.git"
 [tool.hatch.build.targets.sdist]
 exclude = [
   "/docs_dev",      # Documents exclude package. It for developer.
+  "/examples",      # README.md で紹介されているスクリプト
   "/tests",         # 設定しなくても最初から機能するという話しもある
   "*.log",          # Logging
   "*.bak",          # WinMerge

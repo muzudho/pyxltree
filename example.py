@@ -1,16 +1,15 @@
 #
-# python test.py 1
+# python example.py 2
 #
-# エクセルで樹形図を描こう
+# 例を実行しよう
 #
 
 import traceback
 import datetime
 import sys
 
-from tests.no_1 import execute as execute_no_1
-from tests.no_2 import execute as execute_no_2
-from tests.no_3 import execute as execute_no_3
+from examples.no_1 import execute as execute_no_1
+from examples.no_2 import execute as execute_no_2
 
 
 ########################################
@@ -29,9 +28,6 @@ if __name__ == '__main__':
             if args[1] == '2':
                 execute_no_2()
 
-            if args[1] == '3':
-                execute_no_3()
-            
             else:
                 raise ValueError(f'unsupported {args[1]=}')
         

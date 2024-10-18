@@ -1,6 +1,9 @@
 # PyXlTree
+/examples/temp/*
+!/examples/temp/.gitkeep
 /tests/temp/*
 !/tests/temp/.gitkeep
+*- コピー*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

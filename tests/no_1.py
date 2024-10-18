@@ -5,7 +5,7 @@ import datetime
 from src.xltree import Config, WorkbookControl
 
 
-def test_render():
+def execute():
     """描画テスト"""
 
     while True:
@@ -53,12 +53,12 @@ Enter the export path to the Excel workbook(.xlsx) file
             })
 
     # ワークブック制御生成
-    wbc = WorkbookControl(target=wb_file_path, config=config)
+    wbc = WorkbookControl(target=wb_file_path, mode='w', config=config)
 
-    # シート描画
-    wbc.render_sheet(target='Tree', based_on=csv_file_path)
+    # ワークシート描画
+    wbc.render_worksheet(target='Tree', based_on=csv_file_path)
 
-    # 'Sheet' 以外のワークシートを生成したあとで、'Sheet' を削除
+    # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
     wbc.remove_worksheet(target='Sheet')
 
     # ワークブック保存

@@ -61,15 +61,20 @@ class WorkbookControl():
     """ワークブック制御"""
 
 
-    def __init__(self, target, config=Config(), debug_write=False):
+    def __init__(self, target, mode, config=Config(), debug_write=False):
         """初期化
 
         Parameters
         ----------
         target : str
             ワークブック（.xlsx）へのファイルパス
+        mode : str
+            既存のワークブックが有ったときの挙動。 'w' は新規作成して置換え、 'a' は追記
+        config : Config
+            構成
         """
         self._wb_file_path = target
+        self._mode = mode
         self._config = config
         self._debug_write = debug_write
         self._wb = None
@@ -81,8 +86,8 @@ class WorkbookControl():
         return self._wb_file_path
 
 
-    def render_sheet(self, target, based_on, debug_write=False):
-        """シート描画
+    def render_worksheet(self, target, based_on, debug_write=False):
+        """ワークシート描画
 
         Parameters
         ----------
@@ -146,19 +151,22 @@ class WorkbookControl():
     def ready_workbook(self):
         """ワークブックを準備する"""
 
-        # 既存のファイルがあるなら読込
+        # 既存のファイルが有ったときの挙動
         if os.path.isfile(self._wb_file_path):
-            if self._debug_write:
-                print(f"[{datetime.datetime.now()}] `{self._wb_file_path}` file exists, read.")
+            # 既存のファイルへ追記
+            if self._mode == 'a':
+                if self._debug_write:
+                    print(f"[{datetime.datetime.now()}] `{self._wb_file_path}` file exists, read.")
 
-            self._wb = xl.load_workbook(filename=self._wb_file_path)
-        
+                self._wb = xl.load_workbook(filename=self._wb_file_path)
+
+                return
+                    
         # ワークブックを新規生成
-        else:
-            if self._debug_write:
-                print(f"[{datetime.datetime.now()}] `{self._wb_file_path}` file not exists, create.")
+        if self._debug_write:
+            print(f"[{datetime.datetime.now()}] `{self._wb_file_path}` file not exists, create.")
 
-            self._wb = xl.Workbook()
+        self._wb = xl.Workbook()
 
 
     def exists_sheet(self, target):
