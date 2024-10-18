@@ -14,19 +14,6 @@ class TreeDrawer():
     """エクセルで罫線などを駆使して、樹形図を描画します"""
 
 
-    # 背景色
-    #
-    #   色の参考： 📖 [Excels 56 ColorIndex Colors](https://www.excelsupersite.com/what-are-the-56-colorindex-colors-in-excel/)
-    #
-    _fgcolor_list = [
-        Font(color='111111'),
-        Font(color='EEEEEE')]
-
-    _bgcolor_list = [
-        PatternFill(patternType='solid', fgColor='CCCCCC'),
-        PatternFill(patternType='solid', fgColor='333333')]
-
-
     def __init__(self, tree_table, ws, settings, debug_write=False):
         """初期化
         
@@ -50,6 +37,14 @@ class TreeDrawer():
         self._prev_record = TreeRecord.new_empty(specified_length_of_nodes=self._tree_table.length_of_nodes)
         self._curr_record = TreeRecord.new_empty(specified_length_of_nodes=self._tree_table.length_of_nodes)
         self._next_record = TreeRecord.new_empty(specified_length_of_nodes=self._tree_table.length_of_nodes)
+
+        self._bgcolor_list = [
+            PatternFill(patternType='solid', fgColor=self._settings.dictionary['header_bgcolor_1']),
+            PatternFill(patternType='solid', fgColor=self._settings.dictionary['header_bgcolor_2'])]
+
+        self._fgcolor_list = [
+            Font(color=self._settings.dictionary['header_fgcolor_1']),
+            Font(color=self._settings.dictionary['header_fgcolor_2'])]
 
 
     def render(self):
@@ -125,25 +120,25 @@ class TreeDrawer():
         # NOTE データテーブルではなく、ビュー用途なので、テーブルとしての機能性は無視しています
         # A の代わりに {xl.utils.get_column_letter(1)} とも書ける
         ws[f'A{row_th}'] = 'No'
-        ws[f'A{row_th}'].fill = TreeDrawer._bgcolor_list[0]
-        ws[f'A{row_th}'].font = TreeDrawer._fgcolor_list[0]
+        ws[f'A{row_th}'].fill = self._bgcolor_list[0]
+        ws[f'A{row_th}'].font = self._fgcolor_list[0]
 
         # B列は空
-        ws[f'B{row_th}'].fill = TreeDrawer._bgcolor_list[0]
+        ws[f'B{row_th}'].fill = self._bgcolor_list[0]
 
         ws[f'C{row_th}'] = 'Root'
-        ws[f'C{row_th}'].fill = TreeDrawer._bgcolor_list[1]
-        ws[f'C{row_th}'].font = TreeDrawer._fgcolor_list[1]
+        ws[f'C{row_th}'].fill = self._bgcolor_list[1]
+        ws[f'C{row_th}'].font = self._fgcolor_list[1]
 
 
         flip = 0
         head_column_th = 4
 
         for node_th in range(1, self._tree_table.length_of_nodes):
-            ws[f'{xl.utils.get_column_letter(head_column_th    )}{row_th}'].fill = TreeDrawer._bgcolor_list[flip]
-            ws[f'{xl.utils.get_column_letter(head_column_th + 1)}{row_th}'].fill = TreeDrawer._bgcolor_list[flip]
-            ws[f'{xl.utils.get_column_letter(head_column_th + 2)}{row_th}'].fill = TreeDrawer._bgcolor_list[flip]
-            ws[f'{xl.utils.get_column_letter(head_column_th + 2)}{row_th}'].font = TreeDrawer._fgcolor_list[flip]
+            ws[f'{xl.utils.get_column_letter(head_column_th    )}{row_th}'].fill = self._bgcolor_list[flip]
+            ws[f'{xl.utils.get_column_letter(head_column_th + 1)}{row_th}'].fill = self._bgcolor_list[flip]
+            ws[f'{xl.utils.get_column_letter(head_column_th + 2)}{row_th}'].fill = self._bgcolor_list[flip]
+            ws[f'{xl.utils.get_column_letter(head_column_th + 2)}{row_th}'].font = self._fgcolor_list[flip]
 
             # 列名
             ws[f'{xl.utils.get_column_letter(head_column_th + 2)}{row_th}'] = nth(node_th)
@@ -156,7 +151,7 @@ class TreeDrawer():
         # ------
         # 空行にする
         row_th = 2
-        ws[f'A{row_th}'].fill = TreeDrawer._bgcolor_list[0]
+        ws[f'A{row_th}'].fill = self._bgcolor_list[0]
 
 
     def _on_each_record(self, next_row_number, next_record):
@@ -194,9 +189,9 @@ class TreeDrawer():
             ws.row_dimensions[row3_th].height = 6
 
             ws[f'A{row1_th}'].value = self._curr_record.no
-            ws[f'A{row1_th}'].fill = TreeDrawer._bgcolor_list[0]
-            ws[f'A{row2_th}'].fill = TreeDrawer._bgcolor_list[0]
-            ws[f'A{row3_th}'].fill = TreeDrawer._bgcolor_list[0]
+            ws[f'A{row1_th}'].fill = self._bgcolor_list[0]
+            ws[f'A{row2_th}'].fill = self._bgcolor_list[0]
+            ws[f'A{row3_th}'].fill = self._bgcolor_list[0]
             # B列は空
 
 

@@ -18,6 +18,12 @@ def execute():
                 'header_height':                    13,     # 第１行。ヘッダー
                 'column_header_separator_height':   13,     # 第２行。空行
 
+                # ヘッダー関連
+                'header_bgcolor_1':                 'CCCCFF',
+                'header_bgcolor_2':                 '333366',
+                'header_fgcolor_1':                 '111122',
+                'header_fgcolor_2':                 'EEEEFF',
+
                 # ノード関連
                 'node_horizontal_alignment':        'left',
                 'node_vertical_alignment':          None,

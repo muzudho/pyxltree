@@ -31,6 +31,14 @@ class Settings():
             * `header_height` - 第１行。ヘッダー
             * `column_header_separator_height` - 第２行。空行
 
+            ヘッダー関連
+            * `header_bgcolor_1` - ヘッダーの背景色その１
+            * `header_bgcolor_2` - ヘッダーの背景色その２
+            * `header_fgcolor_1` - ヘッダーの文字色その１
+            * `header_fgcolor_2` - ヘッダーの文字色その２
+
+            * 色の参考： 📖 [Excels 56 ColorIndex Colors](https://www.excelsupersite.com/what-are-the-56-colorindex-colors-in-excel/)
+
             ノード関連
             * `node_horizontal_alignment` - 文字の水平方向の寄せ。規定値 None。'left', 'fill', 'centerContinuous', 'center', 'right', 'general', 'justify', 'distributed' のいずれか。指定しないなら None
             * `node_vertical_alignment` - 文字の垂直方向の寄せ。規定値 None。'bottom', 'center', 'top', 'justify', 'distributed' のいずれか。指定しないなら None
@@ -48,6 +56,12 @@ class Settings():
             # 行の高さ
             'header_height':                    13,
             'column_header_separator_height':   13,
+
+            # ヘッダー関連
+            'header_bgcolor_1':                 'CCCCCC',
+            'header_bgcolor_2':                 '333333',
+            'header_fgcolor_1':                 '111111',
+            'header_fgcolor_2':                 'EEEEEE',
 
             # ノード関連
             'node_horizontal_alignment':        None,
