@@ -2,8 +2,8 @@ import os
 import datetime
 import openpyxl as xl
 
-from src.xltree.database import TreeTable
-from src.xltree.workbooks import TreeDrawer, TreeEraser
+from .database import TreeTable
+from .workbooks import TreeDrawer, TreeEraser
 
 
 class Config():

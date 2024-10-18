@@ -2,7 +2,7 @@ import re
 import datetime
 import pandas as pd
 
-from src.xltree.library import INDENT
+from .library import INDENT
 
 
 ############

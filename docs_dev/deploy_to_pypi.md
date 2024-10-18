@@ -5,7 +5,7 @@
 トップ・ディレクトリーの 📄 `README.md` テキストは pypi.org のパッケージのページの README としても使われるので、それを想定して書くこと。  
 画像は相対パスではなくURLを指定すること  
 
-# pypi へのデプロイについて
+# test.pypi.org へのデプロイについて
 
 とりあえずこれを読め  
 
@@ -89,3 +89,14 @@ APIトークンを尋ねられるので、 `pypi-` プレフィックスを付�
 👇 アップロードされたら、test.pypi.org を見に行く  
 
 https://test.pypi.org/project/xltree/0.0.1/  
+
+# pypi.org へのデプロイについて
+
+test.pypi.org と pypi.org は別アカウントなので、ログインし直す。  
+アカウント設定画面から、APIトークンも発行する  
+
+`twine` のコマンド引数が変わる  
+
+```shell
+twine upload dist/*
+```
