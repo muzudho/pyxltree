@@ -1,0 +1,24 @@
+[project]
+name = "xltree"
+version = "0.1.0"
+authors = [
+  { name="Takahashi Satoshi", email="muzudho1@gmail.com" },
+]
+dependencies = [
+  "numpy==1.26.4",
+  "openpyxl==3.1.5",
+  "pandas==2.2.2",
+]
+maintainers = [
+  { name="Takahashi Satoshi", email="muzudho1@gmail.com" },
+]
+description = "Render tree structure diagram using border on Excel."
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["tree structure diagram", "excel", "border"]
+classifiers = [
+  "Programming Language :: Python"
+]
+
+[project.urls]
+Repository = "https://github.com/muzudho/pyxltree.git"
