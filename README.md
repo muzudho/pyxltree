@@ -6,13 +6,13 @@
 
 Output:  
 
-![View](https://github.com/muzudho/pyxltree/raw/main/docs/img/202410__pg__18--1815-XltreeDrive.png)  
+![View](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__18--1815-XltreeDrive.png)  
 
 👆　わたしのWindows PCのCドライブの例です  
 
 Input:  
 
-![Data](https://github.com/muzudho/pyxltree/raw/main/docs/img/202410__pg__18--1832-XltreeDriveData.png)  
+![Data](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__18--1832-XltreeDriveData.png)  
 
 ```csv
 no,node0,node1,node2,node3,node4,node5,node6,node7,node8
@@ -61,13 +61,13 @@ def execute():
 
 Output:  
 
-![View](https://github.com/muzudho/pyxltree/raw/main/docs/img/202410__pg__19--0020-XltreeWordChainGameView.png)  
+![View](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__19--0020-XltreeWordChainGameView.png)  
 
 👆　しりとりというゲームの記録です。図（Diagram）の辺（Edge）にテキストを書くのはオプションです  
 
 Input:  
 
-![Data](https://github.com/muzudho/pyxltree/raw/main/docs/img/202410__pg__19--0021-XltreeWordChainGameData.png)  
+![Data](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__19--0021-XltreeWordChainGameData.png)  
 
 ```csv
 no,node0,edge1,node1,edge2,node2,edge3,node3,edge4,node4,edge5,node5,edge6,node6,edge7,node7,edge8,node8,edge9,node9
@@ -110,7 +110,7 @@ def execute():
 
 Output:  
 
-![View](./docs/img/202410__pg__19--0311-XltreeSettings.png)  
+![View](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__19--0311-XltreeSettings.png)  
 
 👆　スタイルも少しだけ設定できます  
 
