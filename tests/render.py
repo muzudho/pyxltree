@@ -2,7 +2,7 @@ import traceback
 import os
 import datetime
 
-from __init__ import Config, Renderer
+from xltree import Config, Renderer
 
 SHEET_NAME = 'Tree'
 

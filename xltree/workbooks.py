@@ -4,9 +4,9 @@ import openpyxl as xl
 from openpyxl.styles import PatternFill, Font
 from openpyxl.styles.borders import Border, Side
 
-from library import nth
-from database import TreeNode, TreeRecord
-from models import TreeModel
+from xltree.library import nth
+from xltree.database import TreeNode, TreeRecord
+from xltree.models import TreeModel
 
 
 class TreeDrawer():
