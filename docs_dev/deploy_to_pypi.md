@@ -41,7 +41,10 @@ py -m pip install --upgrade build
 
 📄 `pyproject.toml` を書く。トップディレクトリーに置いてある現物を参照  
 
-`build` を実行する前に、 📄 `pyproject.toml` のバージョンを設定したか確認しておくこと  
+`build` を**実行する前**に:  
+
+* 📄 `pyproject.toml` のバージョンを設定したか確認しておくこと
+* GitHub にプッシュしていないソースが残っていれば、プッシュしておいた方がいいかもしれません
 
 👇 pyproject.toml を書き上げたら、 `build` を実行する  
 

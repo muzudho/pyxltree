@@ -61,8 +61,52 @@ def execute():
 
 Output:  
 
-![View](./docs/img/202410__pg__19--0020-XltreeWordChainGameView.png)  
+![View](https://github.com/muzudho/pyxltree/raw/main/docs/img/202410__pg__19--0020-XltreeWordChainGameView.png)  
+
+👆　しりとりというゲームの記録です。図（Diagram）の辺（Edge）にテキストを書くのはオプションです  
 
 Input:  
 
-![Data](./docs/img/202410__pg__19--0021-XltreeWordChainGameData.png)  
+![Data](https://github.com/muzudho/pyxltree/raw/main/docs/img/202410__pg__19--0021-XltreeWordChainGameData.png)  
+
+```csv
+no,node0,edge1,node1,edge2,node2,edge3,node3,edge4,node4,edge5,node5,edge6,node6,edge7,node7,edge8,node8,edge9,node9
+1,Word Chain Game,Ea,Eagle,E,Euler,R,Rex,$,ended with x,,,,,,,,,,
+2,Word Chain Game,Eb,Ebony,Y,Yellow,W,Wood,D,Door,R,Rocket,T,Tax,$,ended with x,,,,
+3,Word Chain Game,Ec,Eclair,R,Road,D,Dungeon,N,News,S,Sex,$,ended with x,,,,,,
+4,Word Chain Game,Ed,Edelweiss,S,Sox,$,ended with x,,,,,,,,,,,,
+7,Word Chain Game,En,English,Ha,Hand,Dog,Dog,G,Gorilla,A,Arm,M,Moon,N,Nice,$,adjective,,
+6,Word Chain Game,En,English,Ha,Hand,Doo,Door,R,Ring,G,Grape,E,Egg,G,Golf,F,Fox,$,ended with x
+5,Word Chain Game,En,English,Ha,Hand,Dr,Dragon,N,Nob,B,Box,$,ended with x,,,,,,
+8,Word Chain Game,En,English,He,Hex,$,ended with x,,,,,,,,,,,,
+9,Word Chain Game,En,English,Ho,Hook,Kit,Kitchen,N,Nickel,L,Lemon,N,Nickel,$,time up,,,,
+10,Word Chain Game,En,English,Ho,Hook,Kin,King,G,Goal,L,Lemon,N,Nickel,L,Lemon,$,repetition,,
+```
+
+👆　`edge` 列は 1 から始まる連番で増やすことができます。 `node` 列より深い番号を付けても無視されます  
+
+Script:  
+
+```py
+from xltree import WorkbookControl
+
+
+def execute():
+
+    # 出力先ワークブック指定
+    wbc = WorkbookControl(target='./examples/temp/tree_word_chain_game.xlsx', mode='w')
+
+    # ワークシート描画
+    wbc.render_worksheet(target='Drive', based_on='./examples/data/tree_word_chain_game.csv')
+
+    # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
+    wbc.remove_worksheet(target='Sheet')
+
+    # 保存
+    wbc.save_workbook()
+```
+
+# その他
+
+ソースコードは GitHub で公開しています。ここで紹介されていない機能は仕様変更されやすいですが存在します。 GitHub のリポジトリーを確認してください。  
+オープンなライセンスで公開しています。変更を加えたフォークも歓迎します。  
