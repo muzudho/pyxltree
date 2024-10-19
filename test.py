@@ -12,6 +12,7 @@ from tests.no_1 import execute as execute_no_1
 from tests.no_2 import execute as execute_no_2
 from tests.no_3 import execute as execute_no_3
 from tests.no_4 import execute as execute_no_4
+from tests.no_5 import execute as execute_no_5
 
 
 ########################################
@@ -35,6 +36,9 @@ if __name__ == '__main__':
 
             if args[1] == '4':
                 execute_no_4()
+
+            if args[1] == '5':
+                execute_no_5()
             
             else:
                 raise ValueError(f'unsupported {args[1]=}')

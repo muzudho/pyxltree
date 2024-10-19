@@ -2,7 +2,7 @@ import os
 import datetime
 import openpyxl as xl
 
-from .database import TreeTable
+from .database import Table
 from .workbooks import TreeDrawer, TreeEraser
 
 
@@ -10,9 +10,7 @@ class Settings():
     """各種設定"""
 
 
-    def __init__(
-        self,
-        dictionary=None):
+    def __init__(self, dictionary=None):
         """初期化
         
         Parameters
@@ -66,16 +64,64 @@ class Settings():
             'row_height_of_lower_side_of_node':     13,
             'row_height_of_node_spacing':           6,
 
-            # ヘッダー関連
+            # 背景色関連
             'bgcolor_of_header_1':                 'CCCCCC',
             'bgcolor_of_header_2':                 '333333',
+            'bgcolor_of_node':                     'FFFFCC',
+
+            # 文字色関連
             'fgcolor_of_header_1':                 '111111',
             'fgcolor_of_header_2':                 'EEEEEE',
 
-            # ノード関連
-            'bgcolor_of_node':                     'FFFFCC',
+            # 文字寄せ関連
             'horizontal_alignment_of_node':        None,
             'vertical_alignment_of_node':          None,
+        }
+
+        # 上書き
+        if dictionary is not None:
+            for key, value in dictionary.items():
+                self._dictionary[key] = value
+
+
+    @property
+    def dictionary(self):
+        return self._dictionary
+
+
+class SettingsOfNode():
+    """TODO ノード個別の設定"""
+
+
+    def __init__(self, dictionary=None):
+        """初期化
+        
+        Parameters
+        ----------
+        dictionary : dict
+            設定
+
+            * 色の参考： 📖 [Excels 56 ColorIndex Colors](https://www.excelsupersite.com/what-are-the-56-colorindex-colors-in-excel/)
+
+            色関連
+            * `bgcolor` - 背景色
+            * `fgcolor` - 文字色
+
+            文字寄せ関連
+            * `horizontal_alignment` - 文字の水平方向の寄せ。規定値 None。'left', 'fill', 'centerContinuous', 'center', 'right', 'general', 'justify', 'distributed' のいずれか。指定しないなら None
+            * `vertical_alignment_` - 文字の垂直方向の寄せ。規定値 None。'bottom', 'center', 'top', 'justify', 'distributed' のいずれか。指定しないなら None
+        """
+
+        # 既定のディクショナリー
+        self._dictionary = {
+
+            # 色関連
+            'bgcolor':                     'FFFFCC',
+            'fgcolor':                     None,
+
+            # 文字寄せ関連
+            'horizontal_alignment':        None,
+            'vertical_alignment':          None,
         }
 
         # 上書き
@@ -137,17 +183,17 @@ class WorkbookControl():
         self.ready_worksheet(target=target)
 
         # CSV読込
-        tree_table = TreeTable.from_csv(file_path=based_on)
+        table = Table.from_csv(file_path=based_on)
 
         # ツリードロワーを用意、描画（都合上、要らない罫線が付いています）
-        tree_drawer = TreeDrawer(tree_table=tree_table, ws=self._ws, settings=self._settings, debug_write=debug_write)
+        tree_drawer = TreeDrawer(table=table, ws=self._ws, settings=self._settings, debug_write=debug_write)
         tree_drawer.render()
 
 
         # 要らない罫線を消す
         # DEBUG_TIPS: このコードを不活性にして、必要な線は全部描かれていることを確認してください
         if True:
-            tree_eraser = TreeEraser(tree_table=tree_table, ws=self._ws, debug_write=debug_write)
+            tree_eraser = TreeEraser(table=table, ws=self._ws, debug_write=debug_write)
             tree_eraser.render()
         else:
             if self._debug_write:

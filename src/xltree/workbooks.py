@@ -6,7 +6,7 @@ from openpyxl.styles.borders import Border, Side
 from openpyxl.styles.alignment import Alignment
 
 from .library import nth
-from .database import TreeNode, TreeRecord
+from .database import TreeNode, Record
 from .models import TreeModel
 
 
@@ -14,12 +14,12 @@ class TreeDrawer():
     """エクセルで罫線などを駆使して、樹形図を描画します"""
 
 
-    def __init__(self, tree_table, ws, settings, debug_write=False):
+    def __init__(self, table, ws, settings, debug_write=False):
         """初期化
         
         Parameters
         ----------
-        tree_table : TreeTable
+        table : Table
             ツリーテーブル
         ws : openpyxl.Worksheet
             ワークシート
@@ -29,14 +29,14 @@ class TreeDrawer():
             デバッグライト
             DEBUG_TIPS: デバッグライトをオンにして、コンソールにログを表示すると不具合を調査しやすくなります
         """
-        self._tree_table = tree_table
+        self._table = table
         self._ws = ws
         self._settings = settings
         self._debug_write = debug_write
 
-        self._prev_record = TreeRecord.new_empty(specified_length_of_nodes=self._tree_table.length_of_nodes)
-        self._curr_record = TreeRecord.new_empty(specified_length_of_nodes=self._tree_table.length_of_nodes)
-        self._next_record = TreeRecord.new_empty(specified_length_of_nodes=self._tree_table.length_of_nodes)
+        self._prev_record = Record.new_empty(specified_length_of_nodes=self._table.length_of_nodes)
+        self._curr_record = Record.new_empty(specified_length_of_nodes=self._table.length_of_nodes)
+        self._next_record = Record.new_empty(specified_length_of_nodes=self._table.length_of_nodes)
 
         # ヘッダー関連
         self._header_bgcolor_list = [
@@ -62,10 +62,10 @@ class TreeDrawer():
         self._on_header()
 
         # 対象シートへの各行書出し
-        self._tree_table.for_each(on_each=self._on_each_record)
+        self._table.for_each(on_each=self._on_each_record)
 
         # 最終行の実行
-        self._on_each_record(next_row_number=len(self._tree_table.df), next_record=TreeRecord.new_empty(specified_length_of_nodes=self._tree_table.length_of_nodes))
+        self._on_each_record(next_row_number=len(self._table.df), next_record=Record.new_empty(specified_length_of_nodes=self._table.length_of_nodes))
 
         # ウィンドウ枠の固定
         self._ws.freeze_panes = 'B2'
@@ -97,7 +97,7 @@ class TreeDrawer():
         column_width_dict['C'] = self._settings.dictionary['column_width_of_node']                      # 根
 
         head_column_th = 4
-        for node_th in range(1, self._tree_table.length_of_nodes):
+        for node_th in range(1, self._table.length_of_nodes):
             column_width_dict[xl.utils.get_column_letter(head_column_th    )] = self._settings.dictionary['column_width_of_parent_side_edge']   # 第n層  親側辺
             column_width_dict[xl.utils.get_column_letter(head_column_th + 1)] = self._settings.dictionary['column_width_of_child_side_edge']    #        子側辺
             column_width_dict[xl.utils.get_column_letter(head_column_th + 2)] = self._settings.dictionary['column_width_of_node']               #        節
@@ -142,7 +142,7 @@ class TreeDrawer():
         flip = 0
         head_column_th = 4
 
-        for node_th in range(1, self._tree_table.length_of_nodes):
+        for node_th in range(1, self._table.length_of_nodes):
             ws[f'{xl.utils.get_column_letter(head_column_th    )}{row_th}'].fill = self._header_bgcolor_list[flip]
             ws[f'{xl.utils.get_column_letter(head_column_th + 1)}{row_th}'].fill = self._header_bgcolor_list[flip]
             ws[f'{xl.utils.get_column_letter(head_column_th + 2)}{row_th}'].fill = self._header_bgcolor_list[flip]
@@ -406,7 +406,7 @@ class TreeDrawer():
             # 第０層
             # ------
             depth_th = 0
-            if depth_th < self._tree_table.length_of_nodes:
+            if depth_th < self._table.length_of_nodes:
                 column_letter = xl.utils.get_column_letter(3)   # 'C'
                 draw_node(depth_th=depth_th, three_column_names=[None, None, column_letter], three_row_numbers=three_row_numbers)
 
@@ -415,9 +415,9 @@ class TreeDrawer():
 
             # 第１～最終層
             # ------------
-            for depth_th in range(1, self._tree_table.length_of_nodes):
+            for depth_th in range(1, self._table.length_of_nodes):
                 head_column_th = depth_th * COLUMN_WIDTH + 1
-                if depth_th < self._tree_table.length_of_nodes:
+                if depth_th < self._table.length_of_nodes:
                     # 第1層は 'D', 'E', 'F'、以降、後ろにずれていく
                     column_letter_list = [
                         xl.utils.get_column_letter(head_column_th),
@@ -432,12 +432,12 @@ class TreeEraser():
     """要らない罫線を消す"""
 
 
-    def __init__(self, tree_table, ws, debug_write=False):
+    def __init__(self, table, ws, debug_write=False):
         """初期化
         
         Parameters
         ----------
-        tree_table : TreeTable
+        table : Table
             ツリーテーブル
         ws : openpyxl.Worksheet
             ワークシート
@@ -445,7 +445,7 @@ class TreeEraser():
             デバッグライト
             DEBUG_TIPS: デバッグライトをオンにして、コンソールにログを表示すると不具合を調査しやすくなります
         """
-        self._tree_table = tree_table
+        self._table = table
         self._ws = ws
         self._debug_write = debug_write
 
@@ -455,7 +455,7 @@ class TreeEraser():
 
         # 指定の列の左側の垂直の罫線を見ていく
         column_th = 5
-        for node_th in range(1, self._tree_table.length_of_nodes):
+        for node_th in range(1, self._table.length_of_nodes):
             self._erase_unnecessary_border_by_column(column_letter=xl.utils.get_column_letter(column_th))
             column_th += 3
 

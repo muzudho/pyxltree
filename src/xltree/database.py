@@ -49,7 +49,7 @@ class TreeNode():
 ##############
 # MARK: Record
 ##############
-class TreeRecord():
+class Record():
 
 
     def __init__(self, no, node_list):
@@ -69,7 +69,7 @@ class TreeRecord():
 
     @staticmethod
     def new_empty(specified_length_of_nodes):
-        return TreeRecord(
+        return Record(
                 no=None,
                 node_list=[None] * specified_length_of_nodes)
 
@@ -110,7 +110,7 @@ class TreeRecord():
                 return default
             return new
 
-        return TreeRecord(
+        return Record(
                 no=new_or_default(no, self._no),
                 node_list=new_or_default(node_list, self._node_list))
 
@@ -123,8 +123,8 @@ class TreeRecord():
             blocks.append(node.stringify_dump(succ_indent))
 
         return f"""\
-{indent}TreeRecord
-{indent}----------
+{indent}Record
+{indent}------
 {succ_indent}{self._no=}
 {'\n'.join(blocks)}
 """
@@ -146,7 +146,7 @@ class TreeRecord():
 ##############
 # MARK: Record
 ##############
-class TreeTable():
+class Table():
     """樹形図データのテーブル"""
 
 
@@ -205,7 +205,7 @@ class TreeTable():
 
     @classmethod
     def new_empty_table(clazz, specified_length_of_edges, specified_length_of_nodes):
-        column_name_list = TreeTable.create_column_name_list(
+        column_name_list = Table.create_column_name_list(
                 specified_length_of_nodes=specified_length_of_nodes,
                 include_index=True) # 'no' は後でインデックスに変換
 
@@ -213,7 +213,7 @@ class TreeTable():
                 columns=column_name_list)
         
         clazz.setup_data_frame(df=df, specified_length_of_edges=specified_length_of_edges, specified_length_of_nodes=specified_length_of_nodes, shall_set_index=True)
-        return TreeTable(df=df, length_of_edges=specified_length_of_edges, length_of_nodes=specified_length_of_nodes)
+        return Table(df=df, length_of_edges=specified_length_of_edges, length_of_nodes=specified_length_of_nodes)
 
 
     @classmethod
@@ -257,7 +257,7 @@ class TreeTable():
         
         Returns
         -------
-        table : TreeTable
+        table : Table
             テーブル、またはナン
         file_read_result : FileReadResult
             ファイル読込結果
@@ -265,13 +265,13 @@ class TreeTable():
         df = pd.read_csv(file_path, encoding="utf8", index_col=['no'])
 
         # エッジ数、ノード数を数えたい。エッジは 'edge1' から数えはじめるが、'edge0' があるものとみなして数える
-        length_of_edges = TreeTable.find_list_size_of_column(df=df, prefix='edge', start_number=1)
-        length_of_nodes = TreeTable.find_list_size_of_column(df=df, prefix='node', start_number=0)
+        length_of_edges = Table.find_list_size_of_column(df=df, prefix='edge', start_number=1)
+        length_of_nodes = Table.find_list_size_of_column(df=df, prefix='node', start_number=0)
 
         # テーブルに追加の設定
         clazz.setup_data_frame(df=df, specified_length_of_edges=length_of_edges, specified_length_of_nodes=length_of_nodes, shall_set_index=False)
 
-        return TreeTable(df=df, length_of_edges=length_of_edges, length_of_nodes=length_of_nodes)
+        return Table(df=df, length_of_edges=length_of_edges, length_of_nodes=length_of_nodes)
 
 
     @property
@@ -384,7 +384,7 @@ class TreeTable():
             CSVファイルパス
         """
 
-        column_name_list = TreeTable.create_column_name_list(
+        column_name_list = Table.create_column_name_list(
                 specified_length_of_nodes=self.length_of_nodes,
                 include_index=False) # no はインデックスなので含めない
 
@@ -398,7 +398,7 @@ class TreeTable():
         Parameters
         ----------
         on_each : func
-            TreeRecord 引数を受け取る関数
+            Record 型引数を受け取る関数
         """
 
         df = self._df
@@ -428,7 +428,7 @@ class TreeTable():
 
 
             # レコード作成
-            record = TreeRecord(
+            record = Record(
                     no=no,
                     node_list=node_list)
 
