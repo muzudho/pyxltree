@@ -262,14 +262,21 @@ class Table():
         file_read_result : FileReadResult
             ファイル読込結果
         """
-        df = pd.read_csv(file_path, encoding="utf8", index_col=['no'])
+
+        # 'no' 列が有るかどうか分からないので、読み込み時に index_col は指定できません
+        df = pd.read_csv(file_path, encoding="utf8") #index_col=['no']
+
+        # no 列が含まれていないなら、１から始まる自動連番を追加します
+        if 'no' not in df.columns:
+            df['no'] = range(1, len(df.index) + 1)
 
         # エッジ数、ノード数を数えたい。エッジは 'edge1' から数えはじめるが、'edge0' があるものとみなして数える
         length_of_edges = Table.find_list_size_of_column(df=df, prefix='edge', start_number=1)
         length_of_nodes = Table.find_list_size_of_column(df=df, prefix='node', start_number=0)
 
         # テーブルに追加の設定
-        clazz.setup_data_frame(df=df, specified_length_of_edges=length_of_edges, specified_length_of_nodes=length_of_nodes, shall_set_index=False)
+        clazz.setup_data_frame(df=df, specified_length_of_edges=length_of_edges, specified_length_of_nodes=length_of_nodes,
+            shall_set_index=True) # 'no' 列をインデックスに指定します
 
         return Table(df=df, length_of_edges=length_of_edges, length_of_nodes=length_of_nodes)
 

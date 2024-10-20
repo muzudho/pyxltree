@@ -1,9 +1,9 @@
-no,node0,node1
-1,Evergreen,Griffith's ash
-2,Evergreen,Olive
-3,Deciduous,Aodamo
-4,Deciduous,Ginkgo
-5,Conifer,Cedar
-6,Conifer,Japanese cypress
-7,Broad-leaved,Japanese maple
-8,Broad-leaved,Japanese zelkova
+node0,node1
+Evergreen,Griffith's ash
+Evergreen,Olive
+Deciduous,Aodamo
+Deciduous,Ginkgo
+Conifer,Cedar
+Conifer,Japanese cypress
+Broad-leaved,Japanese maple
+Broad-leaved,Japanese zelkova
