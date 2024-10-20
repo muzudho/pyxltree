@@ -40,8 +40,9 @@ Enter the export path to the Excel workbook(.xlsx) file
     settings ={
         # 列の幅
         'column_width_of_no':                         4,      # A列の幅。no列
-        'column_width_of_row_header_separator':       3,      # B列の幅。空列
-        'column_width_of_node':                       20,     # 例：C, F, I ...列の幅。ノードの箱の幅
+        'column_width_of_root_side_padding':          3,      # B列の幅。ツリー構造図の根側パディング
+        'column_width_of_leaf_side_padding':          3,      # ツリー構造図の葉側パディング
+        'column_width_of_node':                      20,      # 例：C, F, I ...列の幅。ノードの箱の幅
         'column_width_of_parent_side_edge':           2,      # 例：D, G, J ...列の幅。エッジの水平線のうち、親ノードの方
         'column_width_of_child_side_edge':            4,      # 例：E, H, K ...列の幅。エッジの水平線のうち、子ノードの方
 

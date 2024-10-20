@@ -20,7 +20,8 @@ class Settings():
 
             列の幅設定。width はだいたい 'ＭＳ Ｐゴシック' サイズ11 の半角英文字の個数
             * `column_width_of_no` - A列の幅。no列
-            * `column_width_of_row_header_separator` - B列の幅。空列
+            * `column_width_of_root_side_padding` - B列の幅。ツリー構造図の根側パディング
+            * `column_width_of_leaf_side_padding` - ツリー構造図の葉側パディング
             * `column_width_of_node` - 例：C, F, I ...列の幅。ノードの箱の幅
             * `column_width_of_parent_side_edge` - 例：D, G, J ...列の幅。エッジの水平線のうち、親ノードの方
             * `column_width_of_child_side_edge` - 例：E, H, K ...列の幅。エッジの水平線のうち、子ノードの方
@@ -35,6 +36,7 @@ class Settings():
             * 色の参考： 📖 [Excels 56 ColorIndex Colors](https://www.excelsupersite.com/what-are-the-56-colorindex-colors-in-excel/)
 
             背景色関連
+            * `bgcolor_of_tree` - ツリー構造図の背景
             * `bgcolor_of_header_1` - ヘッダーの背景色その１
             * `bgcolor_of_header_2` - ヘッダーの背景色その２
             * `bgcolor_of_node` - 背景色
@@ -52,8 +54,9 @@ class Settings():
         self._dictionary = {
             # 列の幅
             'column_width_of_no':                         4,
-            'column_width_of_row_header_separator':       3,
-            'column_width_of_node':                       20,
+            'column_width_of_root_side_padding':          3,
+            'column_width_of_leaf_side_padding':          3,
+            'column_width_of_node':                      20,
             'column_width_of_parent_side_edge':           2,
             'column_width_of_child_side_edge':            4,
 
@@ -65,17 +68,18 @@ class Settings():
             'row_height_of_node_spacing':           6,
 
             # 背景色関連
-            'bgcolor_of_header_1':                 'CCCCCC',
-            'bgcolor_of_header_2':                 '333333',
-            'bgcolor_of_node':                     'FFFFCC',
+            'bgcolor_of_tree':                   'FFFFFF',
+            'bgcolor_of_header_1':               'CCCCCC',
+            'bgcolor_of_header_2':               '333333',
+            'bgcolor_of_node':                   'FFFFCC',
 
             # 文字色関連
-            'fgcolor_of_header_1':                 '111111',
-            'fgcolor_of_header_2':                 'EEEEEE',
+            'fgcolor_of_header_1':               '111111',
+            'fgcolor_of_header_2':               'EEEEEE',
 
             # 文字寄せ関連
-            'horizontal_alignment_of_node':        None,
-            'vertical_alignment_of_node':          None,
+            'horizontal_alignment_of_node':      None,
+            'vertical_alignment_of_node':        None,
         }
 
         # 上書き

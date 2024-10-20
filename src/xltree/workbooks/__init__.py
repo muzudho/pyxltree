@@ -60,9 +60,26 @@ class TreeDrawer():
     def render(self):
         """描画"""
 
-        # 対象シートへ列ヘッダー書出し
-        self._on_header()
+        # シート全体
+        # ----------
+        #
+        #   TODO シート全体を描画し終えたあと（シート全体のサイズが分かったあと）に行わなければならない
+        #
+        if 'bgcolor_of_tree' in self._settings_obj.dictionary:
+            print(f"bgcolor_of_tree 設定あり {self._ws.max_row=} {self._ws.max_column=}")
+            bgcolor_of_tree = PatternFill(patternType='solid', fgColor=self._settings_obj.dictionary['bgcolor_of_tree'])
 
+            for row_th in range(1, self._ws.max_row + 1):
+                for column_th in range(1, self._ws.max_column + 1):
+                    print(f"({row_th}, {column_th})")
+
+                    column_letter = xl.utils.get_column_letter(column_th)
+                    cell = self._ws[f'{column_letter}{row_th}']
+                    cell.fill = bgcolor_of_tree
+
+
+        # 列幅の自動調整
+        # --------------
         # NOTE 文字数は取れるが、１文字の横幅が１とは限らない
         for source_column_th, column_name in enumerate(self._table.df.columns, 1):
             target_column_th = StyleControl.get_target_column_th(source_table=self._table, column_name=column_name)
@@ -99,6 +116,9 @@ class TreeDrawer():
             self._ws.column_dimensions[target_column_letter].width = number_of_character * 1.2
 
 
+        # 対象シートへ列ヘッダー書出し
+        self._on_header()
+
         # 対象シートへの各行書出し
         self._table.for_each(on_each=self._on_each_record)
 
@@ -131,8 +151,9 @@ class TreeDrawer():
         # 列の幅設定
         column_width_dict = {}
         column_width_dict['A'] = self._settings_obj.dictionary['column_width_of_no']                        # no
-        column_width_dict['B'] = self._settings_obj.dictionary['column_width_of_row_header_separator']      # 空列
+        column_width_dict['B'] = self._settings_obj.dictionary['column_width_of_root_side_padding']         # B列の幅。ツリー構造図の根側パディング
         column_width_dict['C'] = self._settings_obj.dictionary['column_width_of_node']                      # 根
+
 
         head_column_th = 4
         for node_th in range(1, self._table.analyzer.end_node_th):
@@ -194,11 +215,21 @@ class TreeDrawer():
             head_column_th += 3
 
 
+        # ツリー構造図の葉側パディング
+        # ----------------------------
+        target_column_th = self._table.analyzer.end_node_th * StyleControl.ONE_NODE_COLUMNS + 1
+        column_letter = xl.utils.get_column_letter(target_column_th)
+        cell_address = f'{column_letter}{row_th}'
+        # 背景色、文字色
+        ws[cell_address].fill = self._header_bgcolor_list[flip]
+        ws[cell_address].font = self._header_fgcolor_list[flip]
+        ws.column_dimensions[column_letter].width = self._settings_obj.dictionary['column_width_of_leaf_side_padding']
+
+
         # 余り列
         # ------
         # 最終層以降の列
         column_name_of_leaf_node = self._table.analyzer.get_column_name_of_last_node()
-        is_first_remaining = True
         is_remaining = False
         target_column_th = self._table.analyzer.end_node_th * StyleControl.ONE_NODE_COLUMNS + 2   # 空列を１つ挟む
         for column_name in self._table.df.columns:
@@ -208,19 +239,6 @@ class TreeDrawer():
                 continue
 
             elif is_remaining:
-
-                # ツリー区と、プロパティ区のセパレーター
-                if is_first_remaining:
-                    cell_address = f'{xl.utils.get_column_letter(target_column_th - 1)}{row_th}'
-                    #print(f'余り列 {cell_address=}  {row_th=}  {column_name=}')
-
-                    # 背景色、文字色
-                    ws[cell_address].fill = self._header_bgcolor_list[flip]
-                    ws[cell_address].font = self._header_fgcolor_list[flip]
-
-                    is_first_remaining = False
-
-
                 cell_address = f'{xl.utils.get_column_letter(target_column_th)}{row_th}'
                 #print(f'{cell_address=}  {row_th=}  {column_name=}')
 
@@ -240,6 +258,13 @@ class TreeDrawer():
         # 空行にする
         row_th = 2
         ws[f'A{row_th}'].fill = self._header_bgcolor_list[0]
+
+        # ツリー構造図の背景色
+        # --------------------
+        bgcolor_of_tree = PatternFill(patternType='solid', fgColor=self._settings_obj.dictionary['bgcolor_of_tree'])
+        for column_th in range(2, target_column_th):
+            column_letter = xl.utils.get_column_letter(column_th)
+            ws[f'{column_letter}{row_th}'].fill = bgcolor_of_tree
 
 
     def _on_each_record(self, next_row_number, next_record):

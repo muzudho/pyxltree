@@ -154,7 +154,8 @@ def execute():
     settings = {
         # 列の幅
         #'column_width_of_no':                       4,      # A列の幅。no列
-        #'column_width_of_row_header_separator':     3,      # B列の幅。空列
+        #'column_width_of_root_side_padding':        3,      # B列の幅。ツリー構造図の根側パディング
+        #'column_width_of_leaf_side_padding':        3,      # ツリー構造図の葉側パディング
         'column_width_of_node':                     7,      # 例：C, F, I ...列の幅。ノードの箱の幅
         #'column_width_of_parent_side_edge':         2,      # 例：D, G, J ...列の幅。エッジの水平線のうち、親ノードの方
         'column_width_of_child_side_edge':         22,      # 例：E, H, K ...列の幅。エッジの水平線のうち、子ノードの方
@@ -167,6 +168,7 @@ def execute():
         'row_height_of_node_spacing':               6,      # ノード間の高さ
 
         # 背景色関連
+        'bgcolor_of_tree':                   'FFFFFF',      # ツリー構造図の背景
         'bgcolor_of_header_1':               'CCCCFF',      # ヘッダーの背景色その１
         'bgcolor_of_header_2':               '333366',      # ヘッダーの背景色その２
         'bgcolor_of_node':                   'EEFFCC',      # 背景色
@@ -195,6 +197,7 @@ def execute():
 
 👆　Settings オブジェクトを使ってください。  
 （`xltree>=0.1.0` から） settings は Dictionary 型になりました  
+（`xltree>=0.2.0` から） `column_width_of_row_header_separator` は `column_width_of_root_side_padding` に名称変更しました
 
 # その他
 
