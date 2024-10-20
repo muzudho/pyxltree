@@ -28,7 +28,7 @@ class Settings():
 
             行の高さ設定。height の単位はポイント。既定値 8。昔のアメリカ人が椅子に座ってディスプレイを見たとき 1/72 インチに見える大きさが 1ポイント らしいが、そんなんワカラン。目視確認してほしい
             * `row_height_of_header` - 第１行。ヘッダー
-            * `row_height_of_column_header_separator` - 第２行。空行
+            * `row_height_of_lower_side_padding` - 第２行。ツリー構造図の軸の番号が小さい側パティング
             * `row_height_of_upper_side_of_node` - ノードの上側のセルの高さ
             * `row_height_of_lower_side_of_node` - ノードの下側のセルの高さ
             * `row_height_of_node_spacing` - ノード間の高さ
@@ -53,16 +53,20 @@ class Settings():
         # 既定のディクショナリー
         self._dictionary = {
             # 列の幅
-            'column_width_of_no':                         4,
-            'column_width_of_root_side_padding':          3,
-            'column_width_of_leaf_side_padding':          3,
-            'column_width_of_node':                      20,
-            'column_width_of_parent_side_edge':           2,
-            'column_width_of_child_side_edge':            4,
+            #
+            #   ［列幅の自動調整］機能を付けたので、文字が入る箇所は規定値はナンにします。
+            #   キーは存在させたいので、コメントアウトしないでください
+            #
+            'column_width_of_no':                 None,
+            'column_width_of_root_side_padding':     3,
+            'column_width_of_leaf_side_padding':     3,
+            'column_width_of_node':               None,
+            'column_width_of_parent_side_edge':      2,
+            'column_width_of_child_side_edge':    None,
 
             # 行の高さ
-            'row_height_of_header':                    13,
-            'row_height_of_column_header_separator':   13,
+            'row_height_of_header':                 13,
+            'row_height_of_lower_side_padding':     13,
             'row_height_of_upper_side_of_node':     13,
             'row_height_of_lower_side_of_node':     13,
             'row_height_of_node_spacing':           6,

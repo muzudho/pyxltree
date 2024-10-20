@@ -70,11 +70,38 @@ class TreeDrawer():
 
         # 列幅の自動調整
         # --------------
-        # NOTE 文字数は取れるが、１文字の横幅が１とは限らない
+        #
+        #   NOTE 'no' は列ではなくインデックスなのでやり方が異なる
+        #   NOTE 文字数は取れるが、１文字の横幅が１とは限らない
+        #
+        # 'no' インデックス
+        width = len('no')
+        for index_value in self._table.df.index:
+            width = max(width, len(str(index_value)))
+        self._ws.column_dimensions['A'].width = width * 1.5
+
+        # エッジ列が省略されているケース
+        #
+        #   NOTE 規定値を何か設定しないと、デフォルトの長い列幅になってしまう
+        #
+        for source_column_th, column_name in enumerate(self._table.df.columns, 1):
+
+            # ノードを見つければ、その前列がエッジ
+            result = TableControl.pattern_of_column_name_of_node.match(column_name)
+            if result:
+                target_column_th = StyleControl.get_target_column_th(source_table=self._table, column_name=column_name)
+                target_column_letter = xl.utils.get_column_letter(target_column_th - 1)
+                # 幅は 4 でいいだろ
+                self._ws.column_dimensions[target_column_letter].width = 4
+                continue
+
+        # 各列
         for source_column_th, column_name in enumerate(self._table.df.columns, 1):
             target_column_th = StyleControl.get_target_column_th(source_table=self._table, column_name=column_name)
             target_column_letter = xl.utils.get_column_letter(target_column_th)
             number_of_character = StyleControl.get_number_of_character_of_column(df=self._table.df, column_name=column_name)
+            # Root とか 1st とか、ヘッダーに入っているので、とりあえず最低でも 4文字は欲しい。 1000th とかはとりあえず考えないことにする
+            number_of_character = max(number_of_character, 4)
 
             #print(f"列幅の自動調整  {column_name=}  {target_column_letter=}  内訳：  {source_column_th=}  {target_column_th=}  {number_of_character=}")
 
@@ -139,16 +166,35 @@ class TreeDrawer():
 
         # 列の幅設定
         column_width_dict = {}
-        column_width_dict['A'] = self._settings_obj.dictionary['column_width_of_no']                        # no
-        column_width_dict['B'] = self._settings_obj.dictionary['column_width_of_root_side_padding']         # B列の幅。ツリー構造図の根側パディング
-        column_width_dict['C'] = self._settings_obj.dictionary['column_width_of_node']                      # 根
+
+        width = self._settings_obj.dictionary['column_width_of_no']
+        if width is not None:
+            column_width_dict['A'] = width      # no
+
+        width = self._settings_obj.dictionary['column_width_of_root_side_padding']
+        if width is not None:
+            column_width_dict['B'] = width      # B列の幅。ツリー構造図の根側パディング
+        
+        width = self._settings_obj.dictionary['column_width_of_node']
+        if width is not None:
+            column_width_dict['C'] = width      # 根
 
 
         head_column_th = 4
         for node_th in range(1, self._table.analyzer.end_node_th):
-            column_width_dict[xl.utils.get_column_letter(head_column_th    )] = self._settings_obj.dictionary['column_width_of_parent_side_edge']   # 第n層  親側辺
-            column_width_dict[xl.utils.get_column_letter(head_column_th + 1)] = self._settings_obj.dictionary['column_width_of_child_side_edge']    #        子側辺
-            column_width_dict[xl.utils.get_column_letter(head_column_th + 2)] = self._settings_obj.dictionary['column_width_of_node']               #        節
+
+            width = self._settings_obj.dictionary['column_width_of_parent_side_edge']
+            if width is not None:
+                column_width_dict[xl.utils.get_column_letter(head_column_th    )] = width   # 第n層  親側辺
+
+            width = self._settings_obj.dictionary['column_width_of_child_side_edge']
+            if width is not None:
+                column_width_dict[xl.utils.get_column_letter(head_column_th + 1)] = width   #        子側辺
+
+            width = self._settings_obj.dictionary['column_width_of_node']
+            if width is not None:
+                column_width_dict[xl.utils.get_column_letter(head_column_th + 2)] = width   #        節
+
             head_column_th += 3
 
 
@@ -158,10 +204,15 @@ class TreeDrawer():
 
         # 行の高さ設定
         # height の単位はポイント。初期値 8。昔のアメリカ人が椅子に座ってディスプレイを見たとき 1/72 インチに見える大きさが 1ポイント らしいが、そんなんワカラン。目視確認してほしい
-        row_height_dict = {
-            1: self._settings_obj.dictionary['row_height_of_header'],
-            2: self._settings_obj.dictionary['row_height_of_column_header_separator'],
-        }
+        row_height_dict = {}
+
+        height = self._settings_obj.dictionary['row_height_of_header']
+        if height is not None:
+            row_height_dict[1] = height
+
+        height = self._settings_obj.dictionary['row_height_of_lower_side_padding']
+        if height is not None:
+            row_height_dict[2] = height
 
         for row_number, height in row_height_dict.items():
             ws.row_dimensions[row_number].height = height
@@ -215,7 +266,10 @@ class TreeDrawer():
         # 背景色、文字色
         ws[cell_address].fill = self._header_bgcolor_list[(flip + 1) % 2]   # 葉ノードと同じ色にする
         ws[cell_address].font = self._header_fgcolor_list[(flip + 1) % 2]
-        ws.column_dimensions[column_letter].width = self._settings_obj.dictionary['column_width_of_leaf_side_padding']
+
+        width = self._settings_obj.dictionary['column_width_of_leaf_side_padding']
+        if width is not None:
+            ws.column_dimensions[column_letter].width = width
 
 
         # 余り列
@@ -289,9 +343,17 @@ class TreeDrawer():
 
             # 行の高さ設定
             # height の単位はポイント。昔のアメリカ人が椅子に座ってディスプレイを見たとき 1/72 インチに見える大きさが 1ポイント らしいが、そんなんワカラン。目視確認してほしい
-            ws.row_dimensions[row1_th].height = self._settings_obj.dictionary['row_height_of_upper_side_of_node']
-            ws.row_dimensions[row2_th].height = self._settings_obj.dictionary['row_height_of_lower_side_of_node']
-            ws.row_dimensions[row3_th].height = self._settings_obj.dictionary['row_height_of_node_spacing']
+            height = self._settings_obj.dictionary['row_height_of_upper_side_of_node']
+            if height is not None:
+                ws.row_dimensions[row1_th].height = height
+            
+            height = self._settings_obj.dictionary['row_height_of_lower_side_of_node']
+            if height is not None:
+                ws.row_dimensions[row2_th].height = height
+            
+            height = self._settings_obj.dictionary['row_height_of_node_spacing']
+            if height is not None:
+                ws.row_dimensions[row3_th].height = height
 
 
             ws[f'A{row1_th}'].value = self._curr_record.no

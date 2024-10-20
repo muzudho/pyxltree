@@ -162,7 +162,7 @@ def execute():
 
         # 行の高さ
         'row_height_of_header':                    13,      # 第１行。ヘッダー
-        'row_height_of_column_header_separator':   13,      # 第２行。空行
+        'row_height_of_lower_side_padding':        13,      # 第２行。ツリー構造図の軸の番号が小さい側パティング
         'row_height_of_upper_side_of_node':        13,      # ノードの上側のセルの高さ
         'row_height_of_lower_side_of_node':         6,      # ノードの下側のセルの高さ
         'row_height_of_node_spacing':               6,      # ノード間の高さ
@@ -198,6 +198,7 @@ def execute():
 👆　Settings オブジェクトを使ってください。  
 （`xltree>=0.1.0` から） settings は Dictionary 型になりました  
 （`xltree>=0.2.0` から） `column_width_of_row_header_separator` は `column_width_of_root_side_padding` に名称変更しました
+（`xltree>=0.3.0` から） `row_height_of_column_header_separator` は `row_height_of_lower_side_padding` に名称変更しました
 
 # その他
 

@@ -19,13 +19,13 @@ def execute():
 
         # 行の高さ
         'row_height_of_header':                    13,      # 第１行。ヘッダー
-        'row_height_of_column_header_separator':   13,      # 第２行。空行
+        'row_height_of_lower_side_padding':        13,      # 第２行。ツリー構造図の軸の番号が小さい側パティング
         'row_height_of_upper_side_of_node':        13,      # ノードの上側のセルの高さ
         'row_height_of_lower_side_of_node':         6,      # ノードの下側のセルの高さ
         'row_height_of_node_spacing':               6,      # ノード間の高さ
 
         # 背景色関連
-        'bgcolor_of_tree':                   'FFFFFF',      # ツリー構造図の背景
+        'bgcolor_of_tree':                   'EEEEFF',      # ツリー構造図の背景
         'bgcolor_of_header_1':               'CCCCFF',      # ヘッダーの背景色その１
         'bgcolor_of_header_2':               '333366',      # ヘッダーの背景色その２
         'bgcolor_of_node':                   'EEFFCC',      # 背景色

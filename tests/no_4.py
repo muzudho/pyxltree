@@ -18,9 +18,9 @@ def execute():
         'column_width_of_child_side_edge':            22,     # 例：E, H, K ...列の幅。エッジの水平線のうち、子ノードの方
 
         # 行の高さ
-        'row_height_of_header':                     13,     # 第１行。ヘッダー
-        'row_height_of_column_header_separator':    13,     # 第２行。空行
-        'row_height_of_upper_side_of_node':         13,     # ノードの上側のセルの高さ
+        'row_height_of_header':                    13,      # 第１行。ヘッダー
+        'row_height_of_lower_side_padding':        13,      # 第２行。ツリー構造図の軸の番号が小さい側パティング
+        'row_height_of_upper_side_of_node':        13,      # ノードの上側のセルの高さ
         'row_height_of_lower_side_of_node':         6,      # ノードの下側のセルの高さ
         'row_height_of_node_spacing':               6,      # ノード間の高さ
 
