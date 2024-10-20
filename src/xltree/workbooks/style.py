@@ -23,6 +23,8 @@ class StyleControl():
         例： node0, edge1, node1, node2
 
         no 列、edge{数}列はオプションです
+
+        FIXME: `node0, edge1, foo1, bar1, node1` のように予期しない列が混ざっているケースは？
         """
 
         # ルートノード
@@ -44,6 +46,7 @@ class StyleControl():
         result = TableControl.pattern_of_column_name_of_edge.match(column_name)
         if result:
             edge_th = int(result.group(1))
+            # FIXME node の前に edge 列があるという前提で大丈夫か？
             return StyleControl.NUMBER_OF_COLUMNS_OF_ROW_HEADER + 1 + edge_th * StyleControl.ONE_NODE_COLUMNS - 1
 
         # それ以外
