@@ -10,7 +10,7 @@ Output:
 
 👆　わたしのWindows PCのCドライブの例です  
 
-Input Example 1:  
+Input case like a table:  
 
 ![Data](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__18--1832-XltreeDriveData.png)  
 
@@ -34,7 +34,7 @@ no,node0,node1,node2,node3,node4,node5,node6,node7,node8
 👆　さきほどの Output の図は、上図の CSV ファイルを読込ませると描いてくれます。  
 `node` 列は 0 から始まる連番で増やすことができます。常識的な長さにしてください  
 
-Input Example 2:
+Input case like a tree:  
 
 ![Data](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__20--1052-XltreeDriveData.png)  
 
@@ -55,8 +55,8 @@ C,Users,Muzudho,OneDrive,Documents,Tools,GitHub,,
 ,,,,,,Default.rdp,,
 ```
 
-👆　さきほどの CSV と同じワークブック（.xlsx）を出力できる CSV です。  
-no 列は省くことができます。中間ノードが空欄になっている箇所は、前行と同じとみなします  
+👆  さきほどの CSV と同じワークブック（.xlsx）を出力できる CSV です。  
+（`xltree>=0.0.9` から） no 列は省くことができます。また、中間ノードが空欄になっている箇所は、前行と同じとみなします  
 
 Script:  
 
