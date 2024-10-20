@@ -9,7 +9,10 @@ def execute():
     wbc = WorkbookControl(target='./tests/temp/no_1_drive_by_tree.xlsx', mode='w')
 
     # ワークシート描画
-    wbc.render_worksheet(target='Shiritori', based_on='./examples/data/drive_by_tree.csv')
+    wbc.render_worksheet(target='DriveByTable', based_on='./examples/data/drive_by_table.csv')
+
+    # ワークシート描画
+    wbc.render_worksheet(target='DriveByTree', based_on='./examples/data/drive_by_tree.csv')
 
     # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
     wbc.remove_worksheet(target='Sheet')

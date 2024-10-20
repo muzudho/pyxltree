@@ -7,7 +7,7 @@ class InputCompletion():
 
 
     @staticmethod
-    def fill_directory(df, length_of_nodes, debug_write=False):
+    def fill_directory(df, end_node_th, debug_write=False):
         """ディレクトリーの空欄を埋めます
         
         Before:
@@ -21,8 +21,10 @@ class InputCompletion():
             a,j,p,l,e,m,n
         """
 
+        last_node_th = end_node_th - 1
+
         if debug_write:
-            print(f"[{datetime.datetime.now()}] このテーブルは{length_of_nodes}個のノードがある")
+            print(f"[{datetime.datetime.now()}] このテーブルは{end_node_th}個のノードがある。最終ノードは {last_node_th}")
 
         row_size = len(df)
 
@@ -30,22 +32,22 @@ class InputCompletion():
         for row_th in range(2, row_size + 1):
 
             # この行について、最終ノード列を調べる
-            last_node_th = length_of_nodes - 1   # 最終ノードから開始
-            for node_th in reversed(range(0, length_of_nodes)):
+            actual_last_node_th = last_node_th   # 最終ノードから開始
+            for node_th in reversed(range(0, end_node_th)):
                 column_name = f'node{node_th}'
 
                 # 縮めていく
-                last_node_th = node_th
+                actual_last_node_th = node_th
 
                 if not pd.isnull(df.at[row_th, column_name]):
                     break
 
 
             if debug_write:
-                print(f"[{datetime.datetime.now()}] 第{row_th}行は第{last_node_th}ノードまで")
+                print(f"[{datetime.datetime.now()}] 第{row_th}行は第{actual_last_node_th}ノードまで")
 
             # この行について、最終ノード列まで、ノードの空欄は上行をコピーする
-            for node_th in range(0, last_node_th + 1):
+            for node_th in range(0, actual_last_node_th + 1):
 
                 column_name = f'node{node_th}'
 

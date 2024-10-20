@@ -1,10 +1,11 @@
-from xltree import WorkbookControl
+# パッケージを iport した場合は、 `from src.xltree`  の部分を `from xltree` に変えてください
+from src.xltree import Settings, WorkbookControl
 
 
 def execute():
 
     # 出力先ワークブック指定
-    wbc = WorkbookControl(target='./examples/temp/tree_drive.xlsx', mode='w')
+    wbc = WorkbookControl(target='./examples/temp/no_1_tree_drive.xlsx', mode='w')
 
     # ワークシート描画
     wbc.render_worksheet(target='Drive', based_on='./examples/data/drive_by_table.csv')

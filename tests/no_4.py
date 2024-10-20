@@ -37,7 +37,7 @@ def execute():
             })
 
     # 出力先ワークブック指定
-    wbc = WorkbookControl(target='./tests/temp/uneven_coin.xlsx', mode='w', settings=settings)
+    wbc = WorkbookControl(target='./tests/temp/no_4_uneven_coin.xlsx', mode='w', settings=settings)
 
     # ワークシート描画
     wbc.render_worksheet(target='UnevenCoin', based_on='./examples/data/uneven_coin.csv')

@@ -6,7 +6,7 @@ def execute():
     """描画テスト"""
 
     # 出力先ワークブック指定
-    wbc = WorkbookControl(target='./tests/temp/rainbow.xlsx', mode='w')
+    wbc = WorkbookControl(target='./tests/temp/no_6_rainbow.xlsx', mode='w')
 
     # ワークシート描画
     wbc.render_worksheet(target='Shiritori', based_on='./examples/data/rainbow.csv')
