@@ -427,6 +427,23 @@ class TreeDrawer():
                     draw_edge(depth_th=depth_th, three_column_names=column_letter_list, three_row_numbers=three_row_numbers)
                     draw_node(depth_th=depth_th, three_column_names=column_letter_list, three_row_numbers=three_row_numbers)
 
+            # TODO 最終層以降の列
+            last_column_name = f'node{self._table.length_of_nodes - 1}'
+            is_remaining = False
+            target_column_th = self._table.length_of_nodes * COLUMN_WIDTH + 2   # 空列を１つ挟む
+            for column_name in self._table.df.columns:
+                if column_name == last_column_name:
+                    is_remaining = True
+                    continue
+
+                elif is_remaining:
+                    cell_address = f'{xl.utils.get_column_letter(target_column_th)}{row1_th}'
+                    print(f'{cell_address=}  {row1_th=}  {column_name=}')
+                    ws[cell_address].value = self._table.df.at[curr_row_number + 1, column_name]
+
+                    target_column_th += 1
+
+
 
 class TreeEraser():
     """要らない罫線を消す"""

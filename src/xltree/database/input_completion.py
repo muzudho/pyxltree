@@ -7,7 +7,7 @@ class InputCompletion():
 
 
     @staticmethod
-    def fill_directory(df, length_of_nodes):
+    def fill_directory(df, length_of_nodes, debug_write=False):
         """ディレクトリーの空欄を埋めます
         
         Before:
@@ -20,7 +20,9 @@ class InputCompletion():
             a,j,k,l,e,m,n,o
             a,j,p,l,e,m,n
         """
-        print(f"[{datetime.datetime.now()}] このテーブルは{length_of_nodes}個のノードがある")
+
+        if debug_write:
+            print(f"[{datetime.datetime.now()}] このテーブルは{length_of_nodes}個のノードがある")
 
         row_size = len(df)
 
@@ -39,10 +41,12 @@ class InputCompletion():
                     break
 
 
-            print(f"[{datetime.datetime.now()}] 第{row_th}行は第{last_node_th}ノードまで")
+            if debug_write:
+                print(f"[{datetime.datetime.now()}] 第{row_th}行は第{last_node_th}ノードまで")
 
             # この行について、最終ノード列まで、ノードの空欄は上行をコピーする
             for node_th in range(0, last_node_th + 1):
+
                 column_name = f'node{node_th}'
 
                 if pd.isnull(df.at[row_th, column_name]):
