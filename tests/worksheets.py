@@ -17,7 +17,12 @@ class WorksheetDumpControl():
 
                     items = []
 
-                    # とりあえず罫線を出力
+                    # 背景色を出力
+                    sub_items = WorksheetDumpControl.parse_fill(fill=cell.fill)
+                    if 0 < len(sub_items):
+                        items.append(f"fill={' '.join(sub_items)}")
+
+                    # 罫線を出力
                     if cell.border is not None:
                         if hasattr(cell.border, 'left') and cell.border.left is not None:
                             sub_items = WorksheetDumpControl.parse_side(side=cell.border.left)
@@ -55,8 +60,21 @@ class WorksheetDumpControl():
                                 items.append(f"horizontal={' '.join(sub_items)}")
 
                     f.write(f"""\
-({row_th}, {column_th}) {' '.join(items)}
+({column_letter}{row_th}) {' '.join(items)}
 """)
+
+
+    @staticmethod
+    def parse_fill(fill):
+        items = []
+        if fill is not None:
+            if fill.patternType is not None:
+                items.append(f"{fill.patternType}")
+
+            # 背景色を出力
+            if fill.fgColor is not None:
+                items.append(f"{fill.fgColor.rgb}")
+        return items
 
 
     @staticmethod
