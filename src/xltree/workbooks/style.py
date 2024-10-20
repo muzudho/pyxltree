@@ -1,4 +1,3 @@
-import re
 import openpyxl as xl
 from ..database.library import TableControl
 
@@ -35,15 +34,14 @@ class StyleControl():
         specified_column_location_of_source = TableControl.get_column_location_by_column_name(df=source_table.df, column_name=column_name)
 
         # 列名から、ノード、エッジ、余り列を見分ける
-        # FIXME 高速化
         # ノード
-        result = re.match(r'node(\d+)', column_name)
+        result = TableControl.pattern_of_column_name_of_node.match(column_name)
         if result:
             node_th = int(result.group(1))
             return StyleControl.NUMBER_OF_COLUMNS_OF_ROW_HEADER + 1 + node_th * StyleControl.ONE_NODE_COLUMNS
 
         # エッジ
-        result = re.match(r'edge(\d+)', column_name)
+        result = TableControl.pattern_of_column_name_of_edge.match(column_name)
         if result:
             edge_th = int(result.group(1))
             return StyleControl.NUMBER_OF_COLUMNS_OF_ROW_HEADER + 1 + edge_th * StyleControl.ONE_NODE_COLUMNS - 1

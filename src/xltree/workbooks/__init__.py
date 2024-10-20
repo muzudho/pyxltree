@@ -1,4 +1,3 @@
-import re
 import datetime
 import pandas as pd
 import openpyxl as xl
@@ -8,6 +7,7 @@ from openpyxl.styles.alignment import Alignment
 
 from ..library import nth
 from ..database import TreeNode, Record
+from ..database.library import TableControl
 from ..models import TreeModel
 from .style import StyleControl
 
@@ -78,9 +78,8 @@ class TreeDrawer():
 
             #print(f"列幅の自動調整  {column_name=}  {target_column_letter=}  内訳：  {source_column_th=}  {target_column_th=}  {number_of_character=}")
 
-            # FIXME 高速化
             # ノード
-            result = re.match(r'node(\d+)', column_name)
+            result = TableControl.pattern_of_column_name_of_node.match(column_name)
             if result:
                 # 文字幅を 1.2 倍 + 1 ぐらいしておく
                 # FIXME フォント情報からきっちり横幅を取れないか？
@@ -92,7 +91,7 @@ class TreeDrawer():
             #
             #   余白を開けたいから広くとる
             #
-            result = re.match(r'edge(\d+)', column_name)
+            result = TableControl.pattern_of_column_name_of_edge.match(column_name)
             if result:
                 # 文字幅の 1.2 倍 + 4 ぐらいしておく
                 # FIXME フォント情報からきっちり横幅を取れないか？

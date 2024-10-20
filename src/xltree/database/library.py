@@ -4,6 +4,22 @@ import re
 class TableControl():
 
 
+    _pattern_of_column_name_of_node = re.compile(r'node(\d+)')
+    _pattern_of_column_name_of_edge = re.compile(r'edge(\d+)')
+
+
+    @classmethod
+    @property
+    def pattern_of_column_name_of_node(clazz):
+        return clazz._pattern_of_column_name_of_node
+
+
+    @classmethod
+    @property
+    def pattern_of_column_name_of_edge(clazz):
+        return clazz._pattern_of_column_name_of_edge
+
+
     @staticmethod
     def get_column_location_by_column_name(df, column_name):
         return df.columns.get_loc(column_name)
@@ -24,10 +40,19 @@ class TableControl():
         start_number : int
             開始番号。エッジなら 1、ノードなら 0
         """
+
+        if prefix == 'node':
+            pattern_of_column_name = TableControl._pattern_of_column_name_of_node
+
+        elif prefix == 'edge':
+            pattern_of_column_name = TableControl._pattern_of_column_name_of_edge
+
+        else:
+            raise ValueError(f'{prefix}')
+
         expected_node_th = start_number    # 次は 'node{0}' を期待する
-        pattern = re.compile(prefix + r'(\d+)')
         for column_name in df.columns.values:
-            result = pattern.match(column_name)
+            result = pattern_of_column_name.match(column_name)
             if result:
                 node_th = int(result.group(1))
                 if expected_node_th == node_th:
