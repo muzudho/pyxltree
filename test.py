@@ -9,6 +9,7 @@ import datetime
 import sys
 
 from tests.manual import execute as execute_manual
+from tests.no_1 import execute as execute_no_1
 from tests.no_2 import execute as execute_no_2
 from tests.no_3 import execute as execute_no_3
 from tests.no_4 import execute as execute_no_4
@@ -26,7 +27,10 @@ if __name__ == '__main__':
 
         if 1 < len(args):
 
-            if args[1] == '2':
+            if args[1] == '1':
+                execute_no_1()
+
+            elif args[1] == '2':
                 execute_no_2()
 
             elif args[1] == '3':

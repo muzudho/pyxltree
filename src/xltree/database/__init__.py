@@ -2,7 +2,8 @@ import re
 import datetime
 import pandas as pd
 
-from .library import INDENT
+from ..library import INDENT
+from .input_completion import InputCompletion
 
 
 ############
@@ -279,46 +280,9 @@ class Table():
             shall_set_index=True) # 'no' 列をインデックスに指定します
 
         # 整形
-        Table._fill_directory(df=df, length_of_nodes=length_of_nodes)
+        InputCompletion.fill_directory(df=df, length_of_nodes=length_of_nodes)
 
         return Table(df=df, length_of_edges=length_of_edges, length_of_nodes=length_of_nodes)
-
-
-    @staticmethod
-    def _fill_directory(df, length_of_nodes):
-        """ディレクトリーの空欄を埋めます
-        
-        Before:
-            a,b,c,d,e,f,g,h,i
-             ,j,k,l, ,m,n,o
-             , ,p,      q
-        
-        After:
-            a,b,c,d,e,f,g,h,i
-            a,j,k,l,e,m,n,o
-            a,j,p,l,e,m,n
-        """
-
-        row_size = len(df)
-
-        # ２行目から、１行ずつ行う
-        for row_th in range(2, row_size + 1):
-
-            # この行について、最終ノード列を調べる
-            last_node_th = -1   # 空行
-            for node_th in reversed(range(0, length_of_nodes)):
-                last_node_th = node_th
-
-            # 空行は無視
-            if last_node_th == -1:
-                continue
-
-            # この行について、最終ノード列まで、ノードの空欄は上行をコピーする
-            for node_th in range(0, last_node_th + 1):
-                column_name = f'node{node_th}'
-
-                if pd.isnull(df.at[row_th, column_name]):
-                    df.at[row_th, column_name] = df.at[row_th - 1, column_name]
 
 
     @property
