@@ -6,13 +6,14 @@
 
 Output:  
 
-![View](./docs_dev/img/202410__pg__20--1625-XltreeDrive.png)  
+![View](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__20--1625-XltreeDrive.png)  
 
 👆　わたしのWindows PCのCドライブの例です  
+（`xltree>=0.0.10` から） ツリー部分より右側の列、つまり上図でいうと last_modified 列以降も出力します  
 
 Input case like a table:  
 
-![Data](./docs_dev/img/202410__pg__20--1630-XltreeDriveTableData.png)  
+![Data](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__20--1630-XltreeDriveTableData.png)  
 
 ```csv
 no,node0,node1,node2,node3,node4,node5,node6,node7,node8,last_modified,size,comment
@@ -36,7 +37,7 @@ no,node0,node1,node2,node3,node4,node5,node6,node7,node8,last_modified,size,comm
 
 Input case like a tree:  
 
-![Data](./docs_dev/img/202410__pg__20--1633-XltreeDriveTreeData.png)  
+![Data](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__20--1633-XltreeDriveTreeData.png)  
 
 ```csv
 node0,node1,node2,node3,node4,node5,node6,node7,node8,last_modified,size,comment
