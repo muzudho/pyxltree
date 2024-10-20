@@ -1,5 +1,5 @@
 import datetime
-from src.xltree import Settings, WorkbookControl
+from src.xltree import WorkbookControl
 
 # テスト用
 from src.xltree.workbooks.testing import WorksheetDumpControl

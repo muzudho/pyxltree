@@ -16,7 +16,7 @@ class TreeDrawer():
     """エクセルで罫線などを駆使して、樹形図を描画します"""
 
 
-    def __init__(self, table, ws, settings, debug_write=False):
+    def __init__(self, table, ws, settings_obj, debug_write=False):
         """初期化
         
         Parameters
@@ -25,7 +25,7 @@ class TreeDrawer():
             ツリーテーブル
         ws : openpyxl.Worksheet
             ワークシート
-        settings : Settings
+        settings_obj : Settings
             各種設定
         debug_write : bool
             デバッグライト
@@ -33,7 +33,7 @@ class TreeDrawer():
         """
         self._table = table
         self._ws = ws
-        self._settings = settings
+        self._settings_obj = settings_obj
         self._debug_write = debug_write
 
         self._prev_record = Record.new_empty(specified_end_node_th=self._table.analyzer.end_node_th)
@@ -42,19 +42,19 @@ class TreeDrawer():
 
         # ヘッダー関連
         self._header_bgcolor_list = [
-            PatternFill(patternType='solid', fgColor=self._settings.dictionary['bgcolor_of_header_1']),
-            PatternFill(patternType='solid', fgColor=self._settings.dictionary['bgcolor_of_header_2'])]
+            PatternFill(patternType='solid', fgColor=self._settings_obj.dictionary['bgcolor_of_header_1']),
+            PatternFill(patternType='solid', fgColor=self._settings_obj.dictionary['bgcolor_of_header_2'])]
 
         self._header_fgcolor_list = [
-            Font(color=self._settings.dictionary['fgcolor_of_header_1']),
-            Font(color=self._settings.dictionary['fgcolor_of_header_2'])]
+            Font(color=self._settings_obj.dictionary['fgcolor_of_header_1']),
+            Font(color=self._settings_obj.dictionary['fgcolor_of_header_2'])]
 
         # ノード関連
         self._node_alignment = Alignment(
-                horizontal=self._settings.dictionary['horizontal_alignment_of_node'],
-                vertical=self._settings.dictionary['vertical_alignment_of_node'])
+                horizontal=self._settings_obj.dictionary['horizontal_alignment_of_node'],
+                vertical=self._settings_obj.dictionary['vertical_alignment_of_node'])
 
-        self._node_bgcolor = PatternFill(patternType='solid', fgColor=self._settings.dictionary['bgcolor_of_node'])
+        self._node_bgcolor = PatternFill(patternType='solid', fgColor=self._settings_obj.dictionary['bgcolor_of_node'])
 
 
     def render(self):
@@ -130,15 +130,15 @@ class TreeDrawer():
 
         # 列の幅設定
         column_width_dict = {}
-        column_width_dict['A'] = self._settings.dictionary['column_width_of_no']                        # no
-        column_width_dict['B'] = self._settings.dictionary['column_width_of_row_header_separator']      # 空列
-        column_width_dict['C'] = self._settings.dictionary['column_width_of_node']                      # 根
+        column_width_dict['A'] = self._settings_obj.dictionary['column_width_of_no']                        # no
+        column_width_dict['B'] = self._settings_obj.dictionary['column_width_of_row_header_separator']      # 空列
+        column_width_dict['C'] = self._settings_obj.dictionary['column_width_of_node']                      # 根
 
         head_column_th = 4
         for node_th in range(1, self._table.analyzer.end_node_th):
-            column_width_dict[xl.utils.get_column_letter(head_column_th    )] = self._settings.dictionary['column_width_of_parent_side_edge']   # 第n層  親側辺
-            column_width_dict[xl.utils.get_column_letter(head_column_th + 1)] = self._settings.dictionary['column_width_of_child_side_edge']    #        子側辺
-            column_width_dict[xl.utils.get_column_letter(head_column_th + 2)] = self._settings.dictionary['column_width_of_node']               #        節
+            column_width_dict[xl.utils.get_column_letter(head_column_th    )] = self._settings_obj.dictionary['column_width_of_parent_side_edge']   # 第n層  親側辺
+            column_width_dict[xl.utils.get_column_letter(head_column_th + 1)] = self._settings_obj.dictionary['column_width_of_child_side_edge']    #        子側辺
+            column_width_dict[xl.utils.get_column_letter(head_column_th + 2)] = self._settings_obj.dictionary['column_width_of_node']               #        節
             head_column_th += 3
 
 
@@ -149,8 +149,8 @@ class TreeDrawer():
         # 行の高さ設定
         # height の単位はポイント。初期値 8。昔のアメリカ人が椅子に座ってディスプレイを見たとき 1/72 インチに見える大きさが 1ポイント らしいが、そんなんワカラン。目視確認してほしい
         row_height_dict = {
-            1: self._settings.dictionary['row_height_of_header'],
-            2: self._settings.dictionary['row_height_of_column_header_separator'],
+            1: self._settings_obj.dictionary['row_height_of_header'],
+            2: self._settings_obj.dictionary['row_height_of_column_header_separator'],
         }
 
         for row_number, height in row_height_dict.items():
@@ -272,9 +272,9 @@ class TreeDrawer():
 
             # 行の高さ設定
             # height の単位はポイント。昔のアメリカ人が椅子に座ってディスプレイを見たとき 1/72 インチに見える大きさが 1ポイント らしいが、そんなんワカラン。目視確認してほしい
-            ws.row_dimensions[row1_th].height = self._settings.dictionary['row_height_of_upper_side_of_node']
-            ws.row_dimensions[row2_th].height = self._settings.dictionary['row_height_of_lower_side_of_node']
-            ws.row_dimensions[row3_th].height = self._settings.dictionary['row_height_of_node_spacing']
+            ws.row_dimensions[row1_th].height = self._settings_obj.dictionary['row_height_of_upper_side_of_node']
+            ws.row_dimensions[row2_th].height = self._settings_obj.dictionary['row_height_of_lower_side_of_node']
+            ws.row_dimensions[row3_th].height = self._settings_obj.dictionary['row_height_of_node_spacing']
 
 
             ws[f'A{row1_th}'].value = self._curr_record.no

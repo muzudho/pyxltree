@@ -139,7 +139,7 @@ class WorkbookControl():
     """ワークブック制御"""
 
 
-    def __init__(self, target, mode, settings=Settings(), debug_write=False):
+    def __init__(self, target, mode, settings={}, debug_write=False):
         """初期化
 
         Parameters
@@ -148,12 +148,12 @@ class WorkbookControl():
             ワークブック（.xlsx）へのファイルパス
         mode : str
             既存のワークブックが有ったときの挙動。 'w' は新規作成して置換え、 'a' は追記
-        settings : Settings
+        settings : dict
             各種設定
         """
         self._wb_file_path = target
         self._mode = mode
-        self._settings = settings
+        self._settings_obj = Settings(dictionary=settings)
         self._debug_write = debug_write
         self._wb = None
         self._ws = None
@@ -186,7 +186,7 @@ class WorkbookControl():
         table = Table.from_csv(file_path=based_on)
 
         # ツリードロワーを用意、描画（都合上、要らない罫線が付いています）
-        tree_drawer = TreeDrawer(table=table, ws=self._ws, settings=self._settings, debug_write=debug_write)
+        tree_drawer = TreeDrawer(table=table, ws=self._ws, settings_obj=self._settings_obj, debug_write=debug_write)
         tree_drawer.render()
 
 

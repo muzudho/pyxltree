@@ -1,5 +1,5 @@
 # パッケージを iport した場合は、 `from src.xltree`  の部分を `from xltree` に変えてください
-from src.xltree import Settings, WorkbookControl
+from src.xltree import WorkbookControl
 
 # テスト用
 from src.xltree.workbooks.testing import WorksheetDumpControl
