@@ -1,3 +1,4 @@
+import re
 import datetime
 import pandas as pd
 import openpyxl as xl
@@ -64,15 +65,39 @@ class TreeDrawer():
 
         # NOTE 文字数は取れるが、１文字の横幅が１とは限らない
         for source_column_th, column_name in enumerate(self._table.df.columns, 1):
-            target_column_th = StyleControl.get_target_column_th(source_table=self._table, source_column_name=column_name)
+            target_column_th = StyleControl.get_target_column_th(source_table=self._table, column_name=column_name)
             target_column_letter = xl.utils.get_column_letter(target_column_th)
             number_of_character = StyleControl.get_number_of_character_of_column(df=self._table.df, column_name=column_name)
 
-            #print(f"列幅の自動調整  {column_name=}  {source_column_th=}  {target_column_th=}  {target_column_letter=}  {number_of_character=}")
-            # 文字幅を 1.2 倍ぐらいしておく
+            #print(f"列幅の自動調整  {column_name=}  {target_column_letter=}  内訳：  {source_column_th=}  {target_column_th=}  {number_of_character=}")
+
+            # FIXME 高速化
+            # ノード
+            result = re.match(r'node(\d+)', column_name)
+            if result:
+                # 文字幅を 1.2 倍 + 1 ぐらいしておく
+                # FIXME フォント情報からきっちり横幅を取れないか？
+                self._ws.column_dimensions[target_column_letter].width = number_of_character * 1.2 + 1
+                continue
+
+
+            # エッジ
+            #
+            #   余白を開けたいから広くとる
+            #
+            result = re.match(r'edge(\d+)', column_name)
+            if result:
+                # 文字幅の 1.2 倍 + 4 ぐらいしておく
+                # FIXME フォント情報からきっちり横幅を取れないか？
+                self._ws.column_dimensions[target_column_letter].width = number_of_character * 1.2 + 4
+                continue
+
+            # 余り列
+            # ------
+            # 余り情報だし、余白は要らないから、文字幅を 1.2 倍ぐらいしておく
             # FIXME フォント情報からきっちり横幅を取れないか？
             self._ws.column_dimensions[target_column_letter].width = number_of_character * 1.2
-        
+
 
         # 対象シートへの各行書出し
         self._table.for_each(on_each=self._on_each_record)
@@ -169,14 +194,16 @@ class TreeDrawer():
             head_column_th += 3
 
 
+        # 余り列
+        # ------
         # 最終層以降の列
-        # --------------
         column_name_of_leaf_node = self._table.analyzer.get_column_name_of_last_node()
         is_first_remaining = True
         is_remaining = False
         target_column_th = self._table.analyzer.end_node_th * StyleControl.ONE_NODE_COLUMNS + 2   # 空列を１つ挟む
         for column_name in self._table.df.columns:
             if column_name == column_name_of_leaf_node:
+                #print(f'ツリー区 {row_th=}  {column_name=}')
                 is_remaining = True
                 continue
 
@@ -185,7 +212,7 @@ class TreeDrawer():
                 # ツリー区と、プロパティ区のセパレーター
                 if is_first_remaining:
                     cell_address = f'{xl.utils.get_column_letter(target_column_th - 1)}{row_th}'
-                    #print(f'{cell_address=}  {row_th=}  {column_name=}')
+                    #print(f'余り列 {cell_address=}  {row_th=}  {column_name=}')
 
                     # 背景色、文字色
                     ws[cell_address].fill = self._header_bgcolor_list[flip]
@@ -489,7 +516,7 @@ class TreeDrawer():
 
                 elif is_remaining:
                     # TODO キャッシュを作れば高速化できそう
-                    target_column_th = StyleControl.get_target_column_th(source_table=self._table, source_column_name=column_name)
+                    target_column_th = StyleControl.get_target_column_th(source_table=self._table, column_name=column_name)
 
                     cell_address = f'{xl.utils.get_column_letter(target_column_th)}{row1_th}'
                     #print(f'{cell_address=}  {row1_th=}  {column_name=}')

@@ -1,3 +1,4 @@
+import re
 import openpyxl as xl
 from ..database.library import TableControl
 
@@ -15,23 +16,45 @@ class StyleControl():
 
 
     @staticmethod
-    def get_target_column_th(source_table, source_column_name):
-        """書出し先ワークブックでの列番号を返します"""
+    def get_target_column_th(source_table, column_name):
+        """書出し先ワークブックでの列番号を返します
+        
+        例： no, node0, node1, node2
+        例： node0, node1, node2
+        例： node0, edge1, node1, node2
 
-        column_location_of_source = TableControl.get_column_location_by_column_name(df=source_table.df, column_name=source_column_name)
+        no 列、edge{数}列はオプションです
+        """
+
+        # ルートノード
+        #column_th_of_source_node_0 = TableControl.get_column_location_by_column_name(df=source_table.df, column_name='node0') + 1
+
+        # 最終ノード
         column_th_of_source_last_node = source_table.analyzer.get_column_th_of_last_node()
 
-        # ツリー区
-        if column_location_of_source + 1 <= column_th_of_source_last_node:
-            route_column_th = StyleControl.NUMBER_OF_COLUMNS_OF_ROW_HEADER + 1
-            return route_column_th + column_location_of_source * StyleControl.ONE_NODE_COLUMNS
+        specified_column_location_of_source = TableControl.get_column_location_by_column_name(df=source_table.df, column_name=column_name)
 
+        # 列名から、ノード、エッジ、余り列を見分ける
+        # FIXME 高速化
+        # ノード
+        result = re.match(r'node(\d+)', column_name)
+        if result:
+            node_th = int(result.group(1))
+            return StyleControl.NUMBER_OF_COLUMNS_OF_ROW_HEADER + 1 + node_th * StyleControl.ONE_NODE_COLUMNS
 
-        # 書出し先のツリー区
+        # エッジ
+        result = re.match(r'edge(\d+)', column_name)
+        if result:
+            edge_th = int(result.group(1))
+            return StyleControl.NUMBER_OF_COLUMNS_OF_ROW_HEADER + 1 + edge_th * StyleControl.ONE_NODE_COLUMNS - 1
+
+        # それ以外
+
+        # 書出し先のツリー区の最後
         last_column_th_of_wb = StyleControl.NUMBER_OF_COLUMNS_OF_ROW_HEADER + source_table.analyzer.end_node_th * StyleControl.ONE_NODE_COLUMNS
 
         # プロパティ区
-        column_th_of_source_in_property_ward = column_location_of_source - column_th_of_source_last_node -1     # 1 以上になる
+        column_th_of_source_in_property_ward = specified_column_location_of_source - column_th_of_source_last_node -1     # 1 以上になる
         return last_column_th_of_wb + StyleControl.SEPARATOR + column_th_of_source_in_property_ward             # 空列を１つ挟む
 
 

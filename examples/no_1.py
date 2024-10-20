@@ -1,4 +1,5 @@
-from xltree import WorkbookControl
+# パッケージを iport した場合は、 `from src.xltree`  の部分を `from xltree` に変えてください
+from src.xltree import Settings, WorkbookControl
 
 
 def execute():
