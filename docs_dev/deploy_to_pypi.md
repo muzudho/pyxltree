@@ -44,7 +44,7 @@ py -m pip install --upgrade build
 `build` を**実行する前**に:  
 
 * 📄 `pyproject.toml` のバージョンを設定したか確認しておくこと
-* GitHub にプッシュしていないソースが残っていれば、プッシュしておいた方がいいかもしれません
+* デプロイしたいファイルで、GitHub にプッシュし忘れているファイルが残っていれば、プッシュしてください
 
 👇 pyproject.toml を書き上げたら、 `build` を実行する  
 
