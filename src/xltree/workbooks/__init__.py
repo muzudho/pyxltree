@@ -58,6 +58,12 @@ class TreeDrawer():
 
         self._node_bgcolor = PatternFill(patternType='solid', fgColor=self._settings_obj.dictionary['bgcolor_of_node'])
 
+        # 罫線
+        side = Side(style='thin', color='111111')
+        self._remaining_cell_upper_border = Border(top=side, left=side, right=side)
+        self._remaining_cell_middle_border = Border(left=side, right=side)
+        self._remaining_cell_lower_border = Border(bottom=side, left=side, right=side)
+
 
     def render(self):
         """描画"""
@@ -220,6 +226,8 @@ class TreeDrawer():
         is_remaining = False
         target_column_th = self._table.analyzer.end_node_th * StyleControl.ONE_NODE_COLUMNS + 2   # 空列を１つ挟む
         for column_name in self._table.df.columns:
+
+            # ツリー区は無視
             if column_name == column_name_of_leaf_node:
                 #print(f'ツリー区 {row_th=}  {column_name=}')
                 is_remaining = True
@@ -518,6 +526,8 @@ class TreeDrawer():
                 ws[f'{cn3}{row2_th}'].fill = self._node_bgcolor
                 ws[f'{cn3}{row2_th}'].border = downside_node_border
 
+                ws[f'{cn3}{row3_th}'].fill = self._bgcolor_of_tree      # ツリー構造図の背景色
+
 
             # 第０層
             # ------
@@ -555,8 +565,9 @@ class TreeDrawer():
             ws[f'{column_letter}{row3_th}'].fill = self._bgcolor_of_tree
 
 
+            # 余り列
+            # ------
             # 最終層以降の列
-            # --------------
             is_remaining = False
             for column_name in self._table.df.columns:
                 if column_name == column_name_of_last_node:
@@ -566,10 +577,20 @@ class TreeDrawer():
                 elif is_remaining:
                     # TODO キャッシュを作れば高速化できそう
                     target_column_th = StyleControl.get_target_column_th(source_table=self._table, column_name=column_name)
+                    column_letter = xl.utils.get_column_letter(target_column_th)
 
-                    cell_address = f'{xl.utils.get_column_letter(target_column_th)}{row1_th}'
-                    #print(f'{cell_address=}  {row1_th=}  {column_name=}')
-                    ws[cell_address].value = self._table.df.at[curr_row_number + 1, column_name]
+                    #print(f'{row1_th=}  {column_name=}')
+                    ws[f'{column_letter}{row1_th}'].value = self._table.df.at[curr_row_number + 1, column_name]
+
+                    # 罫線
+                    ws[f'{column_letter}{row1_th}'].border = self._remaining_cell_upper_border
+                    ws[f'{column_letter}{row2_th}'].border = self._remaining_cell_middle_border
+                    ws[f'{column_letter}{row3_th}'].border = self._remaining_cell_lower_border
+
+                    # ツリー構造図の背景色
+                    ws[f'{column_letter}{row1_th}'].fill = self._bgcolor_of_tree
+                    ws[f'{column_letter}{row2_th}'].fill = self._bgcolor_of_tree
+                    ws[f'{column_letter}{row3_th}'].fill = self._bgcolor_of_tree
 
 
 class TreeEraser():

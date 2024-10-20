@@ -25,7 +25,7 @@ def execute():
         'row_height_of_node_spacing':               6,      # ノード間の高さ
 
         # 背景色関連
-        'bgcolor_of_tree':                   'FFFFFF',      # ツリー構造図の背景
+        'bgcolor_of_tree':                   'EEEEFF',      # ツリー構造図の背景
         'bgcolor_of_header_1':               'CCCCFF',      # ヘッダーの背景色その１
         'bgcolor_of_header_2':               '333366',      # ヘッダーの背景色その２
         'bgcolor_of_node':                   'EEFFCC',      # 背景色
