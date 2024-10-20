@@ -10,7 +10,7 @@ Output:
 
 👆　わたしのWindows PCのCドライブの例です  
 
-Input:  
+Input Example 1:  
 
 ![Data](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__18--1832-XltreeDriveData.png)  
 
@@ -33,6 +33,29 @@ no,node0,node1,node2,node3,node4,node5,node6,node7,node8
 
 👆　さきほどの Output の図は、上図の CSV ファイルを読込ませると描いてくれます。  
 `node` 列は 0 から始まる連番で増やすことができます。常識的な長さにしてください  
+
+Input Example 2:
+
+![Data](./docs_dev/img/202410__pg__20--1052-XltreeDriveData.png)  
+
+```csv
+node0,node1,node2,node3,node4,node5,node6,node7,node8
+C,Users,Muzudho,OneDrive,Documents,Tools,GitHub,,
+,,,,,,Shogidokoro,Engine,Lesserkai.exe
+,,,,,,,,Lesserkai_ja.txt
+,,,,,,,,public.bin
+,,,,,,,ja,Shogidokoro.resources.dll
+,,,,,,,Engine.xml,
+,,,,,,,GameResult.xml,
+,,,,,,,Shogidokoro.exe,
+,,,,,,,Shogidokoro.xml,
+,,,,,,,お読みください.txt,
+,,,,,,Shogidokoro.zip,,
+,,,,,,Visual Studio 2022,,
+,,,,,,Default.rdp,,
+```
+
+👆　no 列は省くことができます。中間ノードが空欄になっている箇所は、前行と同じとみなします  
 
 Script:  
 
