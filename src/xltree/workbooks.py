@@ -65,6 +65,33 @@ class TreeDrawer():
         # 対象シートへ列ヘッダー書出し
         self._on_header()
 
+        # TODO 列幅の自動調整
+        # NOTE 文字数は取れるが、１文字の横幅が１とは限らない
+        for column_th, column_name in enumerate(self._table.df.columns, 1):
+            column_letter = xl.utils.get_column_letter(column_th)
+            series = self._table.df[column_name]
+            #print(f"{type(series)=}")
+
+            
+            if series.dtype == 'int64':
+                column_length = int(series.abs().apply("log10").max()) + 1
+
+            # seriesが浮動小数点型の場合は小数点以下の桁数を返す
+            elif series.dtype == 'float64':
+                column_length = series.abs().astype(str).str.len().max()-1
+
+            # seriesが文字列型の場合は文字数を返す
+            elif series.dtype == 'object':
+                column_length = series.str.len().max()
+
+            else:
+                raise ValueError(f'unsupported {series.dtype=}')
+
+
+            print(f"{column_letter=}  {column_name=}  {column_length=}")
+            self._ws.column_dimensions[column_letter].width = column_length
+        
+
         # 対象シートへの各行書出し
         self._table.for_each(on_each=self._on_each_record)
 
@@ -176,7 +203,7 @@ class TreeDrawer():
                 # ツリー区と、プロパティ区のセパレーター
                 if is_first_remaining:
                     cell_address = f'{xl.utils.get_column_letter(target_column_th - 1)}{row_th}'
-                    print(f'{cell_address=}  {row_th=}  {column_name=}')
+                    #print(f'{cell_address=}  {row_th=}  {column_name=}')
 
                     # 背景色、文字色
                     ws[cell_address].fill = self._header_bgcolor_list[flip]
@@ -186,7 +213,7 @@ class TreeDrawer():
 
 
                 cell_address = f'{xl.utils.get_column_letter(target_column_th)}{row_th}'
-                print(f'{cell_address=}  {row_th=}  {column_name=}')
+                #print(f'{cell_address=}  {row_th=}  {column_name=}')
 
                 # 列名
                 ws[cell_address].value = column_name
@@ -481,7 +508,7 @@ class TreeDrawer():
 
                 elif is_remaining:
                     cell_address = f'{xl.utils.get_column_letter(target_column_th)}{row1_th}'
-                    print(f'{cell_address=}  {row1_th=}  {column_name=}')
+                    #print(f'{cell_address=}  {row1_th=}  {column_name=}')
                     ws[cell_address].value = self._table.df.at[curr_row_number + 1, column_name]
 
                     target_column_th += 1
