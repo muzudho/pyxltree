@@ -10,6 +10,10 @@ from .database import TreeNode, Record
 from .models import TreeModel
 
 
+# １つのノードは３列
+ONE_NODE_COLUMNS = 3
+
+
 class TreeDrawer():
     """エクセルで罫線などを駆使して、樹形図を描画します"""
 
@@ -143,6 +147,7 @@ class TreeDrawer():
         head_column_th = 4
 
         for node_th in range(1, self._table.length_of_nodes):
+            # 背景色、文字色
             ws[f'{xl.utils.get_column_letter(head_column_th    )}{row_th}'].fill = self._header_bgcolor_list[flip]
             ws[f'{xl.utils.get_column_letter(head_column_th + 1)}{row_th}'].fill = self._header_bgcolor_list[flip]
             ws[f'{xl.utils.get_column_letter(head_column_th + 2)}{row_th}'].fill = self._header_bgcolor_list[flip]
@@ -153,6 +158,45 @@ class TreeDrawer():
 
             flip = (flip + 1) % 2
             head_column_th += 3
+
+
+        # 最終層以降の列
+        # --------------
+        last_column_name = f'node{self._table.length_of_nodes - 1}'
+        is_first_remaining = True
+        is_remaining = False
+        target_column_th = self._table.length_of_nodes * ONE_NODE_COLUMNS + 2   # 空列を１つ挟む
+        for column_name in self._table.df.columns:
+            if column_name == last_column_name:
+                is_remaining = True
+                continue
+
+            elif is_remaining:
+
+                # ツリー区と、プロパティ区のセパレーター
+                if is_first_remaining:
+                    cell_address = f'{xl.utils.get_column_letter(target_column_th - 1)}{row_th}'
+                    print(f'{cell_address=}  {row_th=}  {column_name=}')
+
+                    # 背景色、文字色
+                    ws[cell_address].fill = self._header_bgcolor_list[flip]
+                    ws[cell_address].font = self._header_fgcolor_list[flip]
+
+                    is_first_remaining = False
+
+
+                cell_address = f'{xl.utils.get_column_letter(target_column_th)}{row_th}'
+                print(f'{cell_address=}  {row_th=}  {column_name=}')
+
+                # 列名
+                ws[cell_address].value = column_name
+                # 背景色、文字色
+                ws[cell_address].fill = self._header_bgcolor_list[flip]
+                ws[cell_address].font = self._header_fgcolor_list[flip]
+
+
+                flip = (flip + 1) % 2
+                target_column_th += 1
 
 
         # 第２行
@@ -411,12 +455,10 @@ class TreeDrawer():
                 draw_node(depth_th=depth_th, three_column_names=[None, None, column_letter], three_row_numbers=three_row_numbers)
 
 
-            COLUMN_WIDTH = 3
-
             # 第１～最終層
             # ------------
             for depth_th in range(1, self._table.length_of_nodes):
-                head_column_th = depth_th * COLUMN_WIDTH + 1
+                head_column_th = depth_th * ONE_NODE_COLUMNS + 1
                 if depth_th < self._table.length_of_nodes:
                     # 第1層は 'D', 'E', 'F'、以降、後ろにずれていく
                     column_letter_list = [
@@ -427,10 +469,11 @@ class TreeDrawer():
                     draw_edge(depth_th=depth_th, three_column_names=column_letter_list, three_row_numbers=three_row_numbers)
                     draw_node(depth_th=depth_th, three_column_names=column_letter_list, three_row_numbers=three_row_numbers)
 
-            # TODO 最終層以降の列
+            # 最終層以降の列
+            # --------------
             last_column_name = f'node{self._table.length_of_nodes - 1}'
             is_remaining = False
-            target_column_th = self._table.length_of_nodes * COLUMN_WIDTH + 2   # 空列を１つ挟む
+            target_column_th = self._table.length_of_nodes * ONE_NODE_COLUMNS + 2   # 空列を１つ挟む
             for column_name in self._table.df.columns:
                 if column_name == last_column_name:
                     is_remaining = True
