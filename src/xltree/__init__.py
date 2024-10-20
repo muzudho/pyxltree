@@ -239,6 +239,13 @@ class WorkbookControl():
                 self._wb = xl.load_workbook(filename=self._wb_file_path)
 
                 return
+            
+            elif self._mode == 'w':
+                pass
+            
+            else:
+                raise ValueError(f"unsupported {self._mode=}")
+
                     
         # ワークブックを新規生成
         if self._debug_write:

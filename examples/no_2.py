@@ -4,7 +4,7 @@ from xltree import WorkbookControl
 def execute():
 
     # 出力先ワークブック指定
-    wbc = WorkbookControl(target='./examples/temp/word_chain_game.xlsx', mode='w')
+    wbc = WorkbookControl(target='./examples/temp/no_2_word_chain_game.xlsx', mode='w')
 
     # ワークシート描画
     wbc.render_worksheet(target='Drive', based_on='./examples/data/word_chain_game.csv')
