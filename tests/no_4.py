@@ -1,6 +1,9 @@
 import datetime
 from src.xltree import Settings, WorkbookControl
 
+# テスト用
+from src.xltree.workbooks.testing import WorksheetDumpControl
+
 
 def execute():
 
@@ -41,6 +44,7 @@ def execute():
 
     # ワークシート描画
     wbc.render_worksheet(target='UnevenCoin', based_on='./examples/data/uneven_coin.csv')
+    WorksheetDumpControl.dump(worksheet=wbc._ws, file='./tests/temp/actual/no_4_uneven_coin_UnevenCoin.log')     # テスト用
 
     # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
     wbc.remove_worksheet(target='Sheet')
