@@ -62,23 +62,6 @@ class TreeDrawer():
     def render(self):
         """描画"""
 
-        # シート全体
-        # ----------
-        #
-        #   TODO シート全体を描画し終えたあと（シート全体のサイズが分かったあと）に行わなければならない
-        #
-        if 'bgcolor_of_tree' in self._settings_obj.dictionary:
-            print(f"bgcolor_of_tree 設定あり {self._ws.max_row=} {self._ws.max_column=}")
-
-            for row_th in range(1, self._ws.max_row + 1):
-                for column_th in range(1, self._ws.max_column + 1):
-                    print(f"({row_th}, {column_th})")
-
-                    column_letter = xl.utils.get_column_letter(column_th)
-                    cell = self._ws[f'{column_letter}{row_th}']
-                    cell.fill = self._bgcolor_of_tree
-
-
         # 列幅の自動調整
         # --------------
         # NOTE 文字数は取れるが、１文字の横幅が１とは限らない
@@ -191,9 +174,12 @@ class TreeDrawer():
         ws[f'A{row_th}'].fill = self._header_bgcolor_list[0]
         ws[f'A{row_th}'].font = self._header_fgcolor_list[0]
 
-        # B列は空
-        ws[f'B{row_th}'].fill = self._header_bgcolor_list[0]
+        # 根側パディング
+        # --------------
+        ws[f'B{row_th}'].fill = self._header_bgcolor_list[1]
 
+        # 根
+        # --
         ws[f'C{row_th}'] = 'Root'
         ws[f'C{row_th}'].fill = self._header_bgcolor_list[1]
         ws[f'C{row_th}'].font = self._header_fgcolor_list[1]
@@ -216,14 +202,14 @@ class TreeDrawer():
             head_column_th += 3
 
 
-        # ツリー構造図の葉側パディング
-        # ----------------------------
+        # 葉側パディング
+        # --------------
         target_column_th = self._table.analyzer.end_node_th * StyleControl.ONE_NODE_COLUMNS + 1
         column_letter = xl.utils.get_column_letter(target_column_th)
         cell_address = f'{column_letter}{row_th}'
         # 背景色、文字色
-        ws[cell_address].fill = self._header_bgcolor_list[flip]
-        ws[cell_address].font = self._header_fgcolor_list[flip]
+        ws[cell_address].fill = self._header_bgcolor_list[(flip + 1) % 2]   # 葉ノードと同じ色にする
+        ws[cell_address].font = self._header_fgcolor_list[(flip + 1) % 2]
         ws.column_dimensions[column_letter].width = self._settings_obj.dictionary['column_width_of_leaf_side_padding']
 
 
