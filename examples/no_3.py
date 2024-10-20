@@ -2,7 +2,7 @@
 from src.xltree import WorkbookControl
 
 # テスト用
-from src.xltree.workbooks.testing import WorksheetDumpControl
+from tests.worksheets import WorksheetDumpControl
 
 
 def execute():
