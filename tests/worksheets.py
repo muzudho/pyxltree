@@ -9,9 +9,29 @@ class WorksheetDumpControl():
         ws = worksheet
 
         with open(file, mode='w', encoding='utf8') as f:
+
+            # 各列
+            for column_th in range(1, ws.max_column + 1):
+                column_letter = xl.utils.get_column_letter(column_th)
+                items = []
+                items.append(f"width={ws.column_dimensions[column_letter].width}")
+                f.write(f"""\
+({column_letter}) {' '.join(items)}
+""")
+
+
+            # 各行
+            for row_th in range(1, ws.max_row + 1):
+                items = []
+                items.append(f"height={ws.row_dimensions[row_th].height}")
+                f.write(f"""\
+({row_th}) {' '.join(items)}
+""")
+
+
+            # 各セル
             for row_th in range(1, ws.max_row + 1):
                 for column_th in range(1, ws.max_column + 1):
-
                     column_letter = xl.utils.get_column_letter(column_th)
                     cell = ws[f'{column_letter}{row_th}']
 
