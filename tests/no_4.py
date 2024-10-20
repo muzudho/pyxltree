@@ -1,3 +1,4 @@
+import datetime
 from src.xltree import Settings, WorkbookControl
 
 
@@ -46,3 +47,4 @@ def execute():
 
     # 保存
     wbc.save_workbook()
+    print(f"[{datetime.datetime.now()}] Please look {wbc.workbook_file_path}")

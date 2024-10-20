@@ -289,22 +289,34 @@ class Table():
         """ディレクトリーの空欄を埋めます
         
         Before:
-            a,b,c
-             ,d,e
-             , ,f
+            a,b,c,d,e,f,g,h,i
+             ,j,k,l, ,m,n,o
+             , ,p,      q
         
         After:
-            a,b,c
-            a,d,e
-            a,d,f
+            a,b,c,d,e,f,g,h,i
+            a,j,k,l,e,m,n,o
+            a,j,p,l,e,m,n
         """
 
-        size = len(df)
+        row_size = len(df)
 
-        for node_th in range(0, length_of_nodes):
-            column_name = f'node{node_th}'
+        # ２行目から、１行ずつ行う
+        for row_th in range(2, row_size + 1):
 
-            for row_th in range(2, size + 1):
+            # この行について、最終ノード列を調べる
+            last_node_th = -1   # 空行
+            for node_th in reversed(range(0, length_of_nodes)):
+                last_node_th = node_th
+
+            # 空行は無視
+            if last_node_th == -1:
+                continue
+
+            # この行について、最終ノード列まで、ノードの空欄は上行をコピーする
+            for node_th in range(0, last_node_th + 1):
+                column_name = f'node{node_th}'
+
                 if pd.isnull(df.at[row_th, column_name]):
                     df.at[row_th, column_name] = df.at[row_th - 1, column_name]
 

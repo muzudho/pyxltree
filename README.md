@@ -36,7 +36,7 @@ no,node0,node1,node2,node3,node4,node5,node6,node7,node8
 
 Input Example 2:
 
-![Data](./docs_dev/img/202410__pg__20--1052-XltreeDriveData.png)  
+![Data](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__20--1052-XltreeDriveData.png)  
 
 ```csv
 node0,node1,node2,node3,node4,node5,node6,node7,node8
@@ -55,7 +55,8 @@ C,Users,Muzudho,OneDrive,Documents,Tools,GitHub,,
 ,,,,,,Default.rdp,,
 ```
 
-👆　no 列は省くことができます。中間ノードが空欄になっている箇所は、前行と同じとみなします  
+👆　さきほどの CSV と同じワークブック（.xlsx）を出力できる CSV です。  
+no 列は省くことができます。中間ノードが空欄になっている箇所は、前行と同じとみなします  
 
 Script:  
 
