@@ -7,10 +7,10 @@ def execute():
     """描画テスト"""
 
     # 出力先ワークブック指定
-    wbc = WorkbookControl(target='./tests/temp/tree_rainbow.xlsx', mode='w')
+    wbc = WorkbookControl(target='./tests/temp/rainbow.xlsx', mode='w')
 
     # ワークシート描画
-    wbc.render_worksheet(target='Shiritori', based_on='./examples/data/tree_rainbow.csv')
+    wbc.render_worksheet(target='Shiritori', based_on='./examples/data/rainbow.csv')
 
     # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
     wbc.remove_worksheet(target='Sheet')
