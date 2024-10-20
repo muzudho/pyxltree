@@ -26,10 +26,10 @@ if __name__ == '__main__':
             if args[1] == '1':
                 execute_no_1()
 
-            if args[1] == '2':
+            elif args[1] == '2':
                 execute_no_2()
 
-            if args[1] == '3':
+            elif args[1] == '3':
                 execute_no_3()
 
             else:
