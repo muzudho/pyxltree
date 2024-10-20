@@ -46,7 +46,7 @@ def execute():
     wbc = WorkbookControl(target='./tests/temp/tree_drive.xlsx', mode='w')
 
     # ワークシート描画
-    wbc.render_worksheet(target='Drive', based_on='./examples/data/tree_drive.csv')
+    wbc.render_worksheet(target='Drive', based_on='./examples/data/drive_by_table.csv')
 
     # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
     wbc.remove_worksheet(target='Sheet')
@@ -94,10 +94,10 @@ from xltree import WorkbookControl
 def execute():
 
     # 出力先ワークブック指定
-    wbc = WorkbookControl(target='./examples/temp/tree_word_chain_game.xlsx', mode='w')
+    wbc = WorkbookControl(target='./examples/temp/word_chain_game.xlsx', mode='w')
 
     # ワークシート描画
-    wbc.render_worksheet(target='Drive', based_on='./examples/data/tree_word_chain_game.csv')
+    wbc.render_worksheet(target='Drive', based_on='./examples/data/word_chain_game.csv')
 
     # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
     wbc.remove_worksheet(target='Sheet')
@@ -158,10 +158,10 @@ def execute():
             })
 
     # 出力先ワークブック指定
-    wbc = WorkbookControl(target='./examples/temp/tree_uneven_coin.xlsx', mode='w', settings=settings)
+    wbc = WorkbookControl(target='./examples/temp/uneven_coin.xlsx', mode='w', settings=settings)
 
     # ワークシート描画
-    wbc.render_worksheet(target='UnevenCoin', based_on='./examples/data/tree_uneven_coin.csv')
+    wbc.render_worksheet(target='UnevenCoin', based_on='./examples/data/uneven_coin.csv')
 
     # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
     wbc.remove_worksheet(target='Sheet')

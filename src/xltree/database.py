@@ -278,7 +278,35 @@ class Table():
         clazz.setup_data_frame(df=df, specified_length_of_edges=length_of_edges, specified_length_of_nodes=length_of_nodes,
             shall_set_index=True) # 'no' 列をインデックスに指定します
 
+        # 整形
+        Table._fill_directory(df=df, length_of_nodes=length_of_nodes)
+
         return Table(df=df, length_of_edges=length_of_edges, length_of_nodes=length_of_nodes)
+
+
+    @staticmethod
+    def _fill_directory(df, length_of_nodes):
+        """ディレクトリーの空欄を埋めます
+        
+        Before:
+            a,b,c
+             ,d,e
+             , ,f
+        
+        After:
+            a,b,c
+            a,d,e
+            a,d,f
+        """
+
+        size = len(df)
+
+        for node_th in range(0, length_of_nodes):
+            column_name = f'node{node_th}'
+
+            for row_th in range(2, size + 1):
+                if pd.isnull(df.at[row_th, column_name]):
+                    df.at[row_th, column_name] = df.at[row_th - 1, column_name]
 
 
     @property

@@ -13,7 +13,7 @@ def execute():
     wbc.render_worksheet(target='Shiritori', based_on='./tests/data/tree.csv')
 
     # ２つ目のワークシート描画
-    wbc.render_worksheet(target='Drive', based_on='./examples/data/tree_drive.csv')
+    wbc.render_worksheet(target='Drive', based_on='./examples/data/drive_by_table.csv')
 
     # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
     wbc.remove_worksheet(target='Sheet')
