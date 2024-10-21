@@ -42,6 +42,11 @@ class WorksheetDumpControl():
                     if 0 < len(sub_items):
                         items.append(f"fill=[{' '.join(sub_items)}]")
 
+                    # フォントを出力
+                    sub_items = WorksheetDumpControl.parse_font(font=cell.font)
+                    if 0 < len(sub_items):
+                        items.append(f"font=[{' '.join(sub_items)}]")
+
                     # 文字寄せを出力
                     sub_items = WorksheetDumpControl.parse_alignment(alignment=cell.alignment)
                     if 0 < len(sub_items):
@@ -90,15 +95,59 @@ class WorksheetDumpControl():
 
 
     @staticmethod
+    def parse_font(font):
+        items = []
+        if font is not None:
+            #name=None, charset=None, family=None, b=False, i=False, strike=None, outline=None, shadow=None, condense=None, color=<openpyxl.styles.colors.Color object>            
+
+            if font.name is not None:
+                items.append(f"name={font.name}")
+
+            if font.charset is not None:
+                items.append(f"charset={font.charset}")
+
+            if font.family is not None:
+                items.append(f"family={font.family}")
+
+            if font.b is not None:
+                items.append(f"b={font.b}")
+
+            if font.i is not None:
+                items.append(f"i={font.i}")
+
+            if font.strike is not None:
+                items.append(f"strike={font.strike}")
+
+            if font.outline is not None:
+                items.append(f"outline={font.outline}")
+
+            if font.shadow is not None:
+                items.append(f"shadow={font.shadow}")
+
+            if font.condense is not None:
+                items.append(f"condense={font.condense}")
+
+            # 色
+            sub_items = WorksheetDumpControl.parse_color(color=font.color)
+            if 0 < len(sub_items):
+                items.append(f"color=[{' '.join(sub_items)}]")
+
+        return items
+
+
+    @staticmethod
     def parse_fill(fill):
         items = []
         if fill is not None:
             if fill.patternType is not None:
                 items.append(f"{fill.patternType}")
 
-            # 背景色を出力
+            # fg色
             if fill.fgColor is not None:
-                items.append(f"{fill.fgColor.rgb}")
+                sub_items = WorksheetDumpControl.parse_color(color=fill.fgColor)
+                if 0 < len(sub_items):
+                    items.append(f"fgColor=[{' '.join(sub_items)}]")
+
         return items
 
 
@@ -109,7 +158,6 @@ class WorksheetDumpControl():
             if alignment.horizontal is not None:
                 items.append(f"horizontal={alignment.horizontal}")
 
-            # 背景色を出力
             if alignment.vertical is not None:
                 items.append(f"vertical={alignment.vertical}")
         return items
@@ -120,7 +168,40 @@ class WorksheetDumpControl():
         items = []
         if side.style is not None:
             items.append(f"{side.style}")
-        # TODO Color 型は RPG形式以外もあるが、必要になったら対応する
-        if side.color is not None:
-            items.append(f"{side.color.rgb}")
+
+        # 色
+        sub_items = WorksheetDumpControl.parse_color(color=side.color)
+        if 0 < len(sub_items):
+            items.append(f"color=[{' '.join(sub_items)}]")
+
+        return items
+
+
+    @staticmethod
+    def parse_color(color):
+        items = []
+        if color is not None:
+            # rgb='00CCCCCC', indexed=None, auto=None, theme=None, tint=0.0, type='rgb'
+
+            if color.type is not None:
+                items.append(f"type={color.type}")
+
+                if color.type == 'rgb':
+                    if color.rgb is not None:
+                        items.append(f"rgb={color.rgb}")
+
+                elif color.type == 'int':
+                    if color.indexed is not None:
+                        items.append(f"indexed={color.indexed}")
+
+                    if color.theme is not None:
+                        items.append(f"theme={color.theme}")
+
+                elif color.type == 'bool':
+                    if color.auto is not None:
+                        items.append(f"auto={color.auto}")
+
+            if color.tint is not None:
+                items.append(f"tint={color.tint}")
+
         return items

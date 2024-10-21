@@ -122,6 +122,11 @@ class Settings():
         if color is not None:
             self._bgcolor_of_tree = PatternFill(patternType='solid', fgColor=color)
 
+        # ノードの背景色
+        color = self.dictionary['bgcolor_of_node']
+        if color is not None:
+            self._bgcolor_of_node = PatternFill(patternType='solid', fgColor=color)
+
 
         # 文字寄せ関連
         # ------------
@@ -147,9 +152,14 @@ class Settings():
             cell.fill = self._list_of_bgcolor_of_header[index]
 
 
-    def set_bgcolor_of_tree(self, cell):
+    def set_bgcolor_of_tree_to(self, cell):
         if self._bgcolor_of_tree is not None:
             cell.fill = self._bgcolor_of_tree
+
+
+    def set_bgcolor_of_node_to(self, cell):
+        if self._bgcolor_of_node is not None:
+            cell.fill = self._bgcolor_of_node
 
 
     def set_alignment_of_node_to(self, cell):

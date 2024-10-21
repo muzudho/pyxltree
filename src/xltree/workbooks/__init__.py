@@ -53,10 +53,6 @@ class TreeDrawer():
         if color is not None:
             self._header_fgcolor_list.append(Font(color=color))
 
-        color = self._settings_obj.dictionary['bgcolor_of_node']
-        if color is not None:
-            self._node_bgcolor = PatternFill(patternType='solid', fgColor=color)
-
         # 罫線
         # ----
         side = Side(style='thin', color='111111')
@@ -310,7 +306,7 @@ class TreeDrawer():
         # ツリー構造図の背景色
         for column_th in range(2, target_column_th):
             column_letter = xl.utils.get_column_letter(column_th)
-            self._settings_obj.set_bgcolor_of_tree(cell=ws[f'{column_letter}{row_th}'])
+            self._settings_obj.set_bgcolor_of_tree_to(cell=ws[f'{column_letter}{row_th}'])
 
 
     def _on_each_record(self, next_row_number, next_record):
@@ -369,7 +365,7 @@ class TreeDrawer():
                 ws[f'B{row3_th}'],
             ]
             for cell in cells:
-                self._settings_obj.set_bgcolor_of_tree(cell=cell)
+                self._settings_obj.set_bgcolor_of_tree_to(cell=cell)
 
 
             def draw_edge(depth_th, three_column_names, three_row_numbers):
@@ -440,7 +436,7 @@ class TreeDrawer():
                     ws[f'{cn3}{row3_th}'],
                 ]
                 for cell in cells:
-                    self._settings_obj.set_bgcolor_of_tree(cell=cell)
+                    self._settings_obj.set_bgcolor_of_tree_to(cell=cell)
 
 
                 nd = self._curr_record.node_at(depth_th=depth_th)
@@ -573,7 +569,7 @@ class TreeDrawer():
                         ws[f'{cn3}{row3_th}'],
                     ]
                     for cell in cells:
-                        self._settings_obj.set_bgcolor_of_tree(cell=cell)
+                        self._settings_obj.set_bgcolor_of_tree_to(cell=cell)
 
                     return
 
@@ -591,13 +587,13 @@ class TreeDrawer():
                 
                 ws[f'{cn3}{row1_th}'].value = nd.text
                 self._settings_obj.set_alignment_of_node_to(cell=ws[f'{cn3}{row1_th}'])
-                ws[f'{cn3}{row1_th}'].fill = self._node_bgcolor
+                self._settings_obj.set_bgcolor_of_node_to(cell=ws[f'{cn3}{row1_th}'])
                 ws[f'{cn3}{row1_th}'].border = upside_node_border
 
-                ws[f'{cn3}{row2_th}'].fill = self._node_bgcolor
+                self._settings_obj.set_bgcolor_of_node_to(cell=ws[f'{cn3}{row2_th}'])
                 ws[f'{cn3}{row2_th}'].border = downside_node_border
 
-                self._settings_obj.set_bgcolor_of_tree(cell=ws[f'{cn3}{row3_th}'])      # ツリー構造図の背景色
+                self._settings_obj.set_bgcolor_of_tree_to(cell=ws[f'{cn3}{row3_th}'])      # ツリー構造図の背景色
 
 
             # 第０層
@@ -637,7 +633,7 @@ class TreeDrawer():
                 ws[f'{column_letter}{row3_th}'],
             ]
             for cell in cells:
-                self._settings_obj.set_bgcolor_of_tree(cell=cell)      # ツリー構造図の背景色
+                self._settings_obj.set_bgcolor_of_tree_to(cell=cell)      # ツリー構造図の背景色
 
 
 
@@ -670,7 +666,7 @@ class TreeDrawer():
                         ws[f'{column_letter}{row3_th}'],
                     ]
                     for cell in cells:
-                       self._settings_obj.set_bgcolor_of_tree(cell=cell)
+                       self._settings_obj.set_bgcolor_of_tree_to(cell=cell)
 
 
 class TreeEraser():
