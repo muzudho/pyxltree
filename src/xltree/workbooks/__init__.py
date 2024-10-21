@@ -41,24 +41,29 @@ class TreeDrawer():
         self._next_record = Record.new_empty(specified_end_th_of_node=self._table.analyzer.end_th_of_node)
 
         # 背景色関連
-        self._header_bgcolor_list = [
-            PatternFill(patternType='solid', fgColor=self._settings_obj.dictionary['bgcolor_of_header_1']),
-            PatternFill(patternType='solid', fgColor=self._settings_obj.dictionary['bgcolor_of_header_2'])]
-        self._bgcolor_of_tree = PatternFill(patternType='solid', fgColor=self._settings_obj.dictionary['bgcolor_of_tree'])
+        # ----------
+        color = self._settings_obj.dictionary['bgcolor_of_tree']
+        if color is not None:
+            self._bgcolor_of_tree = PatternFill(patternType='solid', fgColor=color)
 
         # 文字色関連
-        self._header_fgcolor_list = [
-            Font(color=self._settings_obj.dictionary['fgcolor_of_header_1']),
-            Font(color=self._settings_obj.dictionary['fgcolor_of_header_2'])]
+        # ----------
+        self._header_fgcolor_list = []
 
-        # ノード関連
-        self._node_alignment = Alignment(
-                horizontal=self._settings_obj.dictionary['horizontal_alignment_of_node'],
-                vertical=self._settings_obj.dictionary['vertical_alignment_of_node'])
+        color = self._settings_obj.dictionary['fgcolor_of_header_1']
+        if color is not None:
+            self._header_fgcolor_list.append(Font(color=color))
+        
+        color = self._settings_obj.dictionary['fgcolor_of_header_2']
+        if color is not None:
+            self._header_fgcolor_list.append(Font(color=color))
 
-        self._node_bgcolor = PatternFill(patternType='solid', fgColor=self._settings_obj.dictionary['bgcolor_of_node'])
+        color = self._settings_obj.dictionary['bgcolor_of_node']
+        if color is not None:
+            self._node_bgcolor = PatternFill(patternType='solid', fgColor=color)
 
         # 罫線
+        # ----
         side = Side(style='thin', color='111111')
         self._remaining_cell_upper_border = Border(top=side, left=side, right=side)
         self._remaining_cell_middle_border = Border(left=side, right=side)
@@ -227,17 +232,17 @@ class TreeDrawer():
         # NOTE データテーブルではなく、ビュー用途なので、テーブルとしての機能性は無視しています
         # A の代わりに {xl.utils.get_column_letter(1)} とも書ける
         ws[f'A{row_th}'] = 'No'
-        ws[f'A{row_th}'].fill = self._header_bgcolor_list[0]
+        self._settings_obj.set_bgcolor_of_header_to(cell=ws[f'A{row_th}'], index=0)
         ws[f'A{row_th}'].font = self._header_fgcolor_list[0]
 
         # 根側パディング
         # --------------
-        ws[f'B{row_th}'].fill = self._header_bgcolor_list[1]
+        self._settings_obj.set_bgcolor_of_header_to(cell=ws[f'B{row_th}'], index=1)
 
         # 根
         # --
         ws[f'C{row_th}'] = 'Root'
-        ws[f'C{row_th}'].fill = self._header_bgcolor_list[1]
+        self._settings_obj.set_bgcolor_of_header_to(cell=ws[f'C{row_th}'], index=1)
         ws[f'C{row_th}'].font = self._header_fgcolor_list[1]
 
 
@@ -246,9 +251,9 @@ class TreeDrawer():
 
         for node_th in range(1, self._table.analyzer.end_th_of_node):
             # 背景色、文字色
-            ws[f'{xl.utils.get_column_letter(head_column_th    )}{row_th}'].fill = self._header_bgcolor_list[flip]
-            ws[f'{xl.utils.get_column_letter(head_column_th + 1)}{row_th}'].fill = self._header_bgcolor_list[flip]
-            ws[f'{xl.utils.get_column_letter(head_column_th + 2)}{row_th}'].fill = self._header_bgcolor_list[flip]
+            self._settings_obj.set_bgcolor_of_header_to(cell=ws[f'{xl.utils.get_column_letter(head_column_th    )}{row_th}'], index=flip)
+            self._settings_obj.set_bgcolor_of_header_to(cell=ws[f'{xl.utils.get_column_letter(head_column_th + 1)}{row_th}'], index=flip)
+            self._settings_obj.set_bgcolor_of_header_to(cell=ws[f'{xl.utils.get_column_letter(head_column_th + 2)}{row_th}'], index=flip)
             ws[f'{xl.utils.get_column_letter(head_column_th + 2)}{row_th}'].font = self._header_fgcolor_list[flip]
 
             # 列名
@@ -264,7 +269,7 @@ class TreeDrawer():
         column_letter = xl.utils.get_column_letter(target_column_th)
         cell_address = f'{column_letter}{row_th}'
         # 背景色、文字色
-        ws[cell_address].fill = self._header_bgcolor_list[(flip + 1) % 2]   # 葉ノードと同じ色にする
+        self._settings_obj.set_bgcolor_of_header_to(cell=ws[cell_address], index=(flip + 1) % 2)   # 葉ノードと同じ色にする
         ws[cell_address].font = self._header_fgcolor_list[(flip + 1) % 2]
 
         width = self._settings_obj.dictionary['column_width_of_leaf_side_padding']
@@ -293,7 +298,7 @@ class TreeDrawer():
                 # 列名
                 ws[cell_address].value = column_name
                 # 背景色、文字色
-                ws[cell_address].fill = self._header_bgcolor_list[flip]
+                self._settings_obj.set_bgcolor_of_header_to(cell=ws[cell_address], index=flip)   # 葉ノードと同じ色にする
                 ws[cell_address].font = self._header_fgcolor_list[flip]
 
 
@@ -305,7 +310,7 @@ class TreeDrawer():
         # ------
         # 空行にする
         row_th = 2
-        ws[f'A{row_th}'].fill = self._header_bgcolor_list[0]
+        self._settings_obj.set_bgcolor_of_header_to(cell=ws[f'A{row_th}'], index=0)   # 葉ノードと同じ色にする
 
         # ツリー構造図の背景色
         for column_th in range(2, target_column_th):
@@ -357,9 +362,9 @@ class TreeDrawer():
 
 
             ws[f'A{row1_th}'].value = self._curr_record.no
-            ws[f'A{row1_th}'].fill = self._header_bgcolor_list[0]
-            ws[f'A{row2_th}'].fill = self._header_bgcolor_list[0]
-            ws[f'A{row3_th}'].fill = self._header_bgcolor_list[0]
+            self._settings_obj.set_bgcolor_of_header_to(cell=ws[f'A{row1_th}'], index=0)
+            self._settings_obj.set_bgcolor_of_header_to(cell=ws[f'A{row2_th}'], index=0)
+            self._settings_obj.set_bgcolor_of_header_to(cell=ws[f'A{row3_th}'], index=0)
 
             # 根側のパディング
             # ----------------
@@ -580,7 +585,7 @@ class TreeDrawer():
                     print(f"[{datetime.datetime.now()}] Pencil(Node) {self._curr_record.no} record > {nth(depth_th)} layer  □ {nd.text}")
                 
                 ws[f'{cn3}{row1_th}'].value = nd.text
-                ws[f'{cn3}{row1_th}'].alignment = self._node_alignment
+                self._settings_obj.set_alignment_of_node_to(cell=ws[f'{cn3}{row1_th}'])
                 ws[f'{cn3}{row1_th}'].fill = self._node_bgcolor
                 ws[f'{cn3}{row1_th}'].border = upside_node_border
 

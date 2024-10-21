@@ -1,6 +1,8 @@
 import os
 import datetime
 import openpyxl as xl
+from openpyxl.styles import PatternFill
+from openpyxl.styles.alignment import Alignment
 
 from .database import Table
 from .workbooks import TreeDrawer, TreeEraser
@@ -48,28 +50,32 @@ class Settings():
             文字寄せ関連
             * `horizontal_alignment_of_node` - 文字の水平方向の寄せ。規定値 None。'left', 'fill', 'centerContinuous', 'center', 'right', 'general', 'justify', 'distributed' のいずれか。指定しないなら None
             * `vertical_alignment_of_node` - 文字の垂直方向の寄せ。規定値 None。'bottom', 'center', 'top', 'justify', 'distributed' のいずれか。指定しないなら None
+
+            その他の操作
+            * `do_not_cell_mege` - セル結合しない
         """
 
         # 既定のディクショナリー
+        # いわゆる settings
         self._dictionary = {
             # 列の幅
             #
             #   ［列幅の自動調整］機能を付けたので、文字が入る箇所は規定値はナンにします。
             #   キーは存在させたいので、コメントアウトしないでください
             #
-            'column_width_of_no':                 None,
-            'column_width_of_root_side_padding':     3,
-            'column_width_of_leaf_side_padding':     3,
-            'column_width_of_node':               None,
-            'column_width_of_parent_side_edge':      2,
-            'column_width_of_child_side_edge':    None,
+            'column_width_of_no':                    None,
+            'column_width_of_root_side_padding':        3,
+            'column_width_of_leaf_side_padding':        3,
+            'column_width_of_node':                  None,
+            'column_width_of_parent_side_edge':         2,
+            'column_width_of_child_side_edge':       None,
 
             # 行の高さ
-            'row_height_of_header':                 13,
-            'row_height_of_lower_side_padding':     13,
-            'row_height_of_upper_side_of_node':     13,
-            'row_height_of_lower_side_of_node':     13,
-            'row_height_of_node_spacing':           6,
+            'row_height_of_header':                    13,
+            'row_height_of_lower_side_padding':        13,
+            'row_height_of_upper_side_of_node':        13,
+            'row_height_of_lower_side_of_node':        13,
+            'row_height_of_node_spacing':               6,
 
             # 背景色関連
             'bgcolor_of_tree':                   'FFFFFF',
@@ -82,8 +88,11 @@ class Settings():
             'fgcolor_of_header_2':               'EEEEEE',
 
             # 文字寄せ関連
-            'horizontal_alignment_of_node':      None,
-            'vertical_alignment_of_node':        None,
+            'horizontal_alignment_of_node':          None,
+            'vertical_alignment_of_node':            None,
+
+            # その他の操作
+            'do_not_cell_mege':                     False,      # セル結合しない
         }
 
         # 上書き
@@ -91,10 +100,50 @@ class Settings():
             for key, value in dictionary.items():
                 self._dictionary[key] = value
 
+        # 背景色関連
+        # ----------
+        self._list_of_bgcolor_of_header = []
+
+        color = self.dictionary['bgcolor_of_header_1']
+        if color is not None:
+            self._list_of_bgcolor_of_header.append(PatternFill(patternType='solid', fgColor=color))
+        else:
+            self._list_of_bgcolor_of_header.append(None)
+        
+        color = self.dictionary['bgcolor_of_header_2']
+        if color is not None:
+            self._list_of_bgcolor_of_header.append(PatternFill(patternType='solid', fgColor=color))
+        else:
+            self._list_of_bgcolor_of_header.append(None)
+
+
+        # 文字寄せ関連
+        # ------------
+        horizontal = self.dictionary['horizontal_alignment_of_node']
+        vertical = self.dictionary['vertical_alignment_of_node']
+        if horizontal is not None and vertical is not None:
+            self._alignment_of_node = Alignment(horizontal=horizontal, vertical=vertical)
+        elif horizontal is not None:
+            self._alignment_of_node = Alignment(horizontal=horizontal)
+        elif vertical is not None:
+            self._alignment_of_node = Alignment(vertical=vertical)
+        else:
+            self._alignment_of_node = None
+
 
     @property
     def dictionary(self):
         return self._dictionary
+
+
+    def set_bgcolor_of_header_to(self, cell, index):
+        if self._list_of_bgcolor_of_header[index] is not None:
+            cell.fill = self._list_of_bgcolor_of_header[index]
+
+
+    def set_alignment_of_node_to(self, cell):
+        if self._alignment_of_node is not None:
+            cell.alignment = self._alignment_of_node
 
 
 class SettingsOfNode():

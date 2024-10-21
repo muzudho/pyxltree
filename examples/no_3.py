@@ -37,6 +37,9 @@ def execute():
         # 文字寄せ関連
         'horizontal_alignment_of_node':        'left',      # 文字の水平方向の寄せ。規定値 None。'left', 'fill', 'centerContinuous', 'center', 'right', 'general', 'justify', 'distributed' のいずれか。指定しないなら None
         'vertical_alignment_of_node':            None,      # 文字の垂直方向の寄せ。規定値 None。'bottom', 'center', 'top', 'justify', 'distributed' のいずれか。指定しないなら None
+
+        # その他の操作
+        'do_not_cell_mege':                     False,      # セル結合しない
     }
 
     # 出力先ワークブック指定
