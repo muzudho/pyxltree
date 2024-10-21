@@ -100,6 +100,7 @@ class Settings():
             for key, value in dictionary.items():
                 self._dictionary[key] = value
 
+
         # 背景色関連
         # ----------
         self._list_of_bgcolor_of_header = []
@@ -115,6 +116,11 @@ class Settings():
             self._list_of_bgcolor_of_header.append(PatternFill(patternType='solid', fgColor=color))
         else:
             self._list_of_bgcolor_of_header.append(None)
+
+        # ツリー構造図の背景色
+        color = self.dictionary['bgcolor_of_tree']
+        if color is not None:
+            self._bgcolor_of_tree = PatternFill(patternType='solid', fgColor=color)
 
 
         # 文字寄せ関連
@@ -139,6 +145,11 @@ class Settings():
     def set_bgcolor_of_header_to(self, cell, index):
         if self._list_of_bgcolor_of_header[index] is not None:
             cell.fill = self._list_of_bgcolor_of_header[index]
+
+
+    def set_bgcolor_of_tree(self, cell):
+        if self._bgcolor_of_tree is not None:
+            cell.fill = self._bgcolor_of_tree
 
 
     def set_alignment_of_node_to(self, cell):

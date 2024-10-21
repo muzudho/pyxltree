@@ -27,7 +27,14 @@ if __name__ == '__main__':
 
         if 1 < len(args):
 
-            if args[1] == '1':
+            if args[1] == 'all':
+                execute_no_1()
+                execute_no_2()
+                execute_no_3()
+                execute_no_4()
+                execute_no_5()
+
+            elif args[1] == '1':
                 execute_no_1()
 
             elif args[1] == '2':
