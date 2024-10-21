@@ -246,10 +246,10 @@ class Table():
             df['no'] = range(1, len(df.index) + 1)
 
         # 列名をソートしたい。no,node0,edge1,node1,edge2,node2,remaining_a,remaining_b,... のような感じに
-        print(f"列ソート前 {df.columns.values=}")
+        #print(f"列ソート前 {df.columns.values=}")
         columns_sorting = ColumnsSorting()
         df = columns_sorting.execute(df)
-        print(f"列ソート後 {df.columns.values=}")
+        #print(f"列ソート後 {df.columns.values=}")
 
 
 

@@ -1,0 +1,215 @@
+(A) width=3.0
+(B) width=3.0
+(C) width=15.399999999999999
+(D) width=2.0
+(E) width=4.0
+(F) width=20.2
+(G) width=3.0
+(1) height=13.0
+(2) height=13.0
+(3) height=13.0
+(4) height=13.0
+(5) height=6.0
+(6) height=13.0
+(7) height=13.0
+(8) height=6.0
+(9) height=13.0
+(10) height=13.0
+(11) height=6.0
+(12) height=13.0
+(13) height=13.0
+(14) height=6.0
+(15) height=13.0
+(16) height=13.0
+(17) height=6.0
+(18) height=13.0
+(19) height=13.0
+(20) height=6.0
+(21) height=13.0
+(22) height=13.0
+(23) height=6.0
+(24) height=13.0
+(25) height=13.0
+(26) height=6.0
+(A1) fill=solid 00CCCCCC
+(B1) fill=solid 00333333
+(C1) fill=solid 00333333
+(D1) fill=solid 00CCCCCC
+(E1) fill=solid 00CCCCCC
+(F1) fill=solid 00CCCCCC
+(G1) fill=solid 00CCCCCC
+(A2) fill=solid 00CCCCCC
+(B2) fill=solid 00FFFFFF
+(C2) fill=solid 00FFFFFF
+(D2) fill=solid 00FFFFFF
+(E2) fill=solid 00FFFFFF
+(F2) fill=solid 00FFFFFF
+(G2) fill=solid 00FFFFFF
+(A3) fill=solid 00CCCCCC
+(B3) fill=solid 00FFFFFF
+(C3) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 top=thick 00000000
+(D3) fill=solid 00FFFFFF bottom=thick 00000000
+(E3) fill=solid 00FFFFFF bottom=thick 00000000
+(F3) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 top=thick 00000000
+(G3) fill=solid 00FFFFFF
+(A4) fill=solid 00CCCCCC
+(B4) fill=solid 00FFFFFF
+(C4) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 bottom=thick 00000000
+(D4) fill=solid 00FFFFFF
+(E4) fill=solid 00FFFFFF left=thick 00000000
+(F4) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 bottom=thick 00000000
+(G4) fill=solid 00FFFFFF
+(A5) fill=solid 00CCCCCC
+(B5) fill=solid 00FFFFFF
+(C5) fill=solid 00FFFFFF
+(D5) fill=solid 00FFFFFF
+(E5) fill=solid 00FFFFFF left=thick 00000000
+(F5) fill=solid 00FFFFFF
+(G5) fill=solid 00FFFFFF
+(A6) fill=solid 00CCCCCC
+(B6) fill=solid 00FFFFFF
+(C6) fill=solid 00FFFFFF
+(D6) fill=solid 00FFFFFF
+(E6) fill=solid 00FFFFFF left=thick 00000000 bottom=thick 00000000
+(F6) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 top=thick 00000000
+(G6) fill=solid 00FFFFFF
+(A7) fill=solid 00CCCCCC
+(B7) fill=solid 00FFFFFF
+(C7) fill=solid 00FFFFFF
+(D7) fill=solid 00FFFFFF
+(E7) fill=solid 00FFFFFF
+(F7) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 bottom=thick 00000000
+(G7) fill=solid 00FFFFFF
+(A8) fill=solid 00CCCCCC
+(B8) fill=solid 00FFFFFF
+(C8) fill=solid 00FFFFFF
+(D8) fill=solid 00FFFFFF
+(E8) fill=solid 00FFFFFF
+(F8) fill=solid 00FFFFFF
+(G8) fill=solid 00FFFFFF
+(A9) fill=solid 00CCCCCC
+(B9) fill=solid 00FFFFFF
+(C9) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 top=thick 00000000
+(D9) fill=solid 00FFFFFF bottom=thick 00000000
+(E9) fill=solid 00FFFFFF bottom=thick 00000000
+(F9) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 top=thick 00000000
+(G9) fill=solid 00FFFFFF
+(A10) fill=solid 00CCCCCC
+(B10) fill=solid 00FFFFFF
+(C10) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 bottom=thick 00000000
+(D10) fill=solid 00FFFFFF
+(E10) fill=solid 00FFFFFF left=thick 00000000
+(F10) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 bottom=thick 00000000
+(G10) fill=solid 00FFFFFF
+(A11) fill=solid 00CCCCCC
+(B11) fill=solid 00FFFFFF
+(C11) fill=solid 00FFFFFF
+(D11) fill=solid 00FFFFFF
+(E11) fill=solid 00FFFFFF left=thick 00000000
+(F11) fill=solid 00FFFFFF
+(G11) fill=solid 00FFFFFF
+(A12) fill=solid 00CCCCCC
+(B12) fill=solid 00FFFFFF
+(C12) fill=solid 00FFFFFF
+(D12) fill=solid 00FFFFFF
+(E12) fill=solid 00FFFFFF left=thick 00000000 bottom=thick 00000000
+(F12) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 top=thick 00000000
+(G12) fill=solid 00FFFFFF
+(A13) fill=solid 00CCCCCC
+(B13) fill=solid 00FFFFFF
+(C13) fill=solid 00FFFFFF
+(D13) fill=solid 00FFFFFF
+(E13) fill=solid 00FFFFFF
+(F13) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 bottom=thick 00000000
+(G13) fill=solid 00FFFFFF
+(A14) fill=solid 00CCCCCC
+(B14) fill=solid 00FFFFFF
+(C14) fill=solid 00FFFFFF
+(D14) fill=solid 00FFFFFF
+(E14) fill=solid 00FFFFFF
+(F14) fill=solid 00FFFFFF
+(G14) fill=solid 00FFFFFF
+(A15) fill=solid 00CCCCCC
+(B15) fill=solid 00FFFFFF
+(C15) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 top=thick 00000000
+(D15) fill=solid 00FFFFFF bottom=thick 00000000
+(E15) fill=solid 00FFFFFF bottom=thick 00000000
+(F15) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 top=thick 00000000
+(G15) fill=solid 00FFFFFF
+(A16) fill=solid 00CCCCCC
+(B16) fill=solid 00FFFFFF
+(C16) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 bottom=thick 00000000
+(D16) fill=solid 00FFFFFF
+(E16) fill=solid 00FFFFFF left=thick 00000000
+(F16) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 bottom=thick 00000000
+(G16) fill=solid 00FFFFFF
+(A17) fill=solid 00CCCCCC
+(B17) fill=solid 00FFFFFF
+(C17) fill=solid 00FFFFFF
+(D17) fill=solid 00FFFFFF
+(E17) fill=solid 00FFFFFF left=thick 00000000
+(F17) fill=solid 00FFFFFF
+(G17) fill=solid 00FFFFFF
+(A18) fill=solid 00CCCCCC
+(B18) fill=solid 00FFFFFF
+(C18) fill=solid 00FFFFFF
+(D18) fill=solid 00FFFFFF
+(E18) fill=solid 00FFFFFF left=thick 00000000 bottom=thick 00000000
+(F18) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 top=thick 00000000
+(G18) fill=solid 00FFFFFF
+(A19) fill=solid 00CCCCCC
+(B19) fill=solid 00FFFFFF
+(C19) fill=solid 00FFFFFF
+(D19) fill=solid 00FFFFFF
+(E19) fill=solid 00FFFFFF
+(F19) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 bottom=thick 00000000
+(G19) fill=solid 00FFFFFF
+(A20) fill=solid 00CCCCCC
+(B20) fill=solid 00FFFFFF
+(C20) fill=solid 00FFFFFF
+(D20) fill=solid 00FFFFFF
+(E20) fill=solid 00FFFFFF
+(F20) fill=solid 00FFFFFF
+(G20) fill=solid 00FFFFFF
+(A21) fill=solid 00CCCCCC
+(B21) fill=solid 00FFFFFF
+(C21) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 top=thick 00000000
+(D21) fill=solid 00FFFFFF bottom=thick 00000000
+(E21) fill=solid 00FFFFFF bottom=thick 00000000
+(F21) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 top=thick 00000000
+(G21) fill=solid 00FFFFFF
+(A22) fill=solid 00CCCCCC
+(B22) fill=solid 00FFFFFF
+(C22) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 bottom=thick 00000000
+(D22) fill=solid 00FFFFFF
+(E22) fill=solid 00FFFFFF left=thick 00000000
+(F22) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 bottom=thick 00000000
+(G22) fill=solid 00FFFFFF
+(A23) fill=solid 00CCCCCC
+(B23) fill=solid 00FFFFFF
+(C23) fill=solid 00FFFFFF
+(D23) fill=solid 00FFFFFF
+(E23) fill=solid 00FFFFFF left=thick 00000000
+(F23) fill=solid 00FFFFFF
+(G23) fill=solid 00FFFFFF
+(A24) fill=solid 00CCCCCC
+(B24) fill=solid 00FFFFFF
+(C24) fill=solid 00FFFFFF
+(D24) fill=solid 00FFFFFF
+(E24) fill=solid 00FFFFFF left=thick 00000000 bottom=thick 00000000
+(F24) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 top=thick 00000000
+(G24) fill=solid 00FFFFFF
+(A25) fill=solid 00CCCCCC
+(B25) fill=solid 00FFFFFF
+(C25) fill=solid 00FFFFFF
+(D25) fill=solid 00FFFFFF
+(E25) fill=solid 00FFFFFF
+(F25) fill=solid 00FFFFCC left=thick 00000000 right=thick 00000000 bottom=thick 00000000
+(G25) fill=solid 00FFFFFF
+(A26) fill=solid 00CCCCCC
+(B26) fill=solid 00FFFFFF
+(C26) fill=solid 00FFFFFF
+(D26) fill=solid 00FFFFFF
+(E26) fill=solid 00FFFFFF
+(F26) fill=solid 00FFFFFF
+(G26) fill=solid 00FFFFFF

@@ -35,7 +35,6 @@ class ColumnsSorting():
         """
 
         self._is_n_o_column_exists, self._end_th_of_node, self._end_th_of_edge, others_name_list = TableControl.sort_out_column_names_n_o_node_edge_others(df)
-        print(f"デバッグ中  {self._is_n_o_column_exists=}  {self._end_th_of_node=}  {self._end_th_of_edge=}  {others_name_list=}") # FIXME
 
         column_name_list = []
 
