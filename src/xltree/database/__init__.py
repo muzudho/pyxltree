@@ -3,7 +3,7 @@ import pandas as pd
 
 from ..library import INDENT
 from .table_formatting import ColumnsSorting, InputCompletion
-from .source_csv_table_analyzer import PreviouslySourceCsvTableAnalyzer, SourceCsvTableAnalyzer
+from .source_csv_table_analyzer import SourceCsvTableAnalyzer
 
 
 ############
@@ -69,10 +69,10 @@ class Record():
 
 
     @staticmethod
-    def new_empty(specified_end_node_th):
+    def new_empty(specified_end_th_of_node):
         return Record(
                 no=None,
-                node_list=[None] * specified_end_node_th)
+                node_list=[None] * specified_end_th_of_node)
 
 
     @property
@@ -155,14 +155,14 @@ class Table():
     _dtype = {}
 
     @classmethod
-    def create_dtype(clazz, specified_end_edge_th, specified_end_node_th):
+    def create_dtype(clazz, specified_end_th_of_edge, specified_end_th_of_node):
         """dtypeの辞書を作成します
 
         Parameters
         ----------
-        specified_end_edge_th : int
+        specified_end_th_of_edge : int
             エッジ数。空欄の根を含むとみなして数える
-        specified_end_node_th : int
+        specified_end_th_of_node : int
             ノード数。根を含む
         """
 
@@ -172,17 +172,17 @@ class Table():
         # ノードだけ根を含む
         clazz._dtype['node0'] = 'object'    # string 型は無いので object 型にする
 
-        for edge_th in range(1, specified_end_edge_th):
+        for edge_th in range(1, specified_end_th_of_edge):
             clazz._dtype[f'edge{edge_th}'] = 'object'
 
-        for node_th in range(1, specified_end_node_th):
+        for node_th in range(1, specified_end_th_of_node):
             clazz._dtype[f'node{node_th}'] = 'object'
 
         return clazz._dtype
 
 
     @staticmethod
-    def create_column_name_list(specified_end_node_th, include_index):
+    def create_column_name_list(specified_end_th_of_node, include_index):
         column_name_list = []
 
         if include_index:
@@ -191,7 +191,7 @@ class Table():
         # 根ノードは必ず追加
         column_name_list.append('node0')
 
-        for node_th in range(1, specified_end_node_th):
+        for node_th in range(1, specified_end_th_of_node):
             column_name_list.append(f'edge{node_th}')
             column_name_list.append(f'node{node_th}')
 
@@ -204,18 +204,18 @@ class Table():
 
 
     @classmethod
-    def new_empty_table(clazz, specified_end_edge_th, specified_end_node_th):
+    def new_empty_table(clazz, specified_end_th_of_edge, specified_end_th_of_node):
         column_name_list = Table.create_column_name_list(
-                specified_end_node_th=specified_end_node_th,
+                specified_end_th_of_node=specified_end_th_of_node,
                 include_index=True) # 'no' は後でインデックスに変換
 
         df = pd.DataFrame(
                 columns=column_name_list)
         
-        clazz.setup_data_frame(df=df, specified_end_edge_th=specified_end_edge_th, specified_end_node_th=specified_end_node_th, shall_set_index=True)
+        clazz.setup_data_frame(df=df, specified_end_th_of_edge=specified_end_th_of_edge, specified_end_th_of_node=specified_end_th_of_node, shall_set_index=True)
 
         # 元テーブルの分析器
-        analyzer = SourceCsvTableAnalyzer.instantiate(df=df, end_edge_th=0, end_node_th=0)
+        analyzer = SourceCsvTableAnalyzer.instantiate(df=df, end_th_of_edge=0, end_th_of_node=0)
 
 
         return Table(df=df, analyzer=analyzer)
@@ -245,26 +245,26 @@ class Table():
         if 'no' not in df.columns:
             df['no'] = range(1, len(df.index) + 1)
 
-        # エッジ数、ノード数を数えたい。エッジは 'edge1' から数えはじめるが、'edge0' があるものとみなして数える
-        end_edge_th = PreviouslySourceCsvTableAnalyzer.find_end_edge_th(df=df)
-        end_node_th = PreviouslySourceCsvTableAnalyzer.find_end_node_th(df=df)
-
-        # テーブルに追加の設定
-        clazz.setup_data_frame(df=df, specified_end_edge_th=end_edge_th, specified_end_node_th=end_node_th,
-            shall_set_index=True) # 'no' 列をインデックスに指定します
-
         # 列名をソートしたい。no,node0,edge1,node1,edge2,node2,remaining_a,remaining_b,... のような感じに
         #print(f"列ソート前 {df.columns.values=}")
-        df = ColumnsSorting.sort_columns(df)
+        columns_sorting = ColumnsSorting()
+        df = columns_sorting.execute(df)
         #print(f"列ソート後 {df.columns.values=}")
 
+
+
+        # テーブルに追加の設定
+        clazz.setup_data_frame(df=df, specified_end_th_of_edge=columns_sorting.end_th_of_edge, specified_end_th_of_node=columns_sorting.end_th_of_node,
+            shall_set_index=True) # 'no' 列をインデックスに指定します
+
+
         # 整形
-        InputCompletion.fill_directory(df=df, end_node_th=end_node_th)
+        InputCompletion.fill_directory(df=df, end_th_of_node=columns_sorting.end_th_of_node)
 
         return Table(
             df=df,
             # 元テーブルの分析器
-            analyzer=SourceCsvTableAnalyzer.instantiate(df=df, end_edge_th=end_edge_th, end_node_th=end_node_th))
+            analyzer=SourceCsvTableAnalyzer.instantiate(df=df, end_th_of_edge=columns_sorting.end_th_of_edge, end_th_of_node=columns_sorting.end_th_of_node))
 
 
     @property
@@ -278,7 +278,7 @@ class Table():
 
 
     @classmethod
-    def setup_data_frame(clazz, df, specified_end_edge_th, specified_end_node_th, shall_set_index):
+    def setup_data_frame(clazz, df, specified_end_th_of_edge, specified_end_th_of_node, shall_set_index):
         """データフレームの設定"""
 
         if shall_set_index:
@@ -287,7 +287,7 @@ class Table():
                     inplace=True)   # NOTE インデックスを指定したデータフレームを戻り値として返すのではなく、このインスタンス自身を更新します
 
         # データ型の設定
-        dtype = clazz.create_dtype(specified_end_edge_th=specified_end_edge_th, specified_end_node_th=specified_end_node_th)
+        dtype = clazz.create_dtype(specified_end_th_of_edge=specified_end_th_of_edge, specified_end_th_of_node=specified_end_th_of_node)
         #print(f"[{datetime.datetime.now()}] setup_data_frame {dtype=}")
         df.astype(dtype)
 
@@ -330,7 +330,7 @@ class Table():
             if self._df['node0'][index] != welcome_record.node_at(0).text:
                 shall_record_change = False
             
-            for node_th in range(1, self._analyzer.end_node_th):
+            for node_th in range(1, self._analyzer.end_th_of_node):
                 if self._df[f'node{node_th}'][index] != welcome_record.node_at(node_th).text:
                     shall_record_change = False
                     break
@@ -345,7 +345,7 @@ class Table():
             # 根は必ず含める
             dictionary['node0'] = welcome_record.node_at(0).text
 
-            for node_th in range(1, self.end_node_th):
+            for node_th in range(1, self.end_th_of_node):
                 dictionary[f'edge{node_th}'] = welcome_record.node_at(node_th).edge_text
                 dictionary[f'node{node_th}'] = welcome_record.node_at(node_th).text
 
@@ -371,7 +371,7 @@ class Table():
         """
 
         column_name_list = Table.create_column_name_list(
-                specified_end_node_th=self.end_node_th,
+                specified_end_th_of_node=self.end_th_of_node,
                 include_index=False) # no はインデックスなので含めない
 
         self._df.to_csv(
@@ -389,7 +389,7 @@ class Table():
 
         df = self._df
 
-        node_list = [None] * self._analyzer.end_node_th
+        node_list = [None] * self._analyzer.end_th_of_node
 
         for row_number in range(0, len(df)):
             # no はインデックス
@@ -401,10 +401,10 @@ class Table():
             node_list.append(TreeNode(edge_text=None, text=df.at[no, f'node0']))
 
             # 中間～葉ノード
-            for node_th in range(1, self._analyzer.end_node_th):
+            for node_th in range(1, self._analyzer.end_th_of_node):
 
                 # エッジはオプション
-                if node_th < self._analyzer.end_edge_th:
+                if node_th < self._analyzer.end_th_of_edge:
                     edge_text = df.at[no, f'edge{node_th}']
                 else:
                     edge_text = None

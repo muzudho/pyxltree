@@ -28,7 +28,7 @@ class TableControl():
     @staticmethod
     def sort_out_column_names_node_edge_others(df):
         """列名を edge, node, それ以外の３つに分けます。
-        edge と node は最後の要素の数字を返します。要素がなければ -1 を返します"""
+        edge と node は最後の要素の数字の +1 を返します。要素がなければ 0 を返します"""
         edge_th_set = set()
         node_th_set = set()
         others_name_list = []
@@ -48,71 +48,30 @@ class TableControl():
             others_name_list.append(column_name)
         
         # node 列は 0 から連番で続いているところまで有効にします
-        last_node_th = -1
+        end_th_of_node = 0
         for i in range(0, len(node_th_set)):
             if i not in node_th_set:
                 break
 
             node_th_set.remove(i)
-            last_node_th = i
+            end_th_of_node = i + 1
 
         # 残っている node 列は others リストに入れます
         for node_th in node_th_set:
             others_name_list.append(f'node{node_th}')
 
-        # edge 列は 1 から last_node_th まで連番で続いているところだけ有効にします
-        last_edge_th = -1
-        for i in range(1, last_node_th + 1):
+        # edge 列は 1 から ［end_th_of_node の手前］まで連番で続いているところだけ有効にします
+        end_th_of_edge = 0
+        for i in range(1, end_th_of_node):
             if i not in node_th_set:
                 break
 
             edge_th_set.remove(i)
-            last_edge_th = i
+            end_th_of_edge = i + 1
 
         # 残っている edge 列は others リストに入れます
         for edge_th in edge_th_set:
             others_name_list.append(f'edge{edge_th}')
 
 
-        return last_node_th, last_edge_th, others_name_list
-
-
-    @staticmethod
-    def find_end_th_of_column(df, prefix, start_number):
-        """'prefix{n}'列を数える。nは0から始まる
-        
-        列名を左から見ていくと、 node0, node1, node2 といった形で 0から始まる昇順の連番が付いている "node数" 形式の列名が見つかるものとします
-
-        TODO TableControl.sort_out_column_names_node_edge_others() を使って列名を振り分けてからこのメソッドを使うと高速化できそう
-
-        Parameters
-        ----------
-        df : DataFrame
-            データフレーム
-        prefix : str
-            列名の数字の前の部分。 'node' または 'edge'
-        start_number : int
-            開始番号。エッジなら 1、ノードなら 0
-        """
-
-        if prefix == 'node':
-            pattern_of_column_name = TableControl._pattern_of_column_name_of_node
-
-        elif prefix == 'edge':
-            pattern_of_column_name = TableControl._pattern_of_column_name_of_edge
-
-        else:
-            raise ValueError(f'{prefix}')
-
-        expected_item_th = start_number    # 次は 'node{0}' を期待する
-        for column_name in df.columns.values:
-            result = pattern_of_column_name.match(column_name)
-            if result:
-                item_th = int(result.group(1))
-                if expected_item_th == item_th:
-                    expected_item_th += 1
-
-        # テーブルにあるノード数
-        #print(f"[{datetime.datetime.now()}] Table has {expected_item_th} nodes root node included")
-
-        return expected_item_th     # end 番号に相当
+        return end_th_of_node, end_th_of_edge, others_name_list

@@ -4,31 +4,49 @@ from .library import TableControl
 
 
 class ColumnsSorting():
-    """列ソート"""
+    """列ソート、及びその途中の計算結果"""
 
 
-    def sort_columns(df):
-        """列ソート
+    def __init__(self):
+        # 計算途中結果
+        self._end_th_of_node = None
+        self._end_th_of_edge = None
 
-        TODO 列名をソートしたい。no,node0,edge1,node1,edge2,node2,remaining_a,remaining_b,... のような感じに
+
+    @property
+    def end_th_of_node(self):
+        """node0 から連続する最後の node{i} の i を +1 したもの。なければ 0"""
+        return self._end_th_of_node
+
+
+    @property
+    def end_th_of_edge(self):
+        """edge1 から ［edge{end_th_of_node} の手前］まで連続する最後の edge{i} の i を +1 したもの。なければ 0"""
+        return self._end_th_of_edge
+
+
+    def execute(self, df):
+        """実行
+
+        列名をソートする。no,node0,edge1,node1,edge2,node2,remaining_a,remaining_b,... のような感じに
         """
 
         # 'no' はインデックスなので、列名にはない
-        last_end_th_of_node, last_end_th_of_edge, others_name_list = TableControl.sort_out_column_names_node_edge_others(df)
+        self._end_th_of_node, self._end_th_of_edge, others_name_list = TableControl.sort_out_column_names_node_edge_others(df)
 
         # 'no' 列を含まないようにしてください
         column_name_list = []
 
-        if last_end_th_of_node < 0:
-            raise ValueError(f'node0 列がありませんでした  {last_end_th_of_edge=}  {last_end_th_of_node=}  {others_name_list=}')
+        if self._end_th_of_node < 1:
+            raise ValueError(f'node0 列がありませんでした  {self._end_th_of_edge=}  {self._end_th_of_node=}  {others_name_list=}')
         
         # node0 列を追加
         column_name_list.append('node0')
 
-        for i in range(1, last_end_th_of_node + 1):
+        for i in range(1, self._end_th_of_node):
 
             # あれば edge{i} 列を追加
-            if i <= last_end_th_of_edge:
+            if i < self._end_th_of_edge:
                 column_name_list.append(f'edge{i}')
 
             # node{i} 列を追加
@@ -45,7 +63,7 @@ class InputCompletion():
 
 
     @staticmethod
-    def fill_directory(df, end_node_th, debug_write=False):
+    def fill_directory(df, end_th_of_node, debug_write=False):
         """ディレクトリーの空欄を埋めます
         
         Before:
@@ -59,10 +77,10 @@ class InputCompletion():
             a,j,p,l,e,m,n
         """
 
-        last_node_th = end_node_th - 1
+        last_node_th = end_th_of_node - 1
 
         if debug_write:
-            print(f"[{datetime.datetime.now()}] このテーブルは{end_node_th}個のノードがある。最終ノードは {last_node_th}")
+            print(f"[{datetime.datetime.now()}] このテーブルは{end_th_of_node}個のノードがある。最終ノードは {last_node_th}")
 
         row_size = len(df)
 
@@ -71,7 +89,7 @@ class InputCompletion():
 
             # この行について、最終ノード列を調べる
             actual_last_node_th = last_node_th   # 最終ノードから開始
-            for node_th in reversed(range(0, end_node_th)):
+            for node_th in reversed(range(0, end_th_of_node)):
                 column_name = f'node{node_th}'
 
                 # 縮めていく

@@ -36,9 +36,9 @@ class TreeDrawer():
         self._settings_obj = settings_obj
         self._debug_write = debug_write
 
-        self._prev_record = Record.new_empty(specified_end_node_th=self._table.analyzer.end_node_th)
-        self._curr_record = Record.new_empty(specified_end_node_th=self._table.analyzer.end_node_th)
-        self._next_record = Record.new_empty(specified_end_node_th=self._table.analyzer.end_node_th)
+        self._prev_record = Record.new_empty(specified_end_th_of_node=self._table.analyzer.end_th_of_node)
+        self._curr_record = Record.new_empty(specified_end_th_of_node=self._table.analyzer.end_th_of_node)
+        self._next_record = Record.new_empty(specified_end_th_of_node=self._table.analyzer.end_th_of_node)
 
         # 背景色関連
         self._header_bgcolor_list = [
@@ -139,7 +139,7 @@ class TreeDrawer():
         self._table.for_each(on_each=self._on_each_record)
 
         # 最終行の実行
-        self._on_each_record(next_row_number=len(self._table.df), next_record=Record.new_empty(specified_end_node_th=self._table.analyzer.end_node_th))
+        self._on_each_record(next_row_number=len(self._table.df), next_record=Record.new_empty(specified_end_th_of_node=self._table.analyzer.end_th_of_node))
 
         # ウィンドウ枠の固定
         self._ws.freeze_panes = 'B2'
@@ -181,7 +181,7 @@ class TreeDrawer():
 
 
         head_column_th = 4
-        for node_th in range(1, self._table.analyzer.end_node_th):
+        for node_th in range(1, self._table.analyzer.end_th_of_node):
 
             width = self._settings_obj.dictionary['column_width_of_parent_side_edge']
             if width is not None:
@@ -244,7 +244,7 @@ class TreeDrawer():
         flip = 0
         head_column_th = 4
 
-        for node_th in range(1, self._table.analyzer.end_node_th):
+        for node_th in range(1, self._table.analyzer.end_th_of_node):
             # 背景色、文字色
             ws[f'{xl.utils.get_column_letter(head_column_th    )}{row_th}'].fill = self._header_bgcolor_list[flip]
             ws[f'{xl.utils.get_column_letter(head_column_th + 1)}{row_th}'].fill = self._header_bgcolor_list[flip]
@@ -260,7 +260,7 @@ class TreeDrawer():
 
         # 葉側パディング
         # --------------
-        target_column_th = self._table.analyzer.end_node_th * StyleControl.ONE_NODE_COLUMNS + 1
+        target_column_th = self._table.analyzer.end_th_of_node * StyleControl.ONE_NODE_COLUMNS + 1
         column_letter = xl.utils.get_column_letter(target_column_th)
         cell_address = f'{column_letter}{row_th}'
         # 背景色、文字色
@@ -277,7 +277,7 @@ class TreeDrawer():
         # 最終層以降の列
         column_name_of_leaf_node = self._table.analyzer.get_column_name_of_last_node()
         is_remaining = False
-        target_column_th = self._table.analyzer.end_node_th * StyleControl.ONE_NODE_COLUMNS + 2   # 空列を１つ挟む
+        target_column_th = self._table.analyzer.end_th_of_node * StyleControl.ONE_NODE_COLUMNS + 2   # 空列を１つ挟む
         for column_name in self._table.df.columns:
 
             # ツリー区は無視
@@ -594,16 +594,16 @@ class TreeDrawer():
             # ------
             depth_th = 0
             column_letter = xl.utils.get_column_letter(3)   # 'C'
-            if depth_th < self._table.analyzer.end_node_th:
+            if depth_th < self._table.analyzer.end_th_of_node:
                 draw_node(depth_th=depth_th, three_column_names=[None, None, column_letter], three_row_numbers=three_row_numbers)
 
 
             # 第１～最終層
             # ------------
-            for depth_th in range(1, self._table.analyzer.end_node_th):
+            for depth_th in range(1, self._table.analyzer.end_th_of_node):
                 head_column_th = depth_th * StyleControl.ONE_NODE_COLUMNS + 1
 
-                if depth_th < self._table.analyzer.end_node_th:
+                if depth_th < self._table.analyzer.end_th_of_node:
                     # 第1層は 'D', 'E', 'F'、以降、後ろにずれていく
                     column_letter_list = [
                         xl.utils.get_column_letter(head_column_th),
@@ -681,7 +681,7 @@ class TreeEraser():
 
         # 指定の列の左側の垂直の罫線を見ていく
         column_th = 5
-        for node_th in range(1, self._table.analyzer.end_node_th):
+        for node_th in range(1, self._table.analyzer.end_th_of_node):
             self._erase_unnecessary_border_by_column(column_letter=xl.utils.get_column_letter(column_th))
             column_th += 3
 

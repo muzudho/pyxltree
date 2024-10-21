@@ -52,7 +52,7 @@ class StyleControl():
         # それ以外
 
         # 書出し先のツリー区の最後
-        last_column_th_of_wb = StyleControl.NUMBER_OF_COLUMNS_OF_ROW_HEADER + source_table.analyzer.end_node_th * StyleControl.ONE_NODE_COLUMNS
+        last_column_th_of_wb = StyleControl.NUMBER_OF_COLUMNS_OF_ROW_HEADER + source_table.analyzer.end_th_of_node * StyleControl.ONE_NODE_COLUMNS
 
         # プロパティ区
         column_th_of_source_in_property_ward = specified_column_location_of_source - column_th_of_source_last_node -1     # 1 以上になる
