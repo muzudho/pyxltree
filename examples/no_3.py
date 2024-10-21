@@ -39,7 +39,7 @@ def execute():
         'vertical_alignment_of_node':            None,      # 文字の垂直方向の寄せ。規定値 None。'bottom', 'center', 'top', 'justify', 'distributed' のいずれか。指定しないなら None
 
         # その他の操作
-        'do_not_cell_mege':                     False,      # セル結合しない
+        'do_not_merge_cells':                   False,      # セル結合しないなら真
     }
 
     # 出力先ワークブック指定

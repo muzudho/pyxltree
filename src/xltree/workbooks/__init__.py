@@ -525,6 +525,15 @@ class TreeDrawer():
 
                 self._settings_obj.set_bgcolor_of_tree_to(cell=ws[f'{cn3}{row3_th}'])      # ツリー構造図の背景色
 
+                # セル結合していいなら
+                if not self._settings_obj.dictionary['do_not_merge_cells']:
+                    #print(f"セル結合 {cn3}{row1_th}:{cn3}{row2_th}")
+                    ws.merge_cells(f'{cn3}{row1_th}:{cn3}{row2_th}')
+
+                    # FIXME 文字も数も区別なく左に揃えていいものか？
+                    #self._settings_obj.set_alignment_left_center(cell=ws[f'{cn3}{row1_th}'])
+                    self._settings_obj.set_alignment_center_center(cell=ws[f'{cn3}{row1_th}'])
+
 
             # 第０層
             # ------
@@ -597,6 +606,14 @@ class TreeDrawer():
                     ]
                     for cell in cells:
                        self._settings_obj.set_bgcolor_of_tree_to(cell=cell)
+
+                    # セル結合していいなら
+                    if not self._settings_obj.dictionary['do_not_merge_cells']:
+                        ws.merge_cells(f'{column_letter}{row1_th}:{column_letter}{row3_th}')
+
+                        # FIXME 文字も数も区別なく左に揃えていいものか？
+                        #self._settings_obj.set_alignment_left_center(cell=ws[f'{column_letter}{row1_th}'])
+                        self._settings_obj.set_alignment_center_center(cell=ws[f'{column_letter}{row1_th}'])
 
 
 class TreeEraser():

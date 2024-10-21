@@ -6,10 +6,11 @@
 
 Output:  
 
-![View](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__20--1625-XltreeDrive.png)  
+![View](./docs_dev/img/202410__pg__22--0026-XltreeDrive.png)  
 
 👆　わたしのWindows PCのCドライブの例です  
 （`xltree>=0.0.10` から） ツリー部分より右側の列、つまり上図でいうと last_modified 列以降も出力します  
+（`xltree>=0.3.1` から） セル結合するかしないか選べます  
 
 Input case like a table:  
 
@@ -86,26 +87,26 @@ def execute():
 
 Output:  
 
-![View](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__19--0020-XltreeWordChainGameView.png)  
+![View](./docs_dev/img/202410__pg__22--0034-XltreeWordChainGame.png)  
 
 👆　しりとりというゲームの記録です。図（Diagram）の辺（Edge）にテキストを書くのはオプションです  
 
 Input:  
 
-![Data](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__19--0021-XltreeWordChainGameData.png)  
+![Data](./docs_dev/img/202410__pg__22--0039-XltreeWordChainGameData.png)  
 
 ```csv
-no,node0,edge1,node1,edge2,node2,edge3,node3,edge4,node4,edge5,node5,edge6,node6,edge7,node7,edge8,node8,edge9,node9
-1,Word Chain Game,Ea,Eagle,E,Euler,R,Rex,$,ended with x,,,,,,,,,,
-2,Word Chain Game,Eb,Ebony,Y,Yellow,W,Wood,D,Door,R,Rocket,T,Tax,$,ended with x,,,,
-3,Word Chain Game,Ec,Eclair,R,Road,D,Dungeon,N,News,S,Sex,$,ended with x,,,,,,
-4,Word Chain Game,Ed,Edelweiss,S,Sox,$,ended with x,,,,,,,,,,,,
-7,Word Chain Game,En,English,Ha,Hand,Dog,Dog,G,Gorilla,A,Arm,M,Moon,N,Nice,$,adjective,,
-6,Word Chain Game,En,English,Ha,Hand,Doo,Door,R,Ring,G,Grape,E,Egg,G,Golf,F,Fox,$,ended with x
-5,Word Chain Game,En,English,Ha,Hand,Dr,Dragon,N,Nob,B,Box,$,ended with x,,,,,,
-8,Word Chain Game,En,English,He,Hex,$,ended with x,,,,,,,,,,,,
-9,Word Chain Game,En,English,Ho,Hook,Kit,Kitchen,N,Nickel,L,Lemon,N,Nickel,$,time up,,,,
-10,Word Chain Game,En,English,Ho,Hook,Kin,King,G,Goal,L,Lemon,N,Nickel,L,Lemon,$,repetition,,
+no,node0,edge1,node1,edge2,node2,edge3,node3,edge4,node4,edge5,node5,edge6,node6,edge7,node7,edge8,node8,result
+1,Word Chain Game,Ea,Eagle,E,Euler,R,Rex,,,,,,,,,,,ended with x
+2,Word Chain Game,Eb,Ebony,Y,Yellow,W,Wood,D,Door,R,Rocket,T,Tax,,,,,ended with x
+3,Word Chain Game,Ec,Eclair,R,Road,D,Dungeon,N,News,S,Sex,,,,,,,ended with x
+4,Word Chain Game,Ed,Edelweiss,S,Sox,,,,,,,,,,,,,ended with x
+7,Word Chain Game,En,English,Ha,Hand,Dog,Dog,G,Gorilla,A,Arm,M,Moon,N,Nice,,,adjective
+6,Word Chain Game,En,English,Ha,Hand,Doo,Door,R,Ring,G,Grape,E,Egg,G,Golf,F,Fox,ended with x
+5,Word Chain Game,En,English,Ha,Hand,Dr,Dragon,N,Nob,B,Box,,,,,,,ended with x
+8,Word Chain Game,En,English,He,Hex,,,,,,,,,,,,,ended with x
+9,Word Chain Game,En,English,Ho,Hook,Kit,Kitchen,N,Nickel,L,Lemon,N,Nickel,,,,,time up
+10,Word Chain Game,En,English,Ho,Hook,Kin,King,G,Goal,L,Lemon,N,Nickel,L,Lemon,,,repetition
 ```
 
 👆　`edge` 列は 1 から始まる連番で増やすことができます。 `node` 列より深い番号を付けても無視されます  
@@ -135,7 +136,7 @@ def execute():
 
 Output:  
 
-![View](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__19--0311-XltreeSettings.png)  
+![View](./docs_dev/img/202410__pg__22--0035-XltreeUnevenCoin.png)  
 
 👆　スタイルも少しだけ設定できます  
 
@@ -180,6 +181,9 @@ def execute():
         # 文字寄せ関連
         'horizontal_alignment_of_node':        'left',      # 文字の水平方向の寄せ。規定値 None。'left', 'fill', 'centerContinuous', 'center', 'right', 'general', 'justify', 'distributed' のいずれか。指定しないなら None
         'vertical_alignment_of_node':            None,      # 文字の垂直方向の寄せ。規定値 None。'bottom', 'center', 'top', 'justify', 'distributed' のいずれか。指定しないなら None
+
+        # その他の操作
+        'do_not_merge_cells':                   False,      # セル結合しないなら真
     }
 
     # 出力先ワークブック指定
