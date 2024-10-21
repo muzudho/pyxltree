@@ -52,7 +52,7 @@ class Settings():
             * `vertical_alignment_of_node` - 文字の垂直方向の寄せ。規定値 None。'bottom', 'center', 'top', 'justify', 'distributed' のいずれか。指定しないなら None
 
             その他の操作
-            * `do_not_cell_mege` - セル結合しない
+            * `do_not_merge_cells` - セル結合しないなら真
         """
 
         # 既定のディクショナリー
@@ -92,7 +92,7 @@ class Settings():
             'vertical_alignment_of_node':            None,
 
             # その他の操作
-            'do_not_cell_mege':                     False,      # セル結合しない
+            'do_not_merge_cells':                   False,      # セル結合しないなら真
         }
 
         # 上書き
@@ -215,6 +215,14 @@ class Settings():
 
         # 文字寄せ関連
         # ------------
+        #
+        #   horizontal は 'distributed', 'fill', 'general', 'center', 'centerContinuous', 'justify', 'right', 'left' のいずれかから選ぶ
+        #   vertical は 'center', 'top', 'bottom', 'justify', 'distributed' のいずれかから選ぶ
+        #   TODO Excelでは文字は left、数は right など規定値が型によって違うが、そこまで細かく設定を分けてない。分けるか？
+        #
+        self._alignment_left_center = Alignment(horizontal='left', vertical='center')
+        self._alignment_center_center = Alignment(horizontal='center', vertical='center')
+
         horizontal = self.dictionary['horizontal_alignment_of_node']
         vertical = self.dictionary['vertical_alignment_of_node']
         if horizontal is not None and vertical is not None:
@@ -230,6 +238,14 @@ class Settings():
     @property
     def dictionary(self):
         return self._dictionary
+
+
+    def set_alignment_left_center(self, cell):
+        cell.alignment = self._alignment_left_center
+
+
+    def set_alignment_center_center(self, cell):
+        cell.alignment = self._alignment_center_center
 
 
     def set_striked_border(self, cell):
