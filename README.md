@@ -6,13 +6,14 @@
 
 Output:  
 
-![View](./docs_dev/img/202410__pg__20--1625-XltreeDrive.png)  
+![View](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__20--1625-XltreeDrive.png)  
 
 👆　わたしのWindows PCのCドライブの例です  
+（`xltree>=0.0.10` から） ツリー部分より右側の列、つまり上図でいうと last_modified 列以降も出力します  
 
 Input case like a table:  
 
-![Data](./docs_dev/img/202410__pg__20--1630-XltreeDriveTableData.png)  
+![Data](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__20--1630-XltreeDriveTableData.png)  
 
 ```csv
 no,node0,node1,node2,node3,node4,node5,node6,node7,node8,last_modified,size,comment
@@ -36,7 +37,7 @@ no,node0,node1,node2,node3,node4,node5,node6,node7,node8,last_modified,size,comm
 
 Input case like a tree:  
 
-![Data](./docs_dev/img/202410__pg__20--1633-XltreeDriveTreeData.png)  
+![Data](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__20--1633-XltreeDriveTreeData.png)  
 
 ```csv
 node0,node1,node2,node3,node4,node5,node6,node7,node8,last_modified,size,comment
@@ -144,42 +145,42 @@ Input:
 Scripts: 
 
 ```py
-from xltree import Settings, WorkbookControl
+from xltree import WorkbookControl
 
 
 def execute():
 
     # 各種設定
-    settings = Settings(
-            # 省略可能
-            dictionary = {
-                # 列の幅
-                #'column_width_of_no':                       4,      # A列の幅。no列
-                #'column_width_of_row_header_separator':     3,      # B列の幅。空列
-                'column_width_of_node':                     7,      # 例：C, F, I ...列の幅。ノードの箱の幅
-                #'column_width_of_parent_side_edge':         2,      # 例：D, G, J ...列の幅。エッジの水平線のうち、親ノードの方
-                'column_width_of_child_side_edge':         22,      # 例：E, H, K ...列の幅。エッジの水平線のうち、子ノードの方
+    settings = {
+        # 列の幅
+        #'column_width_of_no':                       4,      # A列の幅。no列
+        #'column_width_of_root_side_padding':        3,      # B列の幅。ツリー構造図の根側パディング
+        #'column_width_of_leaf_side_padding':        3,      # ツリー構造図の葉側パディング
+        'column_width_of_node':                     7,      # 例：C, F, I ...列の幅。ノードの箱の幅
+        #'column_width_of_parent_side_edge':         2,      # 例：D, G, J ...列の幅。エッジの水平線のうち、親ノードの方
+        'column_width_of_child_side_edge':         22,      # 例：E, H, K ...列の幅。エッジの水平線のうち、子ノードの方
 
-                # 行の高さ
-                'row_height_of_header':                    13,      # 第１行。ヘッダー
-                'row_height_of_column_header_separator':   13,      # 第２行。空行
-                'row_height_of_upper_side_of_node':        13,      # ノードの上側のセルの高さ
-                'row_height_of_lower_side_of_node':         6,      # ノードの下側のセルの高さ
-                'row_height_of_node_spacing':               6,      # ノード間の高さ
+        # 行の高さ
+        'row_height_of_header':                    13,      # 第１行。ヘッダー
+        'row_height_of_lower_side_padding':        13,      # 第２行。ツリー構造図の軸の番号が小さい側パティング
+        'row_height_of_upper_side_of_node':        13,      # ノードの上側のセルの高さ
+        'row_height_of_lower_side_of_node':         6,      # ノードの下側のセルの高さ
+        'row_height_of_node_spacing':               6,      # ノード間の高さ
 
-                # 背景色関連
-                'bgcolor_of_header_1':               'CCCCFF',      # ヘッダーの背景色その１
-                'bgcolor_of_header_2':               '333366',      # ヘッダーの背景色その２
-                'bgcolor_of_node':                   'EEFFCC',      # 背景色
+        # 背景色関連
+        'bgcolor_of_tree':                   'FFFFFF',      # ツリー構造図の背景
+        'bgcolor_of_header_1':               'CCCCFF',      # ヘッダーの背景色その１
+        'bgcolor_of_header_2':               '333366',      # ヘッダーの背景色その２
+        'bgcolor_of_node':                   'EEFFCC',      # 背景色
 
-                # 文字色関連
-                'fgcolor_of_header_1':               '111122',      # ヘッダーの文字色その１
-                'fgcolor_of_header_2':               'EEEEFF',      # ヘッダーの文字色その２
+        # 文字色関連
+        'fgcolor_of_header_1':               '111122',      # ヘッダーの文字色その１
+        'fgcolor_of_header_2':               'EEEEFF',      # ヘッダーの文字色その２
 
-                # 文字寄せ関連
-                'horizontal_alignment_of_node':        'left',      # 文字の水平方向の寄せ。規定値 None。'left', 'fill', 'centerContinuous', 'center', 'right', 'general', 'justify', 'distributed' のいずれか。指定しないなら None
-                'vertical_alignment_of_node':            None,      # 文字の垂直方向の寄せ。規定値 None。'bottom', 'center', 'top', 'justify', 'distributed' のいずれか。指定しないなら None
-            })
+        # 文字寄せ関連
+        'horizontal_alignment_of_node':        'left',      # 文字の水平方向の寄せ。規定値 None。'left', 'fill', 'centerContinuous', 'center', 'right', 'general', 'justify', 'distributed' のいずれか。指定しないなら None
+        'vertical_alignment_of_node':            None,      # 文字の垂直方向の寄せ。規定値 None。'bottom', 'center', 'top', 'justify', 'distributed' のいずれか。指定しないなら None
+    }
 
     # 出力先ワークブック指定
     wbc = WorkbookControl(target='./examples/temp/uneven_coin.xlsx', mode='w', settings=settings)
@@ -194,7 +195,10 @@ def execute():
     wbc.save_workbook()
 ```
 
-👆　Settings オブジェクトを使ってください  
+👆　Settings オブジェクトを使ってください。  
+（`xltree>=0.1.0` から） settings は Dictionary 型になりました  
+（`xltree>=0.2.0` から） `column_width_of_row_header_separator` は `column_width_of_root_side_padding` に名称変更しました
+（`xltree>=0.3.0` から） `row_height_of_column_header_separator` は `row_height_of_lower_side_padding` に名称変更しました
 
 # その他
 

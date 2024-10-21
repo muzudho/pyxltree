@@ -1,4 +1,3 @@
-import re
 import openpyxl as xl
 from ..database.library import TableControl
 
@@ -24,6 +23,8 @@ class StyleControl():
         例： node0, edge1, node1, node2
 
         no 列、edge{数}列はオプションです
+
+        FIXME: `node0, edge1, foo1, bar1, node1` のように予期しない列が混ざっているケースは？
         """
 
         # ルートノード
@@ -35,23 +36,23 @@ class StyleControl():
         specified_column_location_of_source = TableControl.get_column_location_by_column_name(df=source_table.df, column_name=column_name)
 
         # 列名から、ノード、エッジ、余り列を見分ける
-        # FIXME 高速化
         # ノード
-        result = re.match(r'node(\d+)', column_name)
+        result = TableControl.pattern_of_column_name_of_node.match(column_name)
         if result:
             node_th = int(result.group(1))
             return StyleControl.NUMBER_OF_COLUMNS_OF_ROW_HEADER + 1 + node_th * StyleControl.ONE_NODE_COLUMNS
 
         # エッジ
-        result = re.match(r'edge(\d+)', column_name)
+        result = TableControl.pattern_of_column_name_of_edge.match(column_name)
         if result:
             edge_th = int(result.group(1))
+            # FIXME node の前に edge 列があるという前提で大丈夫か？
             return StyleControl.NUMBER_OF_COLUMNS_OF_ROW_HEADER + 1 + edge_th * StyleControl.ONE_NODE_COLUMNS - 1
 
         # それ以外
 
         # 書出し先のツリー区の最後
-        last_column_th_of_wb = StyleControl.NUMBER_OF_COLUMNS_OF_ROW_HEADER + source_table.analyzer.end_node_th * StyleControl.ONE_NODE_COLUMNS
+        last_column_th_of_wb = StyleControl.NUMBER_OF_COLUMNS_OF_ROW_HEADER + source_table.analyzer.end_th_of_node * StyleControl.ONE_NODE_COLUMNS
 
         # プロパティ区
         column_th_of_source_in_property_ward = specified_column_location_of_source - column_th_of_source_last_node -1     # 1 以上になる

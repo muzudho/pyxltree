@@ -1,5 +1,8 @@
 # パッケージを iport した場合は、 `from src.xltree`  の部分を `from xltree` に変えてください
-from src.xltree import Settings, WorkbookControl
+from src.xltree import WorkbookControl
+
+# テスト用
+from tests.worksheets import WorksheetDumpControl
 
 
 def execute():
@@ -9,6 +12,7 @@ def execute():
 
     # ワークシート描画
     wbc.render_worksheet(target='Drive', based_on='./examples/data/drive_by_table.csv')
+    WorksheetDumpControl.dump(worksheet=wbc._ws, file='./examples/temp/actual/no_1_tree_drive_Drive.txt')     # テスト用
 
     # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
     wbc.remove_worksheet(target='Sheet')

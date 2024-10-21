@@ -1,4 +1,3 @@
-import re
 import datetime
 import pandas as pd
 import openpyxl as xl
@@ -8,6 +7,7 @@ from openpyxl.styles.alignment import Alignment
 
 from ..library import nth
 from ..database import TreeNode, Record
+from ..database.library import TableControl
 from ..models import TreeModel
 from .style import StyleControl
 
@@ -16,7 +16,7 @@ class TreeDrawer():
     """エクセルで罫線などを駆使して、樹形図を描画します"""
 
 
-    def __init__(self, table, ws, settings, debug_write=False):
+    def __init__(self, table, ws, settings_obj, debug_write=False):
         """初期化
         
         Parameters
@@ -25,7 +25,7 @@ class TreeDrawer():
             ツリーテーブル
         ws : openpyxl.Worksheet
             ワークシート
-        settings : Settings
+        settings_obj : Settings
             各種設定
         debug_write : bool
             デバッグライト
@@ -33,47 +33,80 @@ class TreeDrawer():
         """
         self._table = table
         self._ws = ws
-        self._settings = settings
+        self._settings_obj = settings_obj
         self._debug_write = debug_write
 
-        self._prev_record = Record.new_empty(specified_end_node_th=self._table.analyzer.end_node_th)
-        self._curr_record = Record.new_empty(specified_end_node_th=self._table.analyzer.end_node_th)
-        self._next_record = Record.new_empty(specified_end_node_th=self._table.analyzer.end_node_th)
+        self._prev_record = Record.new_empty(specified_end_th_of_node=self._table.analyzer.end_th_of_node)
+        self._curr_record = Record.new_empty(specified_end_th_of_node=self._table.analyzer.end_th_of_node)
+        self._next_record = Record.new_empty(specified_end_th_of_node=self._table.analyzer.end_th_of_node)
 
-        # ヘッダー関連
+        # 背景色関連
         self._header_bgcolor_list = [
-            PatternFill(patternType='solid', fgColor=self._settings.dictionary['bgcolor_of_header_1']),
-            PatternFill(patternType='solid', fgColor=self._settings.dictionary['bgcolor_of_header_2'])]
+            PatternFill(patternType='solid', fgColor=self._settings_obj.dictionary['bgcolor_of_header_1']),
+            PatternFill(patternType='solid', fgColor=self._settings_obj.dictionary['bgcolor_of_header_2'])]
+        self._bgcolor_of_tree = PatternFill(patternType='solid', fgColor=self._settings_obj.dictionary['bgcolor_of_tree'])
 
+        # 文字色関連
         self._header_fgcolor_list = [
-            Font(color=self._settings.dictionary['fgcolor_of_header_1']),
-            Font(color=self._settings.dictionary['fgcolor_of_header_2'])]
+            Font(color=self._settings_obj.dictionary['fgcolor_of_header_1']),
+            Font(color=self._settings_obj.dictionary['fgcolor_of_header_2'])]
 
         # ノード関連
         self._node_alignment = Alignment(
-                horizontal=self._settings.dictionary['horizontal_alignment_of_node'],
-                vertical=self._settings.dictionary['vertical_alignment_of_node'])
+                horizontal=self._settings_obj.dictionary['horizontal_alignment_of_node'],
+                vertical=self._settings_obj.dictionary['vertical_alignment_of_node'])
 
-        self._node_bgcolor = PatternFill(patternType='solid', fgColor=self._settings.dictionary['bgcolor_of_node'])
+        self._node_bgcolor = PatternFill(patternType='solid', fgColor=self._settings_obj.dictionary['bgcolor_of_node'])
+
+        # 罫線
+        side = Side(style='thin', color='111111')
+        self._remaining_cell_upper_border = Border(top=side, left=side, right=side)
+        self._remaining_cell_middle_border = Border(left=side, right=side)
+        self._remaining_cell_lower_border = Border(bottom=side, left=side, right=side)
 
 
     def render(self):
         """描画"""
 
-        # 対象シートへ列ヘッダー書出し
-        self._on_header()
+        # 列幅の自動調整
+        # --------------
+        #
+        #   NOTE 'no' は列ではなくインデックスなのでやり方が異なる
+        #   NOTE 文字数は取れるが、１文字の横幅が１とは限らない
+        #
+        # 'no' インデックス
+        width = len('no')
+        for index_value in self._table.df.index:
+            width = max(width, len(str(index_value)))
+        self._ws.column_dimensions['A'].width = width * 1.5
 
-        # NOTE 文字数は取れるが、１文字の横幅が１とは限らない
+        # エッジ列が省略されているケース
+        #
+        #   NOTE 規定値を何か設定しないと、デフォルトの長い列幅になってしまう
+        #
+        for source_column_th, column_name in enumerate(self._table.df.columns, 1):
+
+            # ノードを見つければ、その前列がエッジ
+            result = TableControl.pattern_of_column_name_of_node.match(column_name)
+            if result:
+                target_column_th = StyleControl.get_target_column_th(source_table=self._table, column_name=column_name)
+                target_column_letter = xl.utils.get_column_letter(target_column_th - 1)
+                # 幅は 4 でいいだろ
+                self._ws.column_dimensions[target_column_letter].width = 4
+                continue
+
+        # 各列
         for source_column_th, column_name in enumerate(self._table.df.columns, 1):
             target_column_th = StyleControl.get_target_column_th(source_table=self._table, column_name=column_name)
             target_column_letter = xl.utils.get_column_letter(target_column_th)
             number_of_character = StyleControl.get_number_of_character_of_column(df=self._table.df, column_name=column_name)
+            # Root とか 1st とか、ヘッダーに入っているので、とりあえず最低でも 4文字は欲しい。 1000th とかはとりあえず考えないことにする
+            number_of_character = max(number_of_character, 4)
 
             #print(f"列幅の自動調整  {column_name=}  {target_column_letter=}  内訳：  {source_column_th=}  {target_column_th=}  {number_of_character=}")
 
-            # FIXME 高速化
             # ノード
-            result = re.match(r'node(\d+)', column_name)
+            result = TableControl.pattern_of_column_name_of_node.match(column_name)
             if result:
                 # 文字幅を 1.2 倍 + 1 ぐらいしておく
                 # FIXME フォント情報からきっちり横幅を取れないか？
@@ -85,7 +118,7 @@ class TreeDrawer():
             #
             #   余白を開けたいから広くとる
             #
-            result = re.match(r'edge(\d+)', column_name)
+            result = TableControl.pattern_of_column_name_of_edge.match(column_name)
             if result:
                 # 文字幅の 1.2 倍 + 4 ぐらいしておく
                 # FIXME フォント情報からきっちり横幅を取れないか？
@@ -99,11 +132,14 @@ class TreeDrawer():
             self._ws.column_dimensions[target_column_letter].width = number_of_character * 1.2
 
 
+        # 対象シートへ列ヘッダー書出し
+        self._on_header()
+
         # 対象シートへの各行書出し
         self._table.for_each(on_each=self._on_each_record)
 
         # 最終行の実行
-        self._on_each_record(next_row_number=len(self._table.df), next_record=Record.new_empty(specified_end_node_th=self._table.analyzer.end_node_th))
+        self._on_each_record(next_row_number=len(self._table.df), next_record=Record.new_empty(specified_end_th_of_node=self._table.analyzer.end_th_of_node))
 
         # ウィンドウ枠の固定
         self._ws.freeze_panes = 'B2'
@@ -130,15 +166,35 @@ class TreeDrawer():
 
         # 列の幅設定
         column_width_dict = {}
-        column_width_dict['A'] = self._settings.dictionary['column_width_of_no']                        # no
-        column_width_dict['B'] = self._settings.dictionary['column_width_of_row_header_separator']      # 空列
-        column_width_dict['C'] = self._settings.dictionary['column_width_of_node']                      # 根
+
+        width = self._settings_obj.dictionary['column_width_of_no']
+        if width is not None:
+            column_width_dict['A'] = width      # no
+
+        width = self._settings_obj.dictionary['column_width_of_root_side_padding']
+        if width is not None:
+            column_width_dict['B'] = width      # B列の幅。ツリー構造図の根側パディング
+        
+        width = self._settings_obj.dictionary['column_width_of_node']
+        if width is not None:
+            column_width_dict['C'] = width      # 根
+
 
         head_column_th = 4
-        for node_th in range(1, self._table.analyzer.end_node_th):
-            column_width_dict[xl.utils.get_column_letter(head_column_th    )] = self._settings.dictionary['column_width_of_parent_side_edge']   # 第n層  親側辺
-            column_width_dict[xl.utils.get_column_letter(head_column_th + 1)] = self._settings.dictionary['column_width_of_child_side_edge']    #        子側辺
-            column_width_dict[xl.utils.get_column_letter(head_column_th + 2)] = self._settings.dictionary['column_width_of_node']               #        節
+        for node_th in range(1, self._table.analyzer.end_th_of_node):
+
+            width = self._settings_obj.dictionary['column_width_of_parent_side_edge']
+            if width is not None:
+                column_width_dict[xl.utils.get_column_letter(head_column_th    )] = width   # 第n層  親側辺
+
+            width = self._settings_obj.dictionary['column_width_of_child_side_edge']
+            if width is not None:
+                column_width_dict[xl.utils.get_column_letter(head_column_th + 1)] = width   #        子側辺
+
+            width = self._settings_obj.dictionary['column_width_of_node']
+            if width is not None:
+                column_width_dict[xl.utils.get_column_letter(head_column_th + 2)] = width   #        節
+
             head_column_th += 3
 
 
@@ -148,10 +204,15 @@ class TreeDrawer():
 
         # 行の高さ設定
         # height の単位はポイント。初期値 8。昔のアメリカ人が椅子に座ってディスプレイを見たとき 1/72 インチに見える大きさが 1ポイント らしいが、そんなんワカラン。目視確認してほしい
-        row_height_dict = {
-            1: self._settings.dictionary['row_height_of_header'],
-            2: self._settings.dictionary['row_height_of_column_header_separator'],
-        }
+        row_height_dict = {}
+
+        height = self._settings_obj.dictionary['row_height_of_header']
+        if height is not None:
+            row_height_dict[1] = height
+
+        height = self._settings_obj.dictionary['row_height_of_lower_side_padding']
+        if height is not None:
+            row_height_dict[2] = height
 
         for row_number, height in row_height_dict.items():
             ws.row_dimensions[row_number].height = height
@@ -169,9 +230,12 @@ class TreeDrawer():
         ws[f'A{row_th}'].fill = self._header_bgcolor_list[0]
         ws[f'A{row_th}'].font = self._header_fgcolor_list[0]
 
-        # B列は空
-        ws[f'B{row_th}'].fill = self._header_bgcolor_list[0]
+        # 根側パディング
+        # --------------
+        ws[f'B{row_th}'].fill = self._header_bgcolor_list[1]
 
+        # 根
+        # --
         ws[f'C{row_th}'] = 'Root'
         ws[f'C{row_th}'].fill = self._header_bgcolor_list[1]
         ws[f'C{row_th}'].font = self._header_fgcolor_list[1]
@@ -180,7 +244,7 @@ class TreeDrawer():
         flip = 0
         head_column_th = 4
 
-        for node_th in range(1, self._table.analyzer.end_node_th):
+        for node_th in range(1, self._table.analyzer.end_th_of_node):
             # 背景色、文字色
             ws[f'{xl.utils.get_column_letter(head_column_th    )}{row_th}'].fill = self._header_bgcolor_list[flip]
             ws[f'{xl.utils.get_column_letter(head_column_th + 1)}{row_th}'].fill = self._header_bgcolor_list[flip]
@@ -194,33 +258,35 @@ class TreeDrawer():
             head_column_th += 3
 
 
+        # 葉側パディング
+        # --------------
+        target_column_th = self._table.analyzer.end_th_of_node * StyleControl.ONE_NODE_COLUMNS + 1
+        column_letter = xl.utils.get_column_letter(target_column_th)
+        cell_address = f'{column_letter}{row_th}'
+        # 背景色、文字色
+        ws[cell_address].fill = self._header_bgcolor_list[(flip + 1) % 2]   # 葉ノードと同じ色にする
+        ws[cell_address].font = self._header_fgcolor_list[(flip + 1) % 2]
+
+        width = self._settings_obj.dictionary['column_width_of_leaf_side_padding']
+        if width is not None:
+            ws.column_dimensions[column_letter].width = width
+
+
         # 余り列
         # ------
         # 最終層以降の列
         column_name_of_leaf_node = self._table.analyzer.get_column_name_of_last_node()
-        is_first_remaining = True
         is_remaining = False
-        target_column_th = self._table.analyzer.end_node_th * StyleControl.ONE_NODE_COLUMNS + 2   # 空列を１つ挟む
+        target_column_th = self._table.analyzer.end_th_of_node * StyleControl.ONE_NODE_COLUMNS + 2   # 空列を１つ挟む
         for column_name in self._table.df.columns:
+
+            # ツリー区は無視
             if column_name == column_name_of_leaf_node:
                 #print(f'ツリー区 {row_th=}  {column_name=}')
                 is_remaining = True
                 continue
 
             elif is_remaining:
-
-                # ツリー区と、プロパティ区のセパレーター
-                if is_first_remaining:
-                    cell_address = f'{xl.utils.get_column_letter(target_column_th - 1)}{row_th}'
-                    #print(f'余り列 {cell_address=}  {row_th=}  {column_name=}')
-
-                    # 背景色、文字色
-                    ws[cell_address].fill = self._header_bgcolor_list[flip]
-                    ws[cell_address].font = self._header_fgcolor_list[flip]
-
-                    is_first_remaining = False
-
-
                 cell_address = f'{xl.utils.get_column_letter(target_column_th)}{row_th}'
                 #print(f'{cell_address=}  {row_th=}  {column_name=}')
 
@@ -240,6 +306,11 @@ class TreeDrawer():
         # 空行にする
         row_th = 2
         ws[f'A{row_th}'].fill = self._header_bgcolor_list[0]
+
+        # ツリー構造図の背景色
+        for column_th in range(2, target_column_th):
+            column_letter = xl.utils.get_column_letter(column_th)
+            ws[f'{column_letter}{row_th}'].fill = self._bgcolor_of_tree
 
 
     def _on_each_record(self, next_row_number, next_record):
@@ -272,16 +343,29 @@ class TreeDrawer():
 
             # 行の高さ設定
             # height の単位はポイント。昔のアメリカ人が椅子に座ってディスプレイを見たとき 1/72 インチに見える大きさが 1ポイント らしいが、そんなんワカラン。目視確認してほしい
-            ws.row_dimensions[row1_th].height = self._settings.dictionary['row_height_of_upper_side_of_node']
-            ws.row_dimensions[row2_th].height = self._settings.dictionary['row_height_of_lower_side_of_node']
-            ws.row_dimensions[row3_th].height = self._settings.dictionary['row_height_of_node_spacing']
+            height = self._settings_obj.dictionary['row_height_of_upper_side_of_node']
+            if height is not None:
+                ws.row_dimensions[row1_th].height = height
+            
+            height = self._settings_obj.dictionary['row_height_of_lower_side_of_node']
+            if height is not None:
+                ws.row_dimensions[row2_th].height = height
+            
+            height = self._settings_obj.dictionary['row_height_of_node_spacing']
+            if height is not None:
+                ws.row_dimensions[row3_th].height = height
 
 
             ws[f'A{row1_th}'].value = self._curr_record.no
             ws[f'A{row1_th}'].fill = self._header_bgcolor_list[0]
             ws[f'A{row2_th}'].fill = self._header_bgcolor_list[0]
             ws[f'A{row3_th}'].fill = self._header_bgcolor_list[0]
-            # B列は空
+
+            # 根側のパディング
+            # ----------------
+            ws[f'B{row1_th}'].fill = self._bgcolor_of_tree
+            ws[f'B{row2_th}'].fill = self._bgcolor_of_tree
+            ws[f'B{row3_th}'].fill = self._bgcolor_of_tree
 
 
             def draw_edge(depth_th, three_column_names, three_row_numbers):
@@ -330,20 +414,35 @@ class TreeDrawer():
                 l_letter_border_to_child_upward = Border(left=orange_side, bottom=orange_side)
 
 
-                nd = self._curr_record.node_at(depth_th=depth_th)
-
-                if nd is None or pd.isnull(nd.text):
-                    if self._debug_write:
-                        print(f"[{datetime.datetime.now()}] Pencil(Edge) {self._curr_record.no} record > {nth(depth_th)} layer  Empty cell")
-                    return
-
-
                 cn1 = three_column_names[0]
                 cn2 = three_column_names[1]
                 cn3 = three_column_names[2]
                 row1_th = three_row_numbers[0]
                 row2_th = three_row_numbers[1]
                 row3_th = three_row_numbers[2]
+
+
+                # ツリー構造図の背景色
+                # --------------------
+                ws[f'{cn1}{row1_th}'].fill = self._bgcolor_of_tree
+                ws[f'{cn1}{row2_th}'].fill = self._bgcolor_of_tree
+                ws[f'{cn1}{row3_th}'].fill = self._bgcolor_of_tree
+
+                ws[f'{cn2}{row1_th}'].fill = self._bgcolor_of_tree
+                ws[f'{cn2}{row2_th}'].fill = self._bgcolor_of_tree
+                ws[f'{cn2}{row3_th}'].fill = self._bgcolor_of_tree
+
+                ws[f'{cn3}{row1_th}'].fill = self._bgcolor_of_tree
+                ws[f'{cn3}{row2_th}'].fill = self._bgcolor_of_tree
+                ws[f'{cn3}{row3_th}'].fill = self._bgcolor_of_tree
+
+
+                nd = self._curr_record.node_at(depth_th=depth_th)
+
+                if nd is None or pd.isnull(nd.text):
+                    if self._debug_write:
+                        print(f"[{datetime.datetime.now()}] Pencil(Edge) {self._curr_record.no} record > {nth(depth_th)} layer  Empty cell")
+                    return
 
 
                 # 自件と前件を比較して、根から自ノードまで、ノードテキストが等しいか？
@@ -445,6 +544,11 @@ class TreeDrawer():
                     第何層。根層は 0
                 """
 
+                cn3 = three_column_names[2]
+                row1_th = three_row_numbers[0]
+                row2_th = three_row_numbers[1]
+                row3_th = three_row_numbers[2]
+
                 nd = self._curr_record.node_at(depth_th=depth_th)
 
                 if nd is None or pd.isnull(nd.text) or TreeModel.is_same_path_as_avobe(
@@ -455,13 +559,14 @@ class TreeDrawer():
                     if self._debug_write:
                         print(f"[{datetime.datetime.now()}] Pencil(Node) {self._curr_record.no} record > {nth(depth_th)} layer  Empty cell")
 
+                    # ツリー構造図の背景色
+                    # --------------------
+                    ws[f'{cn3}{row1_th}'].fill = self._bgcolor_of_tree
+                    ws[f'{cn3}{row2_th}'].fill = self._bgcolor_of_tree
+                    ws[f'{cn3}{row3_th}'].fill = self._bgcolor_of_tree
+
                     return
 
-
-                cn3 = three_column_names[2]
-                row1_th = three_row_numbers[0]
-                row2_th = three_row_numbers[1]
-                row3_th = three_row_numbers[2]
 
                 # 罫線、背景色
                 #
@@ -482,20 +587,23 @@ class TreeDrawer():
                 ws[f'{cn3}{row2_th}'].fill = self._node_bgcolor
                 ws[f'{cn3}{row2_th}'].border = downside_node_border
 
+                ws[f'{cn3}{row3_th}'].fill = self._bgcolor_of_tree      # ツリー構造図の背景色
+
 
             # 第０層
             # ------
             depth_th = 0
-            if depth_th < self._table.analyzer.end_node_th:
-                column_letter = xl.utils.get_column_letter(3)   # 'C'
+            column_letter = xl.utils.get_column_letter(3)   # 'C'
+            if depth_th < self._table.analyzer.end_th_of_node:
                 draw_node(depth_th=depth_th, three_column_names=[None, None, column_letter], three_row_numbers=three_row_numbers)
 
 
             # 第１～最終層
             # ------------
-            for depth_th in range(1, self._table.analyzer.end_node_th):
+            for depth_th in range(1, self._table.analyzer.end_th_of_node):
                 head_column_th = depth_th * StyleControl.ONE_NODE_COLUMNS + 1
-                if depth_th < self._table.analyzer.end_node_th:
+
+                if depth_th < self._table.analyzer.end_th_of_node:
                     # 第1層は 'D', 'E', 'F'、以降、後ろにずれていく
                     column_letter_list = [
                         xl.utils.get_column_letter(head_column_th),
@@ -505,9 +613,22 @@ class TreeDrawer():
                     draw_edge(depth_th=depth_th, three_column_names=column_letter_list, three_row_numbers=three_row_numbers)
                     draw_node(depth_th=depth_th, three_column_names=column_letter_list, three_row_numbers=three_row_numbers)
 
-            # 最終層以降の列
-            # --------------
+
             column_name_of_last_node = self._table.analyzer.get_column_name_of_last_node()
+
+
+            # 葉側のパディング
+            # ----------------
+            column_th = StyleControl.get_target_column_th(source_table=self._table, column_name=column_name_of_last_node) + 1
+            column_letter = xl.utils.get_column_letter(column_th)
+            ws[f'{column_letter}{row1_th}'].fill = self._bgcolor_of_tree     # ツリー構造図の背景色
+            ws[f'{column_letter}{row2_th}'].fill = self._bgcolor_of_tree
+            ws[f'{column_letter}{row3_th}'].fill = self._bgcolor_of_tree
+
+
+            # 余り列
+            # ------
+            # 最終層以降の列
             is_remaining = False
             for column_name in self._table.df.columns:
                 if column_name == column_name_of_last_node:
@@ -517,10 +638,20 @@ class TreeDrawer():
                 elif is_remaining:
                     # TODO キャッシュを作れば高速化できそう
                     target_column_th = StyleControl.get_target_column_th(source_table=self._table, column_name=column_name)
+                    column_letter = xl.utils.get_column_letter(target_column_th)
 
-                    cell_address = f'{xl.utils.get_column_letter(target_column_th)}{row1_th}'
-                    #print(f'{cell_address=}  {row1_th=}  {column_name=}')
-                    ws[cell_address].value = self._table.df.at[curr_row_number + 1, column_name]
+                    #print(f'{row1_th=}  {column_name=}')
+                    ws[f'{column_letter}{row1_th}'].value = self._table.df.at[curr_row_number + 1, column_name]
+
+                    # 罫線
+                    ws[f'{column_letter}{row1_th}'].border = self._remaining_cell_upper_border
+                    ws[f'{column_letter}{row2_th}'].border = self._remaining_cell_middle_border
+                    ws[f'{column_letter}{row3_th}'].border = self._remaining_cell_lower_border
+
+                    # ツリー構造図の背景色
+                    ws[f'{column_letter}{row1_th}'].fill = self._bgcolor_of_tree
+                    ws[f'{column_letter}{row2_th}'].fill = self._bgcolor_of_tree
+                    ws[f'{column_letter}{row3_th}'].fill = self._bgcolor_of_tree
 
 
 class TreeEraser():
@@ -550,7 +681,7 @@ class TreeEraser():
 
         # 指定の列の左側の垂直の罫線を見ていく
         column_th = 5
-        for node_th in range(1, self._table.analyzer.end_node_th):
+        for node_th in range(1, self._table.analyzer.end_th_of_node):
             self._erase_unnecessary_border_by_column(column_letter=xl.utils.get_column_letter(column_th))
             column_th += 3
 
