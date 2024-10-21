@@ -1,8 +1,6 @@
 import datetime
 import pandas as pd
 import openpyxl as xl
-from openpyxl.styles.borders import Border, Side
-
 from ..library import nth
 from ..database import TreeNode, Record
 from ..database.library import TableControl
@@ -605,7 +603,7 @@ class TreeEraser():
     """要らない罫線を消す"""
 
 
-    def __init__(self, table, ws, debug_write=False):
+    def __init__(self, table, ws, settings_obj, debug_write=False):
         """初期化
         
         Parameters
@@ -614,12 +612,15 @@ class TreeEraser():
             ツリーテーブル
         ws : openpyxl.Worksheet
             ワークシート
+        settings_obj : Settings
+            各種設定
         debug_write : bool
             デバッグライト
             DEBUG_TIPS: デバッグライトをオンにして、コンソールにログを表示すると不具合を調査しやすくなります
         """
         self._table = table
         self._ws = ws
+        self._settings_obj = settings_obj
         self._debug_write = debug_write
 
 
@@ -635,22 +636,6 @@ class TreeEraser():
 
     def _erase_unnecessary_border_by_column(self, column_letter):
         """不要な境界線を消す"""
-
-        # DEBUG_TIPS: デバッグ時は、罫線を消すのではなく、灰色に変えると見やすいです
-        if True:
-            # 罫線無し
-            striked_border = None
-        else:
-            # 罫線
-            #
-            #   style に入るもの： 'dashDot', 'dashDotDot', 'double', 'hair', 'dotted', 'mediumDashDotDot', 'dashed', 'mediumDashed', 'slantDashDot', 'thick', 'thin', 'medium', 'mediumDashDot'
-            #   色の参考： 📖 [Excels 56 ColorIndex Colors](https://www.excelsupersite.com/what-are-the-56-colorindex-colors-in-excel/)
-            #
-            # 見え消し用（デバッグに使う）
-            striked_side = Side(style='thick', color='DDDDDD')
-            # 見え消し用の罫線
-            striked_border = Border(left=striked_side)
-
 
         # 変数名の短縮
         ws = self._ws
@@ -743,7 +728,7 @@ class TreeEraser():
 
                 for row_th_to_erase in range(start_row_to_erase, end_row_to_erase):
                     # 消すか、見え消しにするか切り替えられるようにしておく
-                    ws[f'{column_letter}{row_th_to_erase}'].border = striked_border
+                    self._settings_obj.set_striked_border(cell=ws[f'{column_letter}{row_th_to_erase}'])
 
         if self._debug_write:
             print(f"[{datetime.datetime.now()}] Eraser {column_letter}{row_th} finished (EOL {ws.max_row})")

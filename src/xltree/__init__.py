@@ -154,6 +154,21 @@ class Settings():
         # └字  橙
         self._l_letter_border_to_child_upward = Border(left=orange_side, bottom=orange_side)
 
+        # DEBUG_TIPS: デバッグ時は、罫線を消すのではなく、灰色に変えると見やすいです
+        if True:
+            # 罫線無し
+            self._striked_border = None
+        else:
+            # 罫線
+            #
+            #   style に入るもの： 'dashDot', 'dashDotDot', 'double', 'hair', 'dotted', 'mediumDashDotDot', 'dashed', 'mediumDashed', 'slantDashDot', 'thick', 'thin', 'medium', 'mediumDashDot'
+            #   色の参考： 📖 [Excels 56 ColorIndex Colors](https://www.excelsupersite.com/what-are-the-56-colorindex-colors-in-excel/)
+            #
+            # 見え消し用（デバッグに使う）
+            striked_side = Side(style='thick', color='DDDDDD')
+            # 見え消し用の罫線
+            self._striked_border = Border(left=striked_side)
+
 
         # ノードの罫線
         #
@@ -217,9 +232,16 @@ class Settings():
         return self._dictionary
 
 
+    def set_striked_border(self, cell):
+        # FIXME None にするという動作。どう対称性を取る？
+        #if self._striked_border is not None:
+        cell.border = self._striked_border
+
+
     def set_border_of_upside_node(self, cell):
         if self._border_of_upside_node is not None:
             cell.border = self._border_of_upside_node
+
 
     def set_border_of_downside_node(self, cell):
         if self._border_of_downside_node is not None:
@@ -415,7 +437,7 @@ class WorkbookControl():
         # 要らない罫線を消す
         # DEBUG_TIPS: このコードを不活性にして、必要な線は全部描かれていることを確認してください
         if True:
-            tree_eraser = TreeEraser(table=table, ws=self._ws, debug_write=debug_write)
+            tree_eraser = TreeEraser(table=table, ws=self._ws, settings_obj=self._settings_obj, debug_write=debug_write)
             tree_eraser.render()
         else:
             if self._debug_write:
