@@ -2,6 +2,7 @@ import os
 import datetime
 import openpyxl as xl
 from openpyxl.styles import PatternFill, Font
+from openpyxl.styles.borders import Border, Side
 from openpyxl.styles.alignment import Alignment
 from .database import Table
 from .workbooks import TreeDrawer, TreeEraser
@@ -100,6 +101,27 @@ class Settings():
                 self._dictionary[key] = value
 
 
+        # フォント関連
+        # ------------
+        self._font_of_header_list = []
+
+        color = self.dictionary['fgcolor_of_header_1']
+        if color is not None:
+            self._font_of_header_list.append(Font(color=color))
+        
+        color = self.dictionary['fgcolor_of_header_2']
+        if color is not None:
+            self._font_of_header_list.append(Font(color=color))
+
+
+        # 罫線関連
+        # --------
+        side = Side(style='thin', color='111111')
+        self._upper_border_of_remaining_cell = Border(top=side, left=side, right=side)
+        self._middle_border_of_remaining_cell = Border(left=side, right=side)
+        self._lower_border_of_remaining_cell = Border(bottom=side, left=side, right=side)
+
+
         # 背景色関連
         # ----------
         self._list_of_bgcolor_of_header = []
@@ -127,19 +149,6 @@ class Settings():
             self._bgcolor_of_node = PatternFill(patternType='solid', fgColor=color)
 
 
-        # フォント関連
-        # ------------
-        self._font_of_header_list = []
-
-        color = self.dictionary['fgcolor_of_header_1']
-        if color is not None:
-            self._font_of_header_list.append(Font(color=color))
-        
-        color = self.dictionary['fgcolor_of_header_2']
-        if color is not None:
-            self._font_of_header_list.append(Font(color=color))
-
-
         # 文字寄せ関連
         # ------------
         horizontal = self.dictionary['horizontal_alignment_of_node']
@@ -157,6 +166,21 @@ class Settings():
     @property
     def dictionary(self):
         return self._dictionary
+
+
+    def set_upper_border_of_remaining_cell(self, cell):
+        if self._upper_border_of_remaining_cell is not None:
+            cell.border = self._upper_border_of_remaining_cell
+
+
+    def set_middle_border_of_remaining_cell(self, cell):
+        if self._middle_border_of_remaining_cell is not None:
+            cell.border = self._middle_border_of_remaining_cell
+
+
+    def set_lower_border_of_remaining_cell(self, cell):
+        if self._lower_border_of_remaining_cell is not None:
+            cell.border = self._lower_border_of_remaining_cell
 
 
     def set_bgcolor_of_header_to(self, cell, index):

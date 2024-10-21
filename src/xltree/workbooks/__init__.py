@@ -41,14 +41,6 @@ class TreeDrawer():
         self._next_record = Record.new_empty(specified_end_th_of_node=self._table.analyzer.end_th_of_node)
 
 
-        # 罫線
-        # ----
-        side = Side(style='thin', color='111111')
-        self._remaining_cell_upper_border = Border(top=side, left=side, right=side)
-        self._remaining_cell_middle_border = Border(left=side, right=side)
-        self._remaining_cell_lower_border = Border(bottom=side, left=side, right=side)
-
-
     def render(self):
         """描画"""
 
@@ -642,9 +634,9 @@ class TreeDrawer():
                     ws[f'{column_letter}{row1_th}'].value = self._table.df.at[curr_row_number + 1, column_name]
 
                     # 罫線
-                    ws[f'{column_letter}{row1_th}'].border = self._remaining_cell_upper_border
-                    ws[f'{column_letter}{row2_th}'].border = self._remaining_cell_middle_border
-                    ws[f'{column_letter}{row3_th}'].border = self._remaining_cell_lower_border
+                    self._settings_obj.set_upper_border_of_remaining_cell(cell=ws[f'{column_letter}{row1_th}'])
+                    self._settings_obj.set_middle_border_of_remaining_cell(cell=ws[f'{column_letter}{row2_th}'])
+                    self._settings_obj.set_lower_border_of_remaining_cell(cell=ws[f'{column_letter}{row3_th}'])
 
                     # ツリー構造図の背景色
                     cells = [
