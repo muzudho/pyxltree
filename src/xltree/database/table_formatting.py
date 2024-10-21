@@ -1,5 +1,43 @@
 import datetime
 import pandas as pd
+from .library import TableControl
+
+
+class ColumnsSorting():
+    """列ソート"""
+
+
+    def sort_columns(df):
+        """列ソート
+
+        TODO 列名をソートしたい。no,node0,edge1,node1,edge2,node2,remaining_a,remaining_b,... のような感じに
+        """
+
+        # 'no' はインデックスなので、列名にはない
+        last_end_th_of_node, last_end_th_of_edge, others_name_list = TableControl.sort_out_column_names_node_edge_others(df)
+
+        # 'no' 列を含まないようにしてください
+        column_name_list = []
+
+        if last_end_th_of_node < 0:
+            raise ValueError(f'node0 列がありませんでした  {last_end_th_of_edge=}  {last_end_th_of_node=}  {others_name_list=}')
+        
+        # node0 列を追加
+        column_name_list.append('node0')
+
+        for i in range(1, last_end_th_of_node + 1):
+
+            # あれば edge{i} 列を追加
+            if i <= last_end_th_of_edge:
+                column_name_list.append(f'edge{i}')
+
+            # node{i} 列を追加
+            column_name_list.append(f'node{i}')
+
+        # 残りの列名を追加
+        column_name_list.extend(others_name_list)
+
+        return df[column_name_list]
 
 
 class InputCompletion():

@@ -7,12 +7,12 @@ class PreviouslySourceCsvTableAnalyzer():
 
     @staticmethod
     def find_end_edge_th(df):
-        return TableControl.find_list_size_of_column(df=df, prefix='edge', start_number=1)
+        return TableControl.find_end_th_of_column(df=df, prefix='edge', start_number=1)
 
 
     @staticmethod
     def find_end_node_th(df):
-        return TableControl.find_list_size_of_column(df=df, prefix='node', start_number=0)
+        return TableControl.find_end_th_of_column(df=df, prefix='node', start_number=0)
 
 
 class SourceCsvTableAnalyzer():

@@ -2,7 +2,7 @@ import datetime
 import pandas as pd
 
 from ..library import INDENT
-from .input_completion import InputCompletion
+from .table_formatting import ColumnsSorting, InputCompletion
 from .source_csv_table_analyzer import PreviouslySourceCsvTableAnalyzer, SourceCsvTableAnalyzer
 
 
@@ -253,13 +253,18 @@ class Table():
         clazz.setup_data_frame(df=df, specified_end_edge_th=end_edge_th, specified_end_node_th=end_node_th,
             shall_set_index=True) # 'no' 列をインデックスに指定します
 
-        # 元テーブルの分析器
-        analyzer = SourceCsvTableAnalyzer.instantiate(df=df, end_edge_th=end_edge_th, end_node_th=end_node_th)
+        # 列名をソートしたい。no,node0,edge1,node1,edge2,node2,remaining_a,remaining_b,... のような感じに
+        #print(f"列ソート前 {df.columns.values=}")
+        df = ColumnsSorting.sort_columns(df)
+        #print(f"列ソート後 {df.columns.values=}")
 
         # 整形
         InputCompletion.fill_directory(df=df, end_node_th=end_node_th)
 
-        return Table(df=df, analyzer=analyzer)
+        return Table(
+            df=df,
+            # 元テーブルの分析器
+            analyzer=SourceCsvTableAnalyzer.instantiate(df=df, end_edge_th=end_edge_th, end_node_th=end_node_th))
 
 
     @property
