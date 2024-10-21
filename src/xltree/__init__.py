@@ -1,9 +1,8 @@
 import os
 import datetime
 import openpyxl as xl
-from openpyxl.styles import PatternFill
+from openpyxl.styles import PatternFill, Font
 from openpyxl.styles.alignment import Alignment
-
 from .database import Table
 from .workbooks import TreeDrawer, TreeEraser
 
@@ -128,6 +127,19 @@ class Settings():
             self._bgcolor_of_node = PatternFill(patternType='solid', fgColor=color)
 
 
+        # フォント関連
+        # ------------
+        self._font_of_header_list = []
+
+        color = self.dictionary['fgcolor_of_header_1']
+        if color is not None:
+            self._font_of_header_list.append(Font(color=color))
+        
+        color = self.dictionary['fgcolor_of_header_2']
+        if color is not None:
+            self._font_of_header_list.append(Font(color=color))
+
+
         # 文字寄せ関連
         # ------------
         horizontal = self.dictionary['horizontal_alignment_of_node']
@@ -150,6 +162,11 @@ class Settings():
     def set_bgcolor_of_header_to(self, cell, index):
         if self._list_of_bgcolor_of_header[index] is not None:
             cell.fill = self._list_of_bgcolor_of_header[index]
+
+
+    def set_font_of_header_to(self, cell, index):
+        if self._font_of_header_list[index] is not None:
+            cell.font = self._font_of_header_list[index]
 
 
     def set_bgcolor_of_tree_to(self, cell):

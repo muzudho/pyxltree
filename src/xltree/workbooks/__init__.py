@@ -41,18 +41,6 @@ class TreeDrawer():
         self._next_record = Record.new_empty(specified_end_th_of_node=self._table.analyzer.end_th_of_node)
 
 
-        # 文字色関連
-        # ----------
-        self._header_fgcolor_list = []
-
-        color = self._settings_obj.dictionary['fgcolor_of_header_1']
-        if color is not None:
-            self._header_fgcolor_list.append(Font(color=color))
-        
-        color = self._settings_obj.dictionary['fgcolor_of_header_2']
-        if color is not None:
-            self._header_fgcolor_list.append(Font(color=color))
-
         # 罫線
         # ----
         side = Side(style='thin', color='111111')
@@ -224,7 +212,7 @@ class TreeDrawer():
         # A の代わりに {xl.utils.get_column_letter(1)} とも書ける
         ws[f'A{row_th}'] = 'No'
         self._settings_obj.set_bgcolor_of_header_to(cell=ws[f'A{row_th}'], index=0)
-        ws[f'A{row_th}'].font = self._header_fgcolor_list[0]
+        self._settings_obj.set_font_of_header_to(cell=ws[f'A{row_th}'], index=0)
 
         # 根側パディング
         # --------------
@@ -234,7 +222,7 @@ class TreeDrawer():
         # --
         ws[f'C{row_th}'] = 'Root'
         self._settings_obj.set_bgcolor_of_header_to(cell=ws[f'C{row_th}'], index=1)
-        ws[f'C{row_th}'].font = self._header_fgcolor_list[1]
+        self._settings_obj.set_font_of_header_to(cell=ws[f'C{row_th}'], index=1)
 
 
         flip = 0
@@ -245,7 +233,7 @@ class TreeDrawer():
             self._settings_obj.set_bgcolor_of_header_to(cell=ws[f'{xl.utils.get_column_letter(head_column_th    )}{row_th}'], index=flip)
             self._settings_obj.set_bgcolor_of_header_to(cell=ws[f'{xl.utils.get_column_letter(head_column_th + 1)}{row_th}'], index=flip)
             self._settings_obj.set_bgcolor_of_header_to(cell=ws[f'{xl.utils.get_column_letter(head_column_th + 2)}{row_th}'], index=flip)
-            ws[f'{xl.utils.get_column_letter(head_column_th + 2)}{row_th}'].font = self._header_fgcolor_list[flip]
+            self._settings_obj.set_font_of_header_to(cell=ws[f'{xl.utils.get_column_letter(head_column_th + 2)}{row_th}'], index=flip)
 
             # 列名
             ws[f'{xl.utils.get_column_letter(head_column_th + 2)}{row_th}'] = nth(node_th)
@@ -261,7 +249,7 @@ class TreeDrawer():
         cell_address = f'{column_letter}{row_th}'
         # 背景色、文字色
         self._settings_obj.set_bgcolor_of_header_to(cell=ws[cell_address], index=(flip + 1) % 2)   # 葉ノードと同じ色にする
-        ws[cell_address].font = self._header_fgcolor_list[(flip + 1) % 2]
+        self._settings_obj.set_font_of_header_to(cell=ws[cell_address], index=(flip + 1) % 2)
 
         width = self._settings_obj.dictionary['column_width_of_leaf_side_padding']
         if width is not None:
@@ -290,8 +278,7 @@ class TreeDrawer():
                 ws[cell_address].value = column_name
                 # 背景色、文字色
                 self._settings_obj.set_bgcolor_of_header_to(cell=ws[cell_address], index=flip)   # 葉ノードと同じ色にする
-                ws[cell_address].font = self._header_fgcolor_list[flip]
-
+                self._settings_obj.set_font_of_header_to(cell=ws[cell_address], index=flip)
 
                 flip = (flip + 1) % 2
                 target_column_th += 1
