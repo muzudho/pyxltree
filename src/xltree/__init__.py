@@ -155,6 +155,15 @@ class Settings():
         self._l_letter_border_to_child_upward = Border(left=orange_side, bottom=orange_side)
 
 
+        # ノードの罫線
+        #
+        #   style に入るもの： 'dashDot', 'dashDotDot', 'double', 'hair', 'dotted', 'mediumDashDotDot', 'dashed', 'mediumDashed', 'slantDashDot', 'thick', 'thin', 'medium', 'mediumDashDot'
+        #
+        side = Side(style='thick', color='000000')
+        self._border_of_upside_node = Border(top=side, left=side, right=side)
+        self._border_of_downside_node = Border(bottom=side, left=side, right=side)
+
+
         # 余り列
         side = Side(style='thin', color='111111')
         self._upper_border_of_remaining_cell = Border(top=side, left=side, right=side)
@@ -206,6 +215,15 @@ class Settings():
     @property
     def dictionary(self):
         return self._dictionary
+
+
+    def set_border_of_upside_node(self, cell):
+        if self._border_of_upside_node is not None:
+            cell.border = self._border_of_upside_node
+
+    def set_border_of_downside_node(self, cell):
+        if self._border_of_downside_node is not None:
+            cell.border = self._border_of_downside_node
 
 
     def set_border_to_parent_horizontal(self, cell):

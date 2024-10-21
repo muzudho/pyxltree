@@ -513,13 +513,6 @@ class TreeDrawer():
                     return
 
 
-                # 罫線、背景色
-                #
-                #   style に入るもの： 'dashDot', 'dashDotDot', 'double', 'hair', 'dotted', 'mediumDashDotDot', 'dashed', 'mediumDashed', 'slantDashDot', 'thick', 'thin', 'medium', 'mediumDashDot'
-                #
-                side = Side(style='thick', color='000000')
-                upside_node_border = Border(top=side, left=side, right=side)
-                downside_node_border = Border(bottom=side, left=side, right=side)
 
                 if self._debug_write:
                     print(f"[{datetime.datetime.now()}] Pencil(Node) {self._curr_record.no} record > {nth(depth_th)} layer  □ {nd.text}")
@@ -527,10 +520,10 @@ class TreeDrawer():
                 ws[f'{cn3}{row1_th}'].value = nd.text
                 self._settings_obj.set_alignment_of_node_to(cell=ws[f'{cn3}{row1_th}'])
                 self._settings_obj.set_bgcolor_of_node_to(cell=ws[f'{cn3}{row1_th}'])
-                ws[f'{cn3}{row1_th}'].border = upside_node_border
+                self._settings_obj.set_border_of_upside_node(cell=ws[f'{cn3}{row1_th}'])
 
                 self._settings_obj.set_bgcolor_of_node_to(cell=ws[f'{cn3}{row2_th}'])
-                ws[f'{cn3}{row2_th}'].border = downside_node_border
+                self._settings_obj.set_border_of_downside_node(cell=ws[f'{cn3}{row2_th}'])
 
                 self._settings_obj.set_bgcolor_of_tree_to(cell=ws[f'{cn3}{row3_th}'])      # ツリー構造図の背景色
 
