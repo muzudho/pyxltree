@@ -1,7 +1,9 @@
 import os
 import datetime
 import openpyxl as xl
-
+from openpyxl.styles import PatternFill, Font
+from openpyxl.styles.borders import Border, Side
+from openpyxl.styles.alignment import Alignment
 from .database import Table
 from .workbooks import TreeDrawer, TreeEraser
 
@@ -48,28 +50,32 @@ class Settings():
             文字寄せ関連
             * `horizontal_alignment_of_node` - 文字の水平方向の寄せ。規定値 None。'left', 'fill', 'centerContinuous', 'center', 'right', 'general', 'justify', 'distributed' のいずれか。指定しないなら None
             * `vertical_alignment_of_node` - 文字の垂直方向の寄せ。規定値 None。'bottom', 'center', 'top', 'justify', 'distributed' のいずれか。指定しないなら None
+
+            その他の操作
+            * `do_not_cell_mege` - セル結合しない
         """
 
         # 既定のディクショナリー
+        # いわゆる settings
         self._dictionary = {
             # 列の幅
             #
             #   ［列幅の自動調整］機能を付けたので、文字が入る箇所は規定値はナンにします。
             #   キーは存在させたいので、コメントアウトしないでください
             #
-            'column_width_of_no':                 None,
-            'column_width_of_root_side_padding':     3,
-            'column_width_of_leaf_side_padding':     3,
-            'column_width_of_node':               None,
-            'column_width_of_parent_side_edge':      2,
-            'column_width_of_child_side_edge':    None,
+            'column_width_of_no':                    None,
+            'column_width_of_root_side_padding':        3,
+            'column_width_of_leaf_side_padding':        3,
+            'column_width_of_node':                  None,
+            'column_width_of_parent_side_edge':         2,
+            'column_width_of_child_side_edge':       None,
 
             # 行の高さ
-            'row_height_of_header':                 13,
-            'row_height_of_lower_side_padding':     13,
-            'row_height_of_upper_side_of_node':     13,
-            'row_height_of_lower_side_of_node':     13,
-            'row_height_of_node_spacing':           6,
+            'row_height_of_header':                    13,
+            'row_height_of_lower_side_padding':        13,
+            'row_height_of_upper_side_of_node':        13,
+            'row_height_of_lower_side_of_node':        13,
+            'row_height_of_node_spacing':               6,
 
             # 背景色関連
             'bgcolor_of_tree':                   'FFFFFF',
@@ -82,8 +88,11 @@ class Settings():
             'fgcolor_of_header_2':               'EEEEEE',
 
             # 文字寄せ関連
-            'horizontal_alignment_of_node':      None,
-            'vertical_alignment_of_node':        None,
+            'horizontal_alignment_of_node':          None,
+            'vertical_alignment_of_node':            None,
+
+            # その他の操作
+            'do_not_cell_mege':                     False,      # セル結合しない
         }
 
         # 上書き
@@ -92,9 +101,236 @@ class Settings():
                 self._dictionary[key] = value
 
 
+        # フォント関連
+        # ------------
+        self._font_of_header_list = []
+
+        color = self.dictionary['fgcolor_of_header_1']
+        if color is not None:
+            self._font_of_header_list.append(Font(color=color))
+        
+        color = self.dictionary['fgcolor_of_header_2']
+        if color is not None:
+            self._font_of_header_list.append(Font(color=color))
+
+
+        # 罫線関連
+        # --------
+
+        # エッジの罫線
+        #
+        #   style に入るもの： 'dashDot', 'dashDotDot', 'double', 'hair', 'dotted', 'mediumDashDotDot', 'dashed', 'mediumDashed', 'slantDashDot', 'thick', 'thin', 'medium', 'mediumDashDot'
+        #   色の参考： 📖 [Excels 56 ColorIndex Colors](https://www.excelsupersite.com/what-are-the-56-colorindex-colors-in-excel/)
+        #
+        BLACK = '000000'
+        side = Side(style='thick', color=BLACK)
+
+        # DEBUG_TIPS: 罫線に色を付けると、デバッグしやすいです
+        if True:
+            red_side = Side(style='thick', color=BLACK)
+            orange_side = Side(style='thick', color=BLACK)
+            green_side = Side(style='thick', color=BLACK)
+            blue_side = Side(style='thick', color=BLACK)
+            cyan_side = Side(style='thick', color=BLACK)
+        else:
+            red_side = Side(style='thick', color='FF0000')
+            orange_side = Side(style='thick', color='FFCC00')
+            green_side = Side(style='thick', color='00FF00')
+            blue_side = Side(style='thick', color='0000FF')
+            cyan_side = Side(style='thick', color='00FFFF')
+
+        # ─字  赤
+        self._border_to_parent_horizontal = Border(bottom=red_side)
+        self._under_border_to_child_horizontal = Border(bottom=red_side)
+        # │字  緑
+        self._leftside_border_to_vertical = Border(left=green_side)
+        # ┬字  青
+        self._border_to_parent_downward = Border(bottom=blue_side)
+        self._under_border_to_child_downward = Border(bottom=blue_side)
+        self._leftside_border_to_child_downward = Border(left=blue_side)
+        # ├字  青緑
+        self._l_letter_border_to_child_rightward = Border(left=cyan_side, bottom=cyan_side)
+        self._leftside_border_to_child_rightward = Border(left=cyan_side)
+        # └字  橙
+        self._l_letter_border_to_child_upward = Border(left=orange_side, bottom=orange_side)
+
+        # DEBUG_TIPS: デバッグ時は、罫線を消すのではなく、灰色に変えると見やすいです
+        if True:
+            # 罫線無し
+            self._striked_border = None
+        else:
+            # 罫線
+            #
+            #   style に入るもの： 'dashDot', 'dashDotDot', 'double', 'hair', 'dotted', 'mediumDashDotDot', 'dashed', 'mediumDashed', 'slantDashDot', 'thick', 'thin', 'medium', 'mediumDashDot'
+            #   色の参考： 📖 [Excels 56 ColorIndex Colors](https://www.excelsupersite.com/what-are-the-56-colorindex-colors-in-excel/)
+            #
+            # 見え消し用（デバッグに使う）
+            striked_side = Side(style='thick', color='DDDDDD')
+            # 見え消し用の罫線
+            self._striked_border = Border(left=striked_side)
+
+
+        # ノードの罫線
+        #
+        #   style に入るもの： 'dashDot', 'dashDotDot', 'double', 'hair', 'dotted', 'mediumDashDotDot', 'dashed', 'mediumDashed', 'slantDashDot', 'thick', 'thin', 'medium', 'mediumDashDot'
+        #
+        side = Side(style='thick', color='000000')
+        self._border_of_upside_node = Border(top=side, left=side, right=side)
+        self._border_of_downside_node = Border(bottom=side, left=side, right=side)
+
+
+        # 余り列
+        side = Side(style='thin', color='111111')
+        self._upper_border_of_remaining_cell = Border(top=side, left=side, right=side)
+        self._middle_border_of_remaining_cell = Border(left=side, right=side)
+        self._lower_border_of_remaining_cell = Border(bottom=side, left=side, right=side)
+
+
+        # 背景色関連
+        # ----------
+        self._list_of_bgcolor_of_header = []
+
+        color = self.dictionary['bgcolor_of_header_1']
+        if color is not None:
+            self._list_of_bgcolor_of_header.append(PatternFill(patternType='solid', fgColor=color))
+        else:
+            self._list_of_bgcolor_of_header.append(None)
+        
+        color = self.dictionary['bgcolor_of_header_2']
+        if color is not None:
+            self._list_of_bgcolor_of_header.append(PatternFill(patternType='solid', fgColor=color))
+        else:
+            self._list_of_bgcolor_of_header.append(None)
+
+        # ツリー構造図の背景色
+        color = self.dictionary['bgcolor_of_tree']
+        if color is not None:
+            self._bgcolor_of_tree = PatternFill(patternType='solid', fgColor=color)
+
+        # ノードの背景色
+        color = self.dictionary['bgcolor_of_node']
+        if color is not None:
+            self._bgcolor_of_node = PatternFill(patternType='solid', fgColor=color)
+
+
+        # 文字寄せ関連
+        # ------------
+        horizontal = self.dictionary['horizontal_alignment_of_node']
+        vertical = self.dictionary['vertical_alignment_of_node']
+        if horizontal is not None and vertical is not None:
+            self._alignment_of_node = Alignment(horizontal=horizontal, vertical=vertical)
+        elif horizontal is not None:
+            self._alignment_of_node = Alignment(horizontal=horizontal)
+        elif vertical is not None:
+            self._alignment_of_node = Alignment(vertical=vertical)
+        else:
+            self._alignment_of_node = None
+
+
     @property
     def dictionary(self):
         return self._dictionary
+
+
+    def set_striked_border(self, cell):
+        # FIXME None にするという動作。どう対称性を取る？
+        #if self._striked_border is not None:
+        cell.border = self._striked_border
+
+
+    def set_border_of_upside_node(self, cell):
+        if self._border_of_upside_node is not None:
+            cell.border = self._border_of_upside_node
+
+
+    def set_border_of_downside_node(self, cell):
+        if self._border_of_downside_node is not None:
+            cell.border = self._border_of_downside_node
+
+
+    def set_border_to_parent_horizontal(self, cell):
+        if self._border_to_parent_horizontal is not None:
+            cell.border = self._border_to_parent_horizontal
+
+
+    def set_under_border_to_child_horizontal(self, cell):
+        if self._under_border_to_child_horizontal is not None:
+            cell.border = self._under_border_to_child_horizontal
+
+
+    def set_leftside_border_to_vertical(self, cell):
+        if self._leftside_border_to_vertical is not None:
+            cell.border = self._leftside_border_to_vertical
+
+
+    def set_border_to_parent_downward(self, cell):
+        if self._border_to_parent_downward is not None:
+            cell.border = self._border_to_parent_downward
+
+
+    def set_under_border_to_child_downward(self, cell):
+        if self._under_border_to_child_downward is not None:
+            cell.border = self._under_border_to_child_downward
+
+
+    def set_leftside_border_to_child_downward(self, cell):
+        if self._leftside_border_to_child_downward is not None:
+            cell.border = self._leftside_border_to_child_downward
+
+
+    def set_l_letter_border_to_child_rightward(self, cell):
+        if self._l_letter_border_to_child_rightward is not None:
+            cell.border = self._l_letter_border_to_child_rightward
+
+
+    def set_leftside_border_to_child_rightward(self, cell):
+        if self._leftside_border_to_child_rightward is not None:
+            cell.border = self._leftside_border_to_child_rightward
+
+
+    def set_l_letter_border_to_child_upward(self, cell):
+        if self._l_letter_border_to_child_upward is not None:
+            cell.border = self._l_letter_border_to_child_upward
+
+
+    def set_upper_border_of_remaining_cell(self, cell):
+        if self._upper_border_of_remaining_cell is not None:
+            cell.border = self._upper_border_of_remaining_cell
+
+
+    def set_middle_border_of_remaining_cell(self, cell):
+        if self._middle_border_of_remaining_cell is not None:
+            cell.border = self._middle_border_of_remaining_cell
+
+
+    def set_lower_border_of_remaining_cell(self, cell):
+        if self._lower_border_of_remaining_cell is not None:
+            cell.border = self._lower_border_of_remaining_cell
+
+
+    def set_bgcolor_of_header_to(self, cell, index):
+        if self._list_of_bgcolor_of_header[index] is not None:
+            cell.fill = self._list_of_bgcolor_of_header[index]
+
+
+    def set_font_of_header_to(self, cell, index):
+        if self._font_of_header_list[index] is not None:
+            cell.font = self._font_of_header_list[index]
+
+
+    def set_bgcolor_of_tree_to(self, cell):
+        if self._bgcolor_of_tree is not None:
+            cell.fill = self._bgcolor_of_tree
+
+
+    def set_bgcolor_of_node_to(self, cell):
+        if self._bgcolor_of_node is not None:
+            cell.fill = self._bgcolor_of_node
+
+
+    def set_alignment_of_node_to(self, cell):
+        if self._alignment_of_node is not None:
+            cell.alignment = self._alignment_of_node
 
 
 class SettingsOfNode():
@@ -201,7 +437,7 @@ class WorkbookControl():
         # 要らない罫線を消す
         # DEBUG_TIPS: このコードを不活性にして、必要な線は全部描かれていることを確認してください
         if True:
-            tree_eraser = TreeEraser(table=table, ws=self._ws, debug_write=debug_write)
+            tree_eraser = TreeEraser(table=table, ws=self._ws, settings_obj=self._settings_obj, debug_write=debug_write)
             tree_eraser.render()
         else:
             if self._debug_write:

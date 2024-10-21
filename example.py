@@ -23,7 +23,12 @@ if __name__ == '__main__':
         args = sys.argv
 
         if 1 < len(args):
-            if args[1] == '1':
+            if args[1] == 'all':
+                execute_no_1()
+                execute_no_2()
+                execute_no_3()
+
+            elif args[1] == '1':
                 execute_no_1()
 
             elif args[1] == '2':
