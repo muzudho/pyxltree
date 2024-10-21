@@ -201,8 +201,8 @@ def execute():
 
 👆　Settings オブジェクトを使ってください。  
 （`xltree>=0.1.0` から） settings は Dictionary 型になりました  
-（`xltree>=0.2.0` から） `column_width_of_row_header_separator` は `column_width_of_root_side_padding` に名称変更しました
-（`xltree>=0.3.0` から） `row_height_of_column_header_separator` は `row_height_of_lower_side_padding` に名称変更しました
+（`xltree>=0.2.0` から） `column_width_of_row_header_separator` は `column_width_of_root_side_padding` に名称変更しました  
+（`xltree>=0.3.0` から） `row_height_of_column_header_separator` は `row_height_of_lower_side_padding` に名称変更しました  
 
 # その他
 
