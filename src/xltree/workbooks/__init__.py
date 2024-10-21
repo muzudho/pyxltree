@@ -1,9 +1,7 @@
 import datetime
 import pandas as pd
 import openpyxl as xl
-from openpyxl.styles import PatternFill, Font
 from openpyxl.styles.borders import Border, Side
-from openpyxl.styles.alignment import Alignment
 
 from ..library import nth
 from ..database import TreeNode, Record
@@ -355,44 +353,6 @@ class TreeDrawer():
                     第何層。根層は 0
                 """
 
-                # 罫線
-                #
-                #   style に入るもの： 'dashDot', 'dashDotDot', 'double', 'hair', 'dotted', 'mediumDashDotDot', 'dashed', 'mediumDashed', 'slantDashDot', 'thick', 'thin', 'medium', 'mediumDashDot'
-                #   色の参考： 📖 [Excels 56 ColorIndex Colors](https://www.excelsupersite.com/what-are-the-56-colorindex-colors-in-excel/)
-                #
-                BLACK = '000000'
-                side = Side(style='thick', color=BLACK)
-
-                # DEBUG_TIPS: 罫線に色を付けると、デバッグしやすいです
-                if True:
-                    red_side = Side(style='thick', color=BLACK)
-                    orange_side = Side(style='thick', color=BLACK)
-                    green_side = Side(style='thick', color=BLACK)
-                    blue_side = Side(style='thick', color=BLACK)
-                    cyan_side = Side(style='thick', color=BLACK)
-                else:
-                    red_side = Side(style='thick', color='FF0000')
-                    orange_side = Side(style='thick', color='FFCC00')
-                    green_side = Side(style='thick', color='00FF00')
-                    blue_side = Side(style='thick', color='0000FF')
-                    cyan_side = Side(style='thick', color='00FFFF')
-
-                # ─字  赤
-                border_to_parent_horizontal = Border(bottom=red_side)
-                under_border_to_child_horizontal = Border(bottom=red_side)
-                # │字  緑
-                leftside_border_to_vertical = Border(left=green_side)
-                # ┬字  青
-                border_to_parent_downward = Border(bottom=blue_side)
-                under_border_to_child_downward = Border(bottom=blue_side)
-                leftside_border_to_child_downward = Border(left=blue_side)
-                # ├字  青緑
-                l_letter_border_to_child_rightward = Border(left=cyan_side, bottom=cyan_side)
-                leftside_border_to_child_rightward = Border(left=cyan_side)
-                # └字  橙
-                l_letter_border_to_child_upward = Border(left=orange_side, bottom=orange_side)
-
-
                 cn1 = three_column_names[0]
                 cn2 = three_column_names[1]
                 cn3 = three_column_names[2]
@@ -441,10 +401,10 @@ class TreeDrawer():
                     # ..+..  
                     #   |    leftside_border
                     #   |    leftside_border
-                    #                        
-                    ws[f'{cn2}{row1_th}'].border = leftside_border_to_vertical
-                    ws[f'{cn2}{row2_th}'].border = leftside_border_to_vertical
-                    ws[f'{cn2}{row3_th}'].border = leftside_border_to_vertical
+                    #
+                    self._settings_obj.set_leftside_border_to_vertical(cell=ws[f'{cn2}{row1_th}'])
+                    self._settings_obj.set_leftside_border_to_vertical(cell=ws[f'{cn2}{row2_th}'])
+                    self._settings_obj.set_leftside_border_to_vertical(cell=ws[f'{cn2}{row3_th}'])
                     return
 
 
@@ -481,28 +441,28 @@ class TreeDrawer():
                         depth_th=depth_th)
 
                 if kind == '─字':
-                    ws[f'{cn1}{row1_th}'].border = border_to_parent_horizontal
-                    ws[f'{cn2}{row1_th}'].border = under_border_to_child_horizontal
+                    self._settings_obj.set_border_to_parent_horizontal(cell=ws[f'{cn1}{row1_th}'])
+                    self._settings_obj.set_under_border_to_child_horizontal(cell=ws[f'{cn2}{row1_th}'])
                     if self._debug_write:
                         print(f"[{datetime.datetime.now()}] Pencil(Edge) {self._curr_record.no} record > {nth(depth_th)} layer  ─ {nd.edge_text}")
                 
                 elif kind == '┬字':
-                    ws[f'{cn1}{row1_th}'].border = border_to_parent_downward
-                    ws[f'{cn2}{row1_th}'].border = under_border_to_child_downward
-                    ws[f'{cn2}{row2_th}'].border = leftside_border_to_child_downward
-                    ws[f'{cn2}{row3_th}'].border = leftside_border_to_child_downward
+                    self._settings_obj.set_border_to_parent_downward(cell=ws[f'{cn1}{row1_th}'])
+                    self._settings_obj.set_under_border_to_child_downward(cell=ws[f'{cn2}{row1_th}'])
+                    self._settings_obj.set_leftside_border_to_child_downward(cell=ws[f'{cn2}{row2_th}'])
+                    self._settings_obj.set_leftside_border_to_child_downward(cell=ws[f'{cn2}{row3_th}'])
                     if self._debug_write:
                         print(f"[{datetime.datetime.now()}] Pencil(Edge) {self._curr_record.no} record > {nth(depth_th)} layer  ┬ {nd.edge_text}")
 
                 elif kind == '├字':
-                    ws[f'{cn2}{row1_th}'].border = l_letter_border_to_child_rightward
-                    ws[f'{cn2}{row2_th}'].border = leftside_border_to_child_rightward
-                    ws[f'{cn2}{row3_th}'].border = leftside_border_to_child_rightward
+                    self._settings_obj.set_l_letter_border_to_child_rightward(cell=ws[f'{cn2}{row1_th}'])
+                    self._settings_obj.set_leftside_border_to_child_rightward(cell=ws[f'{cn2}{row2_th}'])
+                    self._settings_obj.set_leftside_border_to_child_rightward(cell=ws[f'{cn2}{row3_th}'])
                     if self._debug_write:
                         print(f"[{datetime.datetime.now()}] Pencil(Edge) {self._curr_record.no} record > {nth(depth_th)} layer  ├ {nd.edge_text}")
 
                 elif kind == '└字':
-                    ws[f'{cn2}{row1_th}'].border = l_letter_border_to_child_upward
+                    self._settings_obj.set_l_letter_border_to_child_upward(cell=ws[f'{cn2}{row1_th}'])
                     if self._debug_write:
                         print(f"[{datetime.datetime.now()}] Pencil(Edge) {self._curr_record.no} record > {nth(depth_th)} layer  └ {nd.edge_text}")
                 

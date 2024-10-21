@@ -116,6 +116,46 @@ class Settings():
 
         # 罫線関連
         # --------
+
+        # エッジの罫線
+        #
+        #   style に入るもの： 'dashDot', 'dashDotDot', 'double', 'hair', 'dotted', 'mediumDashDotDot', 'dashed', 'mediumDashed', 'slantDashDot', 'thick', 'thin', 'medium', 'mediumDashDot'
+        #   色の参考： 📖 [Excels 56 ColorIndex Colors](https://www.excelsupersite.com/what-are-the-56-colorindex-colors-in-excel/)
+        #
+        BLACK = '000000'
+        side = Side(style='thick', color=BLACK)
+
+        # DEBUG_TIPS: 罫線に色を付けると、デバッグしやすいです
+        if True:
+            red_side = Side(style='thick', color=BLACK)
+            orange_side = Side(style='thick', color=BLACK)
+            green_side = Side(style='thick', color=BLACK)
+            blue_side = Side(style='thick', color=BLACK)
+            cyan_side = Side(style='thick', color=BLACK)
+        else:
+            red_side = Side(style='thick', color='FF0000')
+            orange_side = Side(style='thick', color='FFCC00')
+            green_side = Side(style='thick', color='00FF00')
+            blue_side = Side(style='thick', color='0000FF')
+            cyan_side = Side(style='thick', color='00FFFF')
+
+        # ─字  赤
+        self._border_to_parent_horizontal = Border(bottom=red_side)
+        self._under_border_to_child_horizontal = Border(bottom=red_side)
+        # │字  緑
+        self._leftside_border_to_vertical = Border(left=green_side)
+        # ┬字  青
+        self._border_to_parent_downward = Border(bottom=blue_side)
+        self._under_border_to_child_downward = Border(bottom=blue_side)
+        self._leftside_border_to_child_downward = Border(left=blue_side)
+        # ├字  青緑
+        self._l_letter_border_to_child_rightward = Border(left=cyan_side, bottom=cyan_side)
+        self._leftside_border_to_child_rightward = Border(left=cyan_side)
+        # └字  橙
+        self._l_letter_border_to_child_upward = Border(left=orange_side, bottom=orange_side)
+
+
+        # 余り列
         side = Side(style='thin', color='111111')
         self._upper_border_of_remaining_cell = Border(top=side, left=side, right=side)
         self._middle_border_of_remaining_cell = Border(left=side, right=side)
@@ -166,6 +206,51 @@ class Settings():
     @property
     def dictionary(self):
         return self._dictionary
+
+
+    def set_border_to_parent_horizontal(self, cell):
+        if self._border_to_parent_horizontal is not None:
+            cell.border = self._border_to_parent_horizontal
+
+
+    def set_under_border_to_child_horizontal(self, cell):
+        if self._under_border_to_child_horizontal is not None:
+            cell.border = self._under_border_to_child_horizontal
+
+
+    def set_leftside_border_to_vertical(self, cell):
+        if self._leftside_border_to_vertical is not None:
+            cell.border = self._leftside_border_to_vertical
+
+
+    def set_border_to_parent_downward(self, cell):
+        if self._border_to_parent_downward is not None:
+            cell.border = self._border_to_parent_downward
+
+
+    def set_under_border_to_child_downward(self, cell):
+        if self._under_border_to_child_downward is not None:
+            cell.border = self._under_border_to_child_downward
+
+
+    def set_leftside_border_to_child_downward(self, cell):
+        if self._leftside_border_to_child_downward is not None:
+            cell.border = self._leftside_border_to_child_downward
+
+
+    def set_l_letter_border_to_child_rightward(self, cell):
+        if self._l_letter_border_to_child_rightward is not None:
+            cell.border = self._l_letter_border_to_child_rightward
+
+
+    def set_leftside_border_to_child_rightward(self, cell):
+        if self._leftside_border_to_child_rightward is not None:
+            cell.border = self._leftside_border_to_child_rightward
+
+
+    def set_l_letter_border_to_child_upward(self, cell):
+        if self._l_letter_border_to_child_upward is not None:
+            cell.border = self._l_letter_border_to_child_upward
 
 
     def set_upper_border_of_remaining_cell(self, cell):
