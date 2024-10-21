@@ -6,7 +6,7 @@
 
 Output:  
 
-![View](./docs_dev/img/202410__pg__22--0026-XltreeDrive.png)  
+![View](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__22--0026-XltreeDrive.png)  
 
 👆　わたしのWindows PCのCドライブの例です  
 （`xltree>=0.0.10` から） ツリー部分より右側の列、つまり上図でいうと last_modified 列以降も出力します  
@@ -87,13 +87,13 @@ def execute():
 
 Output:  
 
-![View](./docs_dev/img/202410__pg__22--0034-XltreeWordChainGame.png)  
+![View](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__22--0034-XltreeWordChainGame.png)  
 
 👆　しりとりというゲームの記録です。図（Diagram）の辺（Edge）にテキストを書くのはオプションです  
 
 Input:  
 
-![Data](./docs_dev/img/202410__pg__22--0039-XltreeWordChainGameData.png)  
+![Data](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__22--0039-XltreeWordChainGameData.png)  
 
 ```csv
 no,node0,edge1,node1,edge2,node2,edge3,node3,edge4,node4,edge5,node5,edge6,node6,edge7,node7,edge8,node8,result
@@ -136,7 +136,7 @@ def execute():
 
 Output:  
 
-![View](./docs_dev/img/202410__pg__22--0035-XltreeUnevenCoin.png)  
+![View](https://github.com/muzudho/pyxltree/raw/main/docs_dev/img/202410__pg__22--0035-XltreeUnevenCoin.png)  
 
 👆　スタイルも少しだけ設定できます  
 
