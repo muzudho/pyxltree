@@ -9,6 +9,7 @@ class ColumnsSorting():
 
     def __init__(self):
         # 計算途中結果
+        self._is_n_o_column_exists = None
         self._end_th_of_node = None
         self._end_th_of_edge = None
 
@@ -29,14 +30,18 @@ class ColumnsSorting():
         """実行
 
         列名をソートする。no,node0,edge1,node1,edge2,node2,remaining_a,remaining_b,... のような感じに
+
+        'no' 列は、（まだインデックスに指定されていないものとし）有るケースと、無いケースがあります。有れば先頭へ、無ければ無視することにします
         """
 
-        # 'no' はインデックスなので、列名にはない
-        self._end_th_of_node, self._end_th_of_edge, others_name_list = TableControl.sort_out_column_names_node_edge_others(df)
-        print(f"デバッグ中 {self._end_th_of_node=}  {self._end_th_of_edge=}  {others_name_list=}") # FIXME
+        self._is_n_o_column_exists, self._end_th_of_node, self._end_th_of_edge, others_name_list = TableControl.sort_out_column_names_n_o_node_edge_others(df)
+        print(f"デバッグ中  {self._is_n_o_column_exists=}  {self._end_th_of_node=}  {self._end_th_of_edge=}  {others_name_list=}") # FIXME
 
-        # 'no' 列を含まないようにしてください
         column_name_list = []
+
+        # 'no' 列を含むなら先頭へ
+        if self._is_n_o_column_exists:
+            column_name_list.append('no')
 
         if self._end_th_of_node < 1:
             raise ValueError(f'node0 列がありませんでした  {self._end_th_of_edge=}  {self._end_th_of_node=}  {others_name_list=}')

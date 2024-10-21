@@ -26,15 +26,22 @@ class TableControl():
 
 
     @staticmethod
-    def sort_out_column_names_node_edge_others(df):
+    def sort_out_column_names_n_o_node_edge_others(df):
         """列名を edge, node, それ以外の３つに分けます。
-        edge と node は最後の要素の数字の +1 を返します。要素がなければ 0 を返します"""
+        edge と node は最後の要素の数字の +1 を返します。要素がなければ 0 を返します。
+        'no' 列は、有るケースと無いケースがあります
+        """
+        is_n_o_column_exists = False
         edge_th_set = set()
         node_th_set = set()
         others_name_list = []
 
         # 'no' はインデックスなので、列には含まれない
         for column_name in df.columns.values:
+            if column_name == 'no':
+                is_n_o_column_exists = True
+                continue
+            
             result = TableControl.pattern_of_column_name_of_edge.match(column_name)
             if result:
                 edge_th_set.add(int(result.group(1)))
@@ -74,4 +81,4 @@ class TableControl():
             others_name_list.append(f'edge{edge_th}')
 
 
-        return end_th_of_node, end_th_of_edge, others_name_list
+        return is_n_o_column_exists, end_th_of_node, end_th_of_edge, others_name_list
