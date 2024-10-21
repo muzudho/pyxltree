@@ -63,7 +63,7 @@ class TableControl():
         # edge 列は 1 から ［end_th_of_node の手前］まで連番で続いているところだけ有効にします
         end_th_of_edge = 0
         for i in range(1, end_th_of_node):
-            if i not in node_th_set:
+            if i not in edge_th_set:
                 break
 
             edge_th_set.remove(i)

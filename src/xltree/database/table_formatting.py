@@ -33,6 +33,7 @@ class ColumnsSorting():
 
         # 'no' はインデックスなので、列名にはない
         self._end_th_of_node, self._end_th_of_edge, others_name_list = TableControl.sort_out_column_names_node_edge_others(df)
+        print(f"デバッグ中 {self._end_th_of_node=}  {self._end_th_of_edge=}  {others_name_list=}") # FIXME
 
         # 'no' 列を含まないようにしてください
         column_name_list = []
