@@ -4,7 +4,7 @@ import openpyxl as xl
 from ..library import nth
 from ..database import TreeNode, Record
 from ..database.library import TableControl
-from ..models import TreeModel
+from ..models.line_by_line_leaf import LineByLineLeafModel
 from .style import StyleControl
 
 
@@ -385,7 +385,7 @@ class TreeDrawer():
 
 
                 # 自件と前件を比較して、根から自ノードまで、ノードテキストが等しいか？
-                if TreeModel.is_same_path_as_avobe(
+                if LineByLineLeafModel.is_same_path_as_avobe(
                         curr_record=self._curr_record,
                         prev_record=self._prev_record,
                         depth_th=depth_th):
@@ -432,7 +432,7 @@ class TreeDrawer():
                 #   .    None
                 #   .    None
                 #
-                kind = TreeModel.get_kind_of_edge(
+                kind = LineByLineLeafModel.get_kind_of_edge(
                         prev_record=self._prev_record,
                         curr_record=self._curr_record,
                         next_record=self._next_record,
@@ -490,7 +490,7 @@ class TreeDrawer():
 
                 nd = self._curr_record.node_at(depth_th=depth_th)
 
-                if nd is None or pd.isnull(nd.text) or TreeModel.is_same_path_as_avobe(
+                if nd is None or pd.isnull(nd.text) or LineByLineLeafModel.is_same_path_as_avobe(
                         curr_record=self._curr_record,
                         prev_record=self._prev_record,
                         depth_th=depth_th):

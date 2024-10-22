@@ -1,4 +1,5 @@
-class TreeModel():
+class LineByLineLeafModel():
+    """１行１行に異なる葉が配されているテーブル形式"""
 
 
     @staticmethod
@@ -35,17 +36,17 @@ class TreeModel():
         """
 
         # 前行は兄か？
-        if TreeModel._prev_row_is_elder_sibling(curr_record=curr_record, prev_record=prev_record, depth_th=depth_th):
+        if LineByLineLeafModel._prev_row_is_elder_sibling(curr_record=curr_record, prev_record=prev_record, depth_th=depth_th):
 
             # 次行は（自分または）弟か？ 自分が複数行に跨っていることはある
-            if TreeModel._next_row_is_younger_sibling(curr_record=curr_record, next_record=next_record, depth_th=depth_th):
+            if LineByLineLeafModel._next_row_is_younger_sibling(curr_record=curr_record, next_record=next_record, depth_th=depth_th):
                 return '├字'
 
             else:
                 return '└字'
 
         # 次行は（自分または）弟か？ 自分が複数行に跨っていることはある
-        elif TreeModel._next_row_is_younger_sibling(curr_record=curr_record, next_record=next_record, depth_th=depth_th):
+        elif LineByLineLeafModel._next_row_is_younger_sibling(curr_record=curr_record, next_record=next_record, depth_th=depth_th):
             return '┬字'
 
 
@@ -67,7 +68,7 @@ class TreeModel():
         predepth_th = depth_th - 1
 
         # 自件と前件を比較して、根から自ノードまで、ノードテキストが等しいか？
-        return TreeModel.is_same_path_as_avobe(
+        return LineByLineLeafModel.is_same_path_as_avobe(
                 curr_record=curr_record,
                 prev_record=prev_record,
                 depth_th=predepth_th)
@@ -88,7 +89,7 @@ class TreeModel():
         predepth_th = depth_th - 1
 
         # 自件と前件を比較して、根から自ノードまで、ノードテキストが等しいか？
-        return TreeModel.is_same_path_as_avobe(
+        return LineByLineLeafModel.is_same_path_as_avobe(
                 curr_record=next_record,
                 prev_record=curr_record,
                 depth_th=predepth_th)
