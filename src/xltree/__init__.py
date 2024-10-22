@@ -4,7 +4,7 @@ import openpyxl as xl
 from openpyxl.styles import PatternFill, Font
 from openpyxl.styles.borders import Border, Side
 from openpyxl.styles.alignment import Alignment
-from .database import Table
+from .models.database import Table
 from .workbooks import TreeDrawer, TreeEraser
 
 

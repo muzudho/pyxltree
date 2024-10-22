@@ -2,8 +2,8 @@ import datetime
 import pandas as pd
 import openpyxl as xl
 from ..library import nth
-from ..database import NodeInRecord, Record
-from ..database.library import TableControl
+from ..models.database import NodeInRecord, Record
+from ..models.database.library import TableControl
 from ..models.line_by_line_leaf import LineByLineLeafModel
 from .style import StyleControl
 

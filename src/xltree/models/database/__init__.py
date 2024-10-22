@@ -1,7 +1,7 @@
 import datetime
 import pandas as pd
 
-from ..library import INDENT
+from ...library import INDENT
 from .table_formatting import ColumnsSorting, InputCompletion
 from .source_csv_table_analyzer import SourceCsvTableAnalyzer
 
