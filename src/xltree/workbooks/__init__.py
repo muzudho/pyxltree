@@ -2,7 +2,7 @@ import datetime
 import pandas as pd
 import openpyxl as xl
 from ..library import nth
-from ..database import TreeNode, Record
+from ..database import NodeInRecord, Record
 from ..database.library import TableControl
 from ..models.line_by_line_leaf import LineByLineLeafModel
 from .style import StyleControl
@@ -477,7 +477,7 @@ class TreeDrawer():
 
                 Parameters
                 ----------
-                node : TreeNode
+                node : NodeInRecord
                     節
                 depth_th : int
                     第何層。根層は 0

@@ -9,7 +9,7 @@ from .source_csv_table_analyzer import SourceCsvTableAnalyzer
 ############
 # MARK: Node
 ############
-class TreeNode():
+class NodeInRecord():
     """ノード（節）
     ノードの形に合わせて改造してください"""
 
@@ -40,8 +40,8 @@ class TreeNode():
     def stringify_dump(self, indent):
         succ_indent = indent + INDENT
         return f"""\
-{indent}TreeNode
-{indent}--------
+{indent}NodeInRecord
+{indent}------------
 {succ_indent}{self._edge_text=}
 {succ_indent}{self._text=}
 """
@@ -60,7 +60,7 @@ class Record():
         ----------
         no : int
             1から始まる連番。数詞は件
-        node_list : list<TreeNode>
+        node_list : list<NodeInRecord>
             ノードのリスト。
             第０層は根
         """
@@ -398,7 +398,7 @@ class Table():
             node_list = []
 
             # 根
-            node_list.append(TreeNode(edge_text=None, text=df.at[no, f'node0']))
+            node_list.append(NodeInRecord(edge_text=None, text=df.at[no, f'node0']))
 
             # 中間～葉ノード
             for node_th in range(1, self._analyzer.end_th_of_node):
@@ -409,7 +409,7 @@ class Table():
                 else:
                     edge_text = None
 
-                node_list.append(TreeNode(edge_text=edge_text, text=df.at[no, f'node{node_th}']))
+                node_list.append(NodeInRecord(edge_text=edge_text, text=df.at[no, f'node{node_th}']))
 
 
             # レコード作成
