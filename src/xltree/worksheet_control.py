@@ -1,5 +1,6 @@
 import datetime
 from .models.database import Table
+from .models.tree_structure import TableReaderLikeTree
 from .settings import Settings
 from .workbooks import TreeDrawer, TreeEraser
 
@@ -29,10 +30,14 @@ class WorksheetControl():
         # CSV読込
         table = Table.from_csv(file_path=based_on)
 
-        return WorksheetControl(target=target, based_on=based_on, ws=ws, settings_obj=settings_obj, table=table, debug_write=debug_write)
+        # table からツリー構造を作成
+        reader = TableReaderLikeTree(table=table)
+        root_node = reader.read()
+
+        return WorksheetControl(target=target, based_on=based_on, ws=ws, settings_obj=settings_obj, table=table, root_node=root_node, debug_write=debug_write)
 
 
-    def __init__(self, target, based_on, ws, settings_obj, table, debug_write=False):
+    def __init__(self, target, based_on, ws, settings_obj, table, root_node, debug_write=False):
         """初期化
 
         Parameters
@@ -47,6 +52,8 @@ class WorksheetControl():
             各種設定
         table : Table
             データテーブル
+        root_node : TreeNode
+            根ノード
         debug_write : bool
             デバッグライト
         """
@@ -55,6 +62,7 @@ class WorksheetControl():
         self._ws = ws
         self._settings_obj = settings_obj
         self._table = table
+        self._root_node = root_node
         self._debug_write = debug_write
 
 
@@ -74,14 +82,3 @@ class WorksheetControl():
         else:
             if self._debug_write:
                 print(f"[{datetime.datetime.now()}] eraser disabled")
-
-
-    def to_tree_structure(self):
-        """TODO 木構造モデルの作成
-        
-        Return
-        ------
-        root_node : TreeNode
-            根ノード
-        """
-        pass

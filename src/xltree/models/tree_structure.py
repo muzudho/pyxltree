@@ -1,3 +1,42 @@
+################
+# REMARK: Reader
+################
+class TableReaderLikeTree():
+    """木構造のようにテーブル構造を読むもの"""
+
+
+    def __init__(self, table):
+        """初期化
+        
+        Parameters
+        ----------
+        table : Table
+            データテーブル
+        """
+        self._table = table
+
+
+    def read(self):
+        """TODO テーブル読取
+        
+        Returns
+        -------
+        root_node : TreeNode        
+        """
+
+        # 上のレコードから順に読み込んでいけば作れる
+        self._table.for_each(self.on_record_read)
+
+        return None # FIXME
+
+
+    def on_record_read(self, row_number, record):
+        """TODO レコード読取"""
+        print(f"""レコード読取  {row_number=}
+{record.stringify_dump('')}""")
+        pass
+
+
 ##############
 # REMARK: Node
 ##############
