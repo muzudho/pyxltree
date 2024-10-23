@@ -40,7 +40,7 @@ class TableReaderLikeTree():
         # ダンプ
         print("[read] マルチ根")
         for root in self._multi_root.values():
-            print(f"{root.stringify_dump('    ')}")
+            print(f"{root.stringify_like_tree('    ')}")
 
         return None # FIXME
 
@@ -185,17 +185,33 @@ class TreeNode():
         return self._child_nodes.get(text)
 
 
+    def stringify_like_tree(self, indent):
+        succ_indent = indent + INDENT
+
+        items = []
+        for child_node in self._child_nodes.values():
+            items.append(child_node.stringify_like_tree(indent=succ_indent))
+
+        if self._edge_text is not None:
+            edge_arrow = f"--{self._edge_text}-->"
+        else:
+            edge_arrow = "---->"
+
+        return f"""\
+{indent}{edge_arrow}{self._text}
+{''.join(items)}"""
+
+
     def stringify_dump(self, indent):
         succ_indent = indent + INDENT
 
         items = []
-        for node in self._child_nodes.values():
-            items.append(node.stringify_dump(indent=succ_indent))
+        for child_node in self._child_nodes.values():
+            items.append(child_node.stringify_dump(indent=succ_indent))
 
         return f"""\
 {indent}TreeNode
 {indent}--------
 {succ_indent}{self._edge_text=}
 {succ_indent}{self._text=}
-{''.join(items)}
-"""
+{''.join(items)}"""
