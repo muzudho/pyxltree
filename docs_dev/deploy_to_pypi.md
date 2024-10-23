@@ -82,7 +82,7 @@ test.pypi.org にAPIトークンを追加する。スコープは `アカウン�
 py -m pip install --upgrade twine
 ```
 
-twine を実行する前に、 📄 `pyproject.toml` のバージョンの数を上げておくこと  
+twine を実行する前に、 📄 `pyproject.toml` のバージョンの数を設定（２回目以降なら上げる）しておくこと  
 
 👇 twine を実行する  
 
