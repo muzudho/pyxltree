@@ -63,7 +63,7 @@ C,Users,Muzudho,OneDrive,Documents,GitHub,,,,2024/10/18 12:31,,
 Script:  
 
 ```py
-from xltree as tr
+import xltree as tr
 
 
 # 出力先ワークブックを指定し、ワークブックハンドル取得
@@ -116,7 +116,7 @@ no,node0,edge1,node1,edge2,node2,edge3,node3,edge4,node4,edge5,node5,edge6,node6
 Script:  
 
 ```py
-from xltree as tr
+import xltree as tr
 
 
 # 出力先ワークブックを指定し、ワークブックハンドル取得
@@ -149,7 +149,7 @@ Input:
 Scripts: 
 
 ```py
-from xltree as tr
+import xltree as tr
 
 
 # 各種設定
