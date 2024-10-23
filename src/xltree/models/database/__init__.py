@@ -131,6 +131,11 @@ class Record():
 """
 
 
+    def for_each_node_in_path(self, set_node):
+        for depth, node in enumerate(self._root_to_leaf_pathway):
+            set_node(depth, node)
+
+
     def get_th_of_leaf_node(self):
         """葉要素の層番号を取得。
         th は forth や fifth の th。

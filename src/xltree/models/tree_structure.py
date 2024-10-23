@@ -1,3 +1,6 @@
+from collections import deque
+
+
 ################
 # REMARK: Reader
 ################
@@ -33,9 +36,52 @@ class TableReaderLikeTree():
     def on_record_read(self, row_number, record):
         """TODO レコード読取"""
 
+        class Context():
+            def __init__(self):
+                self._stack = deque()
+                self._pre_parent_tree_node = None
+        
+        context = Context()
+
+
+        def set_node(self, context, depth, node):
+            print(f"""[set_node] {depth=}
+{node.stringify_dump('')}""")
+
+            tree_node = TreeNode(
+                    parent_node=context._pre_parent_tree_node,
+                    edge_text=node.edge_text,
+                    text=node.text,
+                    child_nodes=[])    # 子要素は、子から戻ってきたときじゃないと分からない
+            context._pre_parent_tree_node = tree_node
+            context._stack.append(tree_node)
+
+
         if row_number == 0:
             print("最初のレコードは、根ノードから葉ノードまで全部揃ってる")
-            
+
+
+        record.for_each_node_in_path(set_node=lambda depth, node: set_node(self, context, depth, node))
+
+
+        prev_child_tree_node = None
+
+        # 葉から根に向かってノードを読取
+        while 0 < len(context._stack):
+            tree_node = context._stack.pop()
+
+            # 子を、子要素として追加
+            if prev_child_tree_node is not None:
+                tree_node.child_nodes.append(tree_node)
+
+            print(f"逆読み  {tree_node.edge_text=}  {tree_node.text=}")
+            prev_child_tree_node = tree_node
+
+
+        if len(context._stack) != 0:
+            raise ValueError(f"スタックのサイズが0でないのはおかしい  {len(context._stack)=}")
+
+
         print(f"""レコード読取  {row_number=}
 {record.stringify_dump('')}""")
         pass
@@ -45,11 +91,26 @@ class TableReaderLikeTree():
 # REMARK: Node
 ##############
 class TreeNode():
-    """ツリーノード"""
+    """ツリーノード
+    
+    イミュータブルにすると生成が難しいので、ミュータブルとする
+    """
 
 
     def __init__(self, parent_node, edge_text, text, child_nodes):
-        """初期化"""
+        """初期化
+        
+        Parameters
+        ----------
+        parent_node : TreeNode
+            親ノード
+        edge_text : str
+            エッジのテキスト
+        text : str
+            テキスト
+        child_nodes : list<TreeNode>
+            子ノード
+        """
         self._parent_node = parent_node
         self._edge_text = edge_text
         self._text = text
