@@ -1,3 +1,4 @@
+import gc
 import datetime
 from .models.database import Table
 from .models.tree_structure import TreeStructureBasedOnTable
@@ -5,8 +6,8 @@ from .settings import Settings
 from .workbooks import TreeDrawer, TreeEraser
 
 
-class WorksheetControl():
-    """ワークシート制御"""
+class WorksheetHandle():
+    """ワークシートへの対応"""
 
 
     @staticmethod
@@ -36,7 +37,7 @@ class WorksheetControl():
         #
         multiple_root_node = TreeStructureBasedOnTable.read_multiple_root(table=table)
 
-        return WorksheetControl(target=target, based_on=based_on, ws=ws, settings_obj=settings_obj, table=table, multiple_root_node=multiple_root_node, debug_write=debug_write)
+        return WorksheetHandle(target=target, based_on=based_on, ws=ws, settings_obj=settings_obj, table=table, multiple_root_node=multiple_root_node, debug_write=debug_write)
 
 
     def __init__(self, target, based_on, ws, settings_obj, table, multiple_root_node, debug_write=False):
@@ -66,6 +67,23 @@ class WorksheetControl():
         self._table = table
         self._multiple_root_node = multiple_root_node
         self._debug_write = debug_write
+
+
+    def __enter__(self):
+        return self
+
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        del self._target
+        del self._based_on
+        del self._ws
+        del self._settings_obj
+        del self._table
+        del self._multiple_root_node
+        del self._debug_write
+
+        # メモリ解放
+        gc.collect()
 
 
     @property

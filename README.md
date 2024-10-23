@@ -68,17 +68,20 @@ from xltree as tr
 
 def execute():
 
-    # 出力先ワークブック指定
-    wbc = tr.prepare_workbook(target='./tests/temp/tree_drive.xlsx', mode='w')
+    # 出力先ワークブックを指定し、ワークブックハンドル取得
+    b = tr.prepare_workbook(target='./tests/temp/tree_drive.xlsx', mode='w')
 
-    # ワークシート描画
-    wbc.render_worksheet(target='Drive', based_on='./examples/data/drive_by_table.csv')
+    # 読取元CSVを指定し、ワークシートハンドル取得
+    with b.prepare_worksheet(target='Drive', based_on='./examples/data/drive_by_table.csv') as s:
+
+        # ワークシートへ木構造図を描画
+        s.render_tree()
 
     # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
-    wbc.remove_worksheet(target='Sheet')
+    b.remove_worksheet(target='Sheet')
 
     # 保存
-    wbc.save_workbook()
+    b.save_workbook()
 ```
 
 👆　上記はスクリプトの記述例です  
@@ -119,17 +122,20 @@ from xltree as tr
 
 def execute():
 
-    # 出力先ワークブック指定
-    wbc = tr.prepare_workbook(target='./examples/temp/word_chain_game.xlsx', mode='w')
+    # 出力先ワークブックを指定し、ワークブックハンドル取得
+    b = tr.prepare_workbook(target='./examples/temp/word_chain_game.xlsx', mode='w')
 
-    # ワークシート描画
-    wbc.render_worksheet(target='Drive', based_on='./examples/data/word_chain_game.csv')
+    # 読取元CSVを指定し、ワークシートハンドル取得
+    with b.prepare_worksheet(target='WordChainGame', based_on='./examples/data/word_chain_game.csv') as s:
+
+        # ワークシートへ木構造図を描画
+        s.render_tree()
 
     # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
-    wbc.remove_worksheet(target='Sheet')
+    b.remove_worksheet(target='Sheet')
 
     # 保存
-    wbc.save_workbook()
+    b.save_workbook()
 ```
 
 # 例３：偏ったコインを投げて表と裏が出る確率
@@ -186,17 +192,20 @@ def execute():
         'do_not_merge_cells':                   False,      # セル結合しないなら真
     }
 
-    # 出力先ワークブック指定
-    wbc = tr.prepare_workbook(target='./examples/temp/uneven_coin.xlsx', mode='w', settings=settings)
+    # 出力先ワークブックを指定し、ワークブックハンドル取得
+    b = tr.prepare_workbook(target='./examples/temp/uneven_coin.xlsx', mode='w', settings=settings)
 
-    # ワークシート描画
-    wbc.render_worksheet(target='UnevenCoin', based_on='./examples/data/uneven_coin.csv')
+    # 読取元CSVを指定し、ワークシートハンドル取得
+    with b.prepare_worksheet(target='UnevenCoin', based_on='./examples/data/uneven_coin.csv') as s:
+
+        # ワークシートへ木構造図を描画
+        s.render_tree()
 
     # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
-    wbc.remove_worksheet(target='Sheet')
+    b.remove_worksheet(target='Sheet')
 
     # 保存
-    wbc.save_workbook()
+    b.save_workbook()
 ```
 
 👆　Settings オブジェクトを使ってください。  

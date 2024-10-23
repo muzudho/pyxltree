@@ -1,8 +1,9 @@
+import gc
 import os
 import datetime
 import openpyxl as xl
 from .settings import Settings
-from .worksheet_control import WorksheetControl
+from .worksheet_handle import WorksheetHandle
 
 
 @staticmethod
@@ -48,7 +49,7 @@ def prepare_workbook(target, mode, settings={}, debug_write=False):
         wb = xl.Workbook()
 
 
-    return WorkbookControl(target=target, mode=mode, wb=wb, settings=settings, debug_write=debug_write)
+    return WorkbookHandle(target=target, mode=mode, wb=wb, settings=settings, debug_write=debug_write)
 
 
 class XltreeInSrc():
@@ -88,10 +89,8 @@ class XltreeInSrc():
 xltree_in_src = XltreeInSrc()
 
 
-class WorkbookControl():
-    """ワークブック制御"""
-
-
+class WorkbookHandle():
+    """ワークブックへの対応"""
 
 
     def __init__(self, target, mode, wb, settings={}, debug_write=False):
@@ -114,24 +113,48 @@ class WorkbookControl():
         self._ws = None
 
 
+    def __enter__(self):
+        return self
+
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        del self._wb_file_path
+        del self._mode
+        del self._wb
+        del self._settings_obj
+        del self._debug_write
+        del self._ws
+
+        # メモリ解放
+        gc.collect()
+
+
     @property
     def workbook_file_path(self):
         return self._wb_file_path
 
 
-    def open_worksheet(self, target, based_on, debug_write=False):
-        """TODO ワークシート読取"""
+    def prepare_worksheet(self, target, based_on, debug_write=False):
+        """ワークシートの用意"""
 
         # ワークシートの準備
-        self.ready_worksheet(target=target)
+        if not self.exists_sheet(target):
+            if self._debug_write:
+                print(f"[{datetime.datetime.now()}] create `{target}` sheet...")
+
+            self._wb.create_sheet(target)
+
+
+        ws = self._wb[target]
+
 
         # ワークシート制御の生成
-        return WorksheetControl.instantiate(target=target, based_on=based_on, ws=self._ws, settings_obj=self._settings_obj, debug_write=debug_write)
+        return WorksheetHandle.instantiate(target=target, based_on=based_on, ws=ws, settings_obj=self._settings_obj, debug_write=debug_write)
 
 
 
     def render_worksheet(self, target, based_on, debug_write=False):
-        """ワークシート描画
+        """ワークシートへ木構造図を描画
 
         Parameters
         ----------
@@ -143,14 +166,11 @@ class WorkbookControl():
             デバッグライト
         """
 
-        # ワークシートの準備
-        self.ready_worksheet(target=target)
-
         # ワークシート制御の生成
-        wsc = WorksheetControl.instantiate(target=target, based_on=based_on, ws=self._ws, settings_obj=self._settings_obj, debug_write=debug_write)
+        wsh = WorksheetHandle.instantiate(target=target, based_on=based_on, ws=self._ws, settings_obj=self._settings_obj, debug_write=debug_write)
 
         # 木の描画
-        wsc.render_tree()
+        wsh.render_tree()
 
 
     def remove_worksheet(self, target):
@@ -188,26 +208,6 @@ class WorkbookControl():
             シート名
         """
         return target in self._wb.sheetnames
-
-
-    def ready_worksheet(self, target):
-        """ワークシートを準備する
-        
-        Parameters
-        ----------
-        target : str
-            シート名
-        """
-
-        # シートを作成
-        if not self.exists_sheet(target):
-            if self._debug_write:
-                print(f"[{datetime.datetime.now()}] create `{target}` sheet...")
-
-            self._wb.create_sheet(target)
-
-
-        self._ws = self._wb[target]
 
 
     def get_worksheet(self, sheet_name):

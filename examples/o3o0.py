@@ -47,17 +47,21 @@ def execute():
         'do_not_merge_cells':                   False,      # セル結合しないなら真
     }
 
-    # 出力先ワークブック指定
-    wbc = tr.prepare_workbook(target='./examples/temp/example_o3o0_uneven_coin.xlsx', mode='w', settings=settings)
+    # 出力先ワークブックを指定し、ワークブックハンドル取得
+    b = tr.prepare_workbook(target='./examples/temp/example_o3o0_uneven_coin.xlsx', mode='w', settings=settings)
 
-    # ワークシート描画
-    wbc.render_worksheet(target='UnevenCoin', based_on='./examples/data/uneven_coin.csv')
+    # 読取元CSVを指定し、ワークシートハンドル取得
+    # あとでテストに使うので、メモリ解放しません
+    s = b.prepare_worksheet(target='UnevenCoin', based_on='./examples/data/uneven_coin.csv')
+
+    # ワークシートへ木構造図を描画
+    s.render_tree()
 
     # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
-    wbc.remove_worksheet(target='Sheet')
+    b.remove_worksheet(target='Sheet')
 
     # 保存
-    wbc.save_workbook()
+    b.save_workbook()
 
     # テストに使用するために返す
-    return wbc
+    return b
