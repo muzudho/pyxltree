@@ -2,51 +2,55 @@ from collections import deque
 from ..library import INDENT
 
 
-################
-# REMARK: Reader
-################
-class TableReaderLikeTree():
-    """木構造のようにテーブル構造を読むもの"""
+#######################
+# REMARK: TreeStructure
+#######################
+class TreeStructureBasedOnTable():
+    """テーブル構造を読み込んだ、マルチ根を持つ木構造"""
 
 
-    def __init__(self, table):
-        """初期化
-        
+    @staticmethod
+    def read(table):
+        """テーブル読取
+
         Parameters
         ----------
         table : Table
             データテーブル
+
+        Returns
+        -------
+        tree_structure : TreeStructureBasedOnTable        
         """
-        self._table = table
+
+        tree_structure = TreeStructureBasedOnTable()
+
+        # 先頭のレコードから順に読み込んでいけば作れる
+        table.for_each(tree_structure.on_record_read)
+
+        # ダンプ
+        print("[read] マルチ根")
+        for root in tree_structure._multi_root.values():
+            print(f"{root.stringify_like_tree('    ')}")
+
+        return tree_structure
+
+
+    def __init__(self):
+        """初期化"""
 
         # マルチ根
         self._multi_root = {}
 
-        # 現在ノード
-        self._cur_tree_node = None
 
-
-    def read(self):
-        """TODO テーブル読取
-        
-        Returns
-        -------
-        root_node : TreeNode        
-        """
-
-        # 上のレコードから順に読み込んでいけば作れる
-        self._table.for_each(self.on_record_read)
-
-        # ダンプ
-        print("[read] マルチ根")
-        for root in self._multi_root.values():
-            print(f"{root.stringify_like_tree('    ')}")
-
-        return None # FIXME
+    @property
+    def multi_root(self):
+        """マルチ根"""
+        return self._multi_root
 
 
     def on_record_read(self, row_number, record):
-        """TODO レコード読取
+        """レコード読取
         
         例えば ^ をマルチ根の親とするとき、
         ^, A, B, C
@@ -84,7 +88,6 @@ class TableReaderLikeTree():
             else:
                 tree_node = context._pre_parent_tree_node.child_nodes[node.text]
 
-            self._cur_tree_node = tree_node
 
             context._pre_parent_tree_node = tree_node
             context._stack.append(tree_node)
@@ -102,7 +105,6 @@ class TableReaderLikeTree():
         # 葉から根に向かってノードを読取
         while 0 < len(context._stack):
             tree_node = context._stack.pop()
-            self._cur_tree_node = tree_node
 
             # 子を、子要素として追加
             if prev_child_tree_node is not None:

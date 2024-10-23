@@ -1,6 +1,6 @@
 import datetime
 from .models.database import Table
-from .models.tree_structure import TableReaderLikeTree
+from .models.tree_structure import TreeStructureBasedOnTable
 from .settings import Settings
 from .workbooks import TreeDrawer, TreeEraser
 
@@ -31,13 +31,15 @@ class WorksheetControl():
         table = Table.from_csv(file_path=based_on)
 
         # table からツリー構造を作成
-        reader = TableReaderLikeTree(table=table)
-        root_node = reader.read()
+        #
+        #   NOTE マルチ根にも対応していることに注意してください
+        #
+        tree_structure = TreeStructureBasedOnTable.read(table=table)
 
-        return WorksheetControl(target=target, based_on=based_on, ws=ws, settings_obj=settings_obj, table=table, root_node=root_node, debug_write=debug_write)
+        return WorksheetControl(target=target, based_on=based_on, ws=ws, settings_obj=settings_obj, table=table, tree_structure=tree_structure, debug_write=debug_write)
 
 
-    def __init__(self, target, based_on, ws, settings_obj, table, root_node, debug_write=False):
+    def __init__(self, target, based_on, ws, settings_obj, table, tree_structure, debug_write=False):
         """初期化
 
         Parameters
@@ -52,8 +54,8 @@ class WorksheetControl():
             各種設定
         table : Table
             データテーブル
-        root_node : TreeNode
-            根ノード
+        tree_structure : TreeStructureBasedOnTable
+            木構造
         debug_write : bool
             デバッグライト
         """
@@ -62,8 +64,14 @@ class WorksheetControl():
         self._ws = ws
         self._settings_obj = settings_obj
         self._table = table
-        self._root_node = root_node
+        self._tree_structure = tree_structure
         self._debug_write = debug_write
+
+
+    @property
+    def tree_structure(self):
+        """ツリー構造。マルチ根に対応していることに注意してください"""
+        return self._tree_structure
 
 
     def render_tree(self):
