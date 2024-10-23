@@ -93,13 +93,21 @@ class Record():
             th は forth や fifth の th。
             例：根なら０を指定してください。
             例：第１層なら 1 を指定してください
+        
+        Returns
+        -------
+        node : NodeInRecord
+            ノード、なければナン
         """
 
         # NOTE -1 を指定すると最後尾の要素になるが、固定長配列の最後尾の要素が、思っているような最後尾の要素とは限らない。うまくいかない
         if depth_th < 0:
             raise ValueError(f'depth_th に負数を設定しないでください。意図した動作はしません {depth_th=}')
 
-        return self._root_to_leaf_pathway[depth_th]
+        if depth_th < len(self._root_to_leaf_pathway):
+            return self._root_to_leaf_pathway[depth_th]
+
+        return None
 
 
     def update(self, no=None, root_to_leaf_pathway=None):
@@ -408,13 +416,20 @@ class Table():
             # 中間～葉ノード
             for node_th in range(1, self._analyzer.end_th_of_node):
 
+                # ノードのテキスト
+                node_text = df.at[no, f'node{node_th}']
+
+                # ノードのテキストが未設定なら無視
+                if pd.isnull(node_text):
+                    continue
+
                 # エッジはオプション
                 if node_th < self._analyzer.end_th_of_edge:
                     edge_text = df.at[no, f'edge{node_th}']
                 else:
                     edge_text = None
 
-                root_to_leaf_pathway.append(NodeInRecord(edge_text=edge_text, text=df.at[no, f'node{node_th}']))
+                root_to_leaf_pathway.append(NodeInRecord(edge_text=edge_text, text=node_text))
 
 
             # レコード作成

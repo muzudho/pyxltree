@@ -375,6 +375,8 @@ class TreeDrawer():
                 for cell in cells:
                     self._settings_obj.set_bgcolor_of_tree_to(cell=cell)
 
+                # ↑ノードが無くても背景色は塗る必要がある
+
 
                 nd = self._curr_record.node_at(depth_th=depth_th)
 

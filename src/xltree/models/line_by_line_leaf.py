@@ -10,8 +10,9 @@ class LineByLineLeafModel():
         if prev_record is None or prev_record.no is None:
             return False
 
-        if curr_record.len_of_path_from_root_to_leaf < depth_th:
-            raise ValueError(f"引数の指定ミスです。現件のノード数 {curr_record.len_of_path_from_root_to_leaf} が、 {depth_th=} に足りていません")
+        # # 前件の方がパスが深い
+        # if curr_record.len_of_path_from_root_to_leaf < depth_th:
+        #     raise ValueError(f"引数の指定ミスです。現件のノードパスの長さ {curr_record.len_of_path_from_root_to_leaf} が、 {depth_th=} に足りていません")
 
         if prev_record.len_of_path_from_root_to_leaf < depth_th:
             return False
