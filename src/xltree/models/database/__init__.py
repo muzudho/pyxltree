@@ -72,7 +72,7 @@ class Record():
     def new_empty(specified_end_th_of_node):
         return Record(
                 no=None,
-                root_to_leaf_pathway=[None] * specified_end_th_of_node)     # FIXME 空欄まで None で作るのは廃止できないか？
+                root_to_leaf_pathway=[])
 
 
     @property
