@@ -38,11 +38,9 @@ class TableReaderLikeTree():
         self._table.for_each(self.on_record_read)
 
         # ダンプ
+        print("[read] マルチ根")
         for root in self._multi_root.values():
-            print(f"""[read] マルチ根
-root:
-{root.stringify_dump('')}
-""")
+            print(f"{root.stringify_dump('    ')}")
 
         return None # FIXME
 
@@ -67,11 +65,15 @@ root:
 
 
         def set_node(self, context, depth, node):
-            print(f"""[set_node] {depth=}
-{node.stringify_dump('')}""")
+#             print(f"""[set_node] {depth=}
+# {node.stringify_dump('')}""")
+
+            # 既存のマルチ根かもしれない
+            if depth==0 and node.text in self._multi_root:
+                tree_node = self._multi_root[node.text]
 
             # 未作成のノードなら
-            if context._pre_parent_tree_node is None or node.text not in context._pre_parent_tree_node.child_nodes:
+            elif context._pre_parent_tree_node is None or node.text not in context._pre_parent_tree_node.child_nodes:
                 tree_node = TreeNode(
                         parent_node=context._pre_parent_tree_node,
                         edge_text=node.edge_text,
@@ -88,8 +90,8 @@ root:
             context._stack.append(tree_node)
 
 
-        if row_number == 0:
-            print("最初のレコードは、根ノードから葉ノードまで全部揃ってる")
+        # if row_number == 0:
+        #     print("最初のレコードは、根ノードから葉ノードまで全部揃ってる")
 
 
         record.for_each_node_in_path(set_node=lambda depth, node: set_node(self, context, depth, node))
@@ -106,7 +108,7 @@ root:
             if prev_child_tree_node is not None:
                 tree_node.child_nodes[prev_child_tree_node.text] = prev_child_tree_node
 
-            print(f"逆読み  {tree_node.edge_text=}  {tree_node.text=}")
+            #print(f"逆読み  {tree_node.edge_text=}  {tree_node.text=}")
             prev_child_tree_node = tree_node
 
 
@@ -118,12 +120,11 @@ root:
         self._multi_root[tree_node.text] = tree_node
 
 
-        print(f"""レコード読取  {row_number=}
-root_node:
-{tree_node.stringify_dump('')}
-record:
-{record.stringify_dump('')}""")
-        pass
+#         print(f"""レコード読取  {row_number=}
+# root_node:
+# {tree_node.stringify_dump('')}
+# record:
+# {record.stringify_dump('')}""")
 
 
 ##############
