@@ -165,3 +165,8 @@ class WorkbookControl():
             根ノード
         """
         pass
+
+
+    def get_worksheet(self, sheet_name):
+        """ワークシートの取得"""
+        return self._wb[sheet_name]
