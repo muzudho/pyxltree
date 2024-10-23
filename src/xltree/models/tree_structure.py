@@ -1,4 +1,5 @@
 from collections import deque
+from ..library import INDENT
 
 
 ################
@@ -72,7 +73,7 @@ class TableReaderLikeTree():
 
             # 子を、子要素として追加
             if prev_child_tree_node is not None:
-                tree_node.child_nodes.append(tree_node)
+                tree_node.child_nodes.append(prev_child_tree_node)
 
             print(f"逆読み  {tree_node.edge_text=}  {tree_node.text=}")
             prev_child_tree_node = tree_node
@@ -83,6 +84,9 @@ class TableReaderLikeTree():
 
 
         print(f"""レコード読取  {row_number=}
+root_node:
+{tree_node.stringify_dump('')}
+record:
 {record.stringify_dump('')}""")
         pass
 
@@ -139,3 +143,19 @@ class TreeNode():
     def child_nodes(self):
         """子ノードのリスト"""
         return self._child_nodes
+
+
+    def stringify_dump(self, indent):
+        succ_indent = indent + INDENT
+
+        items = []
+        for node in self._child_nodes:
+            items.append(node.stringify_dump(indent=succ_indent))
+
+        return f"""\
+{indent}TreeNode
+{indent}--------
+{succ_indent}{self._edge_text=}
+{succ_indent}{self._text=}
+{''.join(items)}
+"""
