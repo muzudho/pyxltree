@@ -1,5 +1,15 @@
 import datetime
-from src.xltree import WorkbookControl
+
+# 実際には、
+#
+#   import xltree as tr
+#
+# のように書きたい。
+# テストでは以下のように書く
+#
+#   パッケージを iport した場合は、 `from src.xltree`  の部分を `from xltree` に変えてください
+#
+from src.xltree import xltree_in_src as tr
 
 # テスト用
 from tests.worksheets import WorksheetDumpControl
@@ -8,7 +18,7 @@ from tests.worksheets import WorksheetDumpControl
 def execute():
 
     # 出力先ワークブック指定
-    wbc = WorkbookControl(target='./tests/temp/test_o3o2o0_do_not_merge_cells.xlsx', mode='w', settings={
+    wbc = tr.prepare_workbook(target='./tests/temp/test_o3o2o0_do_not_merge_cells.xlsx', mode='w', settings={
         # その他の操作
         'do_not_merge_cells':                    True,      # セル結合しないなら真
     })

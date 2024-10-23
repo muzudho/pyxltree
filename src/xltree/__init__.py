@@ -5,11 +5,96 @@ from .settings import Settings
 from .worksheet_control import WorksheetControl
 
 
+@staticmethod
+def prepare_workbook(target, mode, settings={}, debug_write=False):
+    """ワークブックを用意します
+    
+    Returns
+    -------
+    target : str
+        ワークブック（.xlsx）へのファイルパス
+    mode : str
+        既存のワークブックが有ったときの挙動。 'w' は新規作成して置換え、 'a' は追記
+    settings : dict
+        各種設定    
+    debug_write : bool
+        デバッグライト
+    """
+
+    wb = None
+
+    # 既存のファイルが有ったときの挙動
+    if os.path.isfile(target):
+        # 既存のファイルへ追記
+        if mode == 'a':
+            if debug_write:
+                print(f"[{datetime.datetime.now()}] `{target}` file exists, read.")
+
+            # ワークブックを開く
+            wb = xl.load_workbook(filename=target)
+        
+        elif mode == 'w':
+            pass
+        
+        else:
+            raise ValueError(f"unsupported {mode=}")
+
+                
+    # ワークブックを新規生成
+    if wb is None:
+        if debug_write:
+            print(f"[{datetime.datetime.now()}] `{target}` file not exists, create.")
+
+        wb = xl.Workbook()
+
+
+    return WorkbookControl(target=target, mode=mode, wb=wb, settings=settings, debug_write=debug_write)
+
+
+class XltreeInSrc():
+    """テストで使う仕組み
+
+    テストでは
+
+        import xltree as tr
+
+    のように書けないので、
+    テストでは以下のように書く
+
+        from src.xltree import xltree_in_src as tr
+    
+    """
+
+    @staticmethod
+    def prepare_workbook(target, mode, settings={}, debug_write=False):
+        """グローバル関数の prepare_workbook() を呼び出す
+        
+        Returns
+        -------
+        target : str
+            ワークブック（.xlsx）へのファイルパス
+        mode : str
+            既存のワークブックが有ったときの挙動。 'w' は新規作成して置換え、 'a' は追記
+        settings : dict
+            各種設定    
+        debug_write : bool
+            デバッグライト
+        """
+        global prepare_workbook
+
+        return prepare_workbook(target=target, mode=mode, settings=settings, debug_write=debug_write)
+
+
+xltree_in_src = XltreeInSrc()
+
+
 class WorkbookControl():
     """ワークブック制御"""
 
 
-    def __init__(self, target, mode, settings={}, debug_write=False):
+
+
+    def __init__(self, target, mode, wb, settings={}, debug_write=False):
         """初期化
 
         Parameters
@@ -23,15 +108,26 @@ class WorkbookControl():
         """
         self._wb_file_path = target
         self._mode = mode
+        self._wb = wb
         self._settings_obj = Settings(dictionary=settings)
         self._debug_write = debug_write
-        self._wb = None
         self._ws = None
 
 
     @property
     def workbook_file_path(self):
         return self._wb_file_path
+
+
+    def open_worksheet(self, target, based_on, debug_write=False):
+        """TODO ワークシート読取"""
+
+        # ワークシートの準備
+        self.ready_worksheet(target=target)
+
+        # ワークシート制御の生成
+        return WorksheetControl.instantiate(target=target, based_on=based_on, ws=self._ws, settings_obj=self._settings_obj, debug_write=debug_write)
+
 
 
     def render_worksheet(self, target, based_on, debug_write=False):
@@ -46,9 +142,6 @@ class WorkbookControl():
         debug_write : bool
             デバッグライト
         """
-
-        if self._wb is None:
-            self.ready_workbook()
 
         # ワークシートの準備
         self.ready_worksheet(target=target)
@@ -84,34 +177,6 @@ class WorkbookControl():
 
         # ワークブックの保存            
         self._wb.save(self._wb_file_path)
-
-
-    def ready_workbook(self):
-        """ワークブックを準備する"""
-
-        # 既存のファイルが有ったときの挙動
-        if os.path.isfile(self._wb_file_path):
-            # 既存のファイルへ追記
-            if self._mode == 'a':
-                if self._debug_write:
-                    print(f"[{datetime.datetime.now()}] `{self._wb_file_path}` file exists, read.")
-
-                self._wb = xl.load_workbook(filename=self._wb_file_path)
-
-                return
-            
-            elif self._mode == 'w':
-                pass
-            
-            else:
-                raise ValueError(f"unsupported {self._mode=}")
-
-                    
-        # ワークブックを新規生成
-        if self._debug_write:
-            print(f"[{datetime.datetime.now()}] `{self._wb_file_path}` file not exists, create.")
-
-        self._wb = xl.Workbook()
 
 
     def exists_sheet(self, target):

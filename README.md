@@ -63,13 +63,13 @@ C,Users,Muzudho,OneDrive,Documents,GitHub,,,,2024/10/18 12:31,,
 Script:  
 
 ```py
-from xltree import WorkbookControl
+from xltree as tr
 
 
 def execute():
 
     # 出力先ワークブック指定
-    wbc = WorkbookControl(target='./tests/temp/tree_drive.xlsx', mode='w')
+    wbc = tr.prepare_workbook(target='./tests/temp/tree_drive.xlsx', mode='w')
 
     # ワークシート描画
     wbc.render_worksheet(target='Drive', based_on='./examples/data/drive_by_table.csv')
@@ -114,13 +114,13 @@ no,node0,edge1,node1,edge2,node2,edge3,node3,edge4,node4,edge5,node5,edge6,node6
 Script:  
 
 ```py
-from xltree import WorkbookControl
+from xltree as tr
 
 
 def execute():
 
     # 出力先ワークブック指定
-    wbc = WorkbookControl(target='./examples/temp/word_chain_game.xlsx', mode='w')
+    wbc = tr.prepare_workbook(target='./examples/temp/word_chain_game.xlsx', mode='w')
 
     # ワークシート描画
     wbc.render_worksheet(target='Drive', based_on='./examples/data/word_chain_game.csv')
@@ -146,7 +146,7 @@ Input:
 Scripts: 
 
 ```py
-from xltree import WorkbookControl
+from xltree as tr
 
 
 def execute():
@@ -187,7 +187,7 @@ def execute():
     }
 
     # 出力先ワークブック指定
-    wbc = WorkbookControl(target='./examples/temp/uneven_coin.xlsx', mode='w', settings=settings)
+    wbc = tr.prepare_workbook(target='./examples/temp/uneven_coin.xlsx', mode='w', settings=settings)
 
     # ワークシート描画
     wbc.render_worksheet(target='UnevenCoin', based_on='./examples/data/uneven_coin.csv')

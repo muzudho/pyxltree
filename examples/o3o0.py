@@ -1,5 +1,13 @@
-# パッケージを iport した場合は、 `from src.xltree`  の部分を `from xltree` に変えてください
-from src.xltree import WorkbookControl
+# 実際には、
+#
+#   import xltree as tr
+#
+# のように書きたい。
+# テストでは以下のように書く
+#
+#   パッケージを iport した場合は、 `from src.xltree`  の部分を `from xltree` に変えてください
+#
+from src.xltree import xltree_in_src as tr
 
 
 def execute():
@@ -40,7 +48,7 @@ def execute():
     }
 
     # 出力先ワークブック指定
-    wbc = WorkbookControl(target='./examples/temp/example_o3o0_uneven_coin.xlsx', mode='w', settings=settings)
+    wbc = tr.prepare_workbook(target='./examples/temp/example_o3o0_uneven_coin.xlsx', mode='w', settings=settings)
 
     # ワークシート描画
     wbc.render_worksheet(target='UnevenCoin', based_on='./examples/data/uneven_coin.csv')

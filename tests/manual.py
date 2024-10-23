@@ -2,7 +2,16 @@ import traceback
 import os
 import datetime
 
-from src.xltree import WorkbookControl
+# 実際には、
+#
+#   import xltree as tr
+#
+# のように書きたい。
+# テストでは以下のように書く
+#
+#   パッケージを iport した場合は、 `from src.xltree`  の部分を `from xltree` に変えてください
+#
+from src.xltree import xltree_in_src as tr
 
 
 def execute():
@@ -52,7 +61,7 @@ Enter the export path to the Excel workbook(.xlsx) file
     }
 
     # 出力先ワークブック指定
-    wbc = WorkbookControl(target=wb_file_path, mode='w', settings=settings)
+    wbc = tr.prepare_workbook(target=wb_file_path, mode='w', settings=settings)
 
     # ワークシート描画
     wbc.render_worksheet(target='Tree', based_on=csv_file_path)
