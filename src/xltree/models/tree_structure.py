@@ -10,7 +10,7 @@ class TreeStructureBasedOnTable():
 
 
     @staticmethod
-    def read(table):
+    def read_multiple_root(table):
         """テーブル読取
 
         Parameters
@@ -20,7 +20,8 @@ class TreeStructureBasedOnTable():
 
         Returns
         -------
-        tree_structure : TreeStructureBasedOnTable        
+        multiple_root_node : dict<TreeNode>
+            マルチ根
         """
 
         tree_structure = TreeStructureBasedOnTable()
@@ -30,23 +31,17 @@ class TreeStructureBasedOnTable():
 
         # ダンプ
         print("[read] マルチ根")
-        for root in tree_structure._multi_root.values():
+        for root in tree_structure._multiple_root.values():
             print(f"{root.stringify_like_tree('    ')}")
 
-        return tree_structure
+        return tree_structure._multiple_root
 
 
     def __init__(self):
         """初期化"""
 
         # マルチ根
-        self._multi_root = {}
-
-
-    @property
-    def multi_root(self):
-        """マルチ根"""
-        return self._multi_root
+        self._multiple_root = {}
 
 
     def on_record_read(self, row_number, record):
@@ -73,8 +68,8 @@ class TreeStructureBasedOnTable():
 # {node.stringify_dump('')}""")
 
             # 既存のマルチ根かもしれない
-            if depth==0 and node.text in self._multi_root:
-                tree_node = self._multi_root[node.text]
+            if depth==0 and node.text in self._multiple_root:
+                tree_node = self._multiple_root[node.text]
 
             # 未作成のノードなら
             elif context._pre_parent_tree_node is None or node.text not in context._pre_parent_tree_node.child_nodes:
@@ -119,7 +114,7 @@ class TreeStructureBasedOnTable():
 
 
         # ルートノードを記憶
-        self._multi_root[tree_node.text] = tree_node
+        self._multiple_root[tree_node.text] = tree_node
 
 
 #         print(f"""レコード読取  {row_number=}

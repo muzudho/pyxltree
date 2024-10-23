@@ -34,12 +34,12 @@ class WorksheetControl():
         #
         #   NOTE マルチ根にも対応していることに注意してください
         #
-        tree_structure = TreeStructureBasedOnTable.read(table=table)
+        multiple_root_node = TreeStructureBasedOnTable.read_multiple_root(table=table)
 
-        return WorksheetControl(target=target, based_on=based_on, ws=ws, settings_obj=settings_obj, table=table, tree_structure=tree_structure, debug_write=debug_write)
+        return WorksheetControl(target=target, based_on=based_on, ws=ws, settings_obj=settings_obj, table=table, multiple_root_node=multiple_root_node, debug_write=debug_write)
 
 
-    def __init__(self, target, based_on, ws, settings_obj, table, tree_structure, debug_write=False):
+    def __init__(self, target, based_on, ws, settings_obj, table, multiple_root_node, debug_write=False):
         """初期化
 
         Parameters
@@ -54,8 +54,8 @@ class WorksheetControl():
             各種設定
         table : Table
             データテーブル
-        tree_structure : TreeStructureBasedOnTable
-            木構造
+        multiple_root_node : dict<TreeNode>
+            マルチ根
         debug_write : bool
             デバッグライト
         """
@@ -64,14 +64,14 @@ class WorksheetControl():
         self._ws = ws
         self._settings_obj = settings_obj
         self._table = table
-        self._tree_structure = tree_structure
+        self._multiple_root_node = multiple_root_node
         self._debug_write = debug_write
 
 
     @property
-    def tree_structure(self):
+    def multiple_root_node(self):
         """ツリー構造。マルチ根に対応していることに注意してください"""
-        return self._tree_structure
+        return self._multiple_root_node
 
 
     def render_tree(self):
