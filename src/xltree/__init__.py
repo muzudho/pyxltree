@@ -4,6 +4,7 @@ import openpyxl as xl
 from .models.database import Table
 from .settings import Settings
 from .workbooks import TreeDrawer, TreeEraser
+from .worksheet_control import WorksheetControl
 
 
 class WorkbookControl():
@@ -51,7 +52,11 @@ class WorkbookControl():
         if self._wb is None:
             self.ready_workbook()
 
+        # ワークシートの準備
         self.ready_worksheet(target=target)
+
+        # ワークシート制御の生成
+        wsc = WorksheetControl(target=target, based_on=based_on, ws=self._ws, debug_write=debug_write)
 
         # CSV読込
         table = Table.from_csv(file_path=based_on)
