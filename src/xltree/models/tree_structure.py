@@ -32,6 +32,10 @@ class TableReaderLikeTree():
 
     def on_record_read(self, row_number, record):
         """TODO レコード読取"""
+
+        if row_number == 0:
+            print("最初のレコードは、根ノードから葉ノードまで全部揃ってる")
+            
         print(f"""レコード読取  {row_number=}
 {record.stringify_dump('')}""")
         pass

@@ -53,26 +53,26 @@ class NodeInRecord():
 class Record():
 
 
-    def __init__(self, no, node_list):
+    def __init__(self, no, root_to_leaf_pathway):
         """初期化
         
         Parameters
         ----------
         no : int
             1から始まる連番。数詞は件
-        node_list : list<NodeInRecord>
-            ノードのリスト。
+        root_to_leaf_pathway : list<NodeInRecord>
+            根から葉まで並んだノードのリスト。
             第０層は根
         """
         self._no = no
-        self._node_list = node_list
+        self._root_to_leaf_pathway = root_to_leaf_pathway
 
 
     @staticmethod
     def new_empty(specified_end_th_of_node):
         return Record(
                 no=None,
-                node_list=[None] * specified_end_th_of_node)
+                root_to_leaf_pathway=[None] * specified_end_th_of_node)
 
 
     @property
@@ -81,8 +81,8 @@ class Record():
 
 
     @property
-    def len_node_list(self):
-        return len(self._node_list)
+    def len_of_path_from_root_to_leaf(self):
+        return len(self._root_to_leaf_pathway)
 
 
     def node_at(self, depth_th):
@@ -99,10 +99,10 @@ class Record():
         if depth_th < 0:
             raise ValueError(f'depth_th に負数を設定しないでください。意図した動作はしません {depth_th=}')
 
-        return self._node_list[depth_th]
+        return self._root_to_leaf_pathway[depth_th]
 
 
-    def update(self, no=None, node_list=None):
+    def update(self, no=None, root_to_leaf_pathway=None):
         """no inplace
         何も更新しなければシャロー・コピーを返します"""
 
@@ -113,14 +113,14 @@ class Record():
 
         return Record(
                 no=new_or_default(no, self._no),
-                node_list=new_or_default(node_list, self._node_list))
+                root_to_leaf_pathway=new_or_default(root_to_leaf_pathway, self._root_to_leaf_pathway))
 
 
     def stringify_dump(self, indent):
         succ_indent = indent + INDENT
 
         blocks = []
-        for node in self._node_list:
+        for node in self._root_to_leaf_pathway:
             blocks.append(node.stringify_dump(succ_indent))
 
         return f"""\
@@ -136,12 +136,12 @@ class Record():
         th は forth や fifth の th。
         葉要素は、次の層がない要素"""
 
-        for depth_th in range(0, len(self._node_list)):
-            nd = self._node_list[depth_th]
+        for depth_th in range(0, len(self._root_to_leaf_pathway)):
+            nd = self._root_to_leaf_pathway[depth_th]
             if nd is None or nd.text is None:
                 return depth_th
 
-        return len(self._node_list)
+        return len(self._root_to_leaf_pathway)
 
 
 #############
@@ -389,16 +389,16 @@ class Table():
 
         df = self._df
 
-        node_list = [None] * self._analyzer.end_th_of_node
+        root_to_leaf_pathway = [None] * self._analyzer.end_th_of_node
 
         for row_number in range(0, len(df)):
             # no はインデックス
             no = df.index[row_number]
 
-            node_list = []
+            root_to_leaf_pathway = []
 
             # 根
-            node_list.append(NodeInRecord(edge_text=None, text=df.at[no, f'node0']))
+            root_to_leaf_pathway.append(NodeInRecord(edge_text=None, text=df.at[no, f'node0']))
 
             # 中間～葉ノード
             for node_th in range(1, self._analyzer.end_th_of_node):
@@ -409,12 +409,12 @@ class Table():
                 else:
                     edge_text = None
 
-                node_list.append(NodeInRecord(edge_text=edge_text, text=df.at[no, f'node{node_th}']))
+                root_to_leaf_pathway.append(NodeInRecord(edge_text=edge_text, text=df.at[no, f'node{node_th}']))
 
 
             # レコード作成
             record = Record(
                     no=no,
-                    node_list=node_list)
+                    root_to_leaf_pathway=root_to_leaf_pathway)
 
             on_each(row_number, record)
