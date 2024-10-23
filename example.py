@@ -8,10 +8,6 @@ import traceback
 import datetime
 import sys
 
-from tests.e_o1o0 import execute_example as execute_e_o1o0
-from tests.e_o2o0 import execute_example as execute_e_o2o0
-from tests.e_o3o0 import execute_example as execute_e_o3o0
-
 
 ########################################
 # コマンドから実行時
@@ -24,18 +20,18 @@ if __name__ == '__main__':
 
         if 1 < len(args):
             if args[1] == 'all':
-                execute_e_o1o0()
-                execute_e_o2o0()
-                execute_e_o3o0()
+                from examples.o1o0 import *
+                from examples.o2o0 import *
+                from examples.o3o0 import *
 
             elif args[1] == '1':
-                execute_e_o1o0()
+                from examples.o1o0 import *
 
             elif args[1] == '2':
-                execute_e_o2o0()
+                from examples.o2o0 import *
 
             elif args[1] == '3':
-                execute_e_o3o0()
+                from examples.o3o0 import *
 
             else:
                 raise ValueError(f'unsupported {args[1]=}')
