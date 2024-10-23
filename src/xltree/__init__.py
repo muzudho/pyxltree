@@ -1,9 +1,7 @@
 import os
 import datetime
 import openpyxl as xl
-from .models.database import Table
 from .settings import Settings
-from .workbooks import TreeDrawer, TreeEraser
 from .worksheet_control import WorksheetControl
 
 
@@ -56,24 +54,10 @@ class WorkbookControl():
         self.ready_worksheet(target=target)
 
         # ワークシート制御の生成
-        wsc = WorksheetControl(target=target, based_on=based_on, ws=self._ws, debug_write=debug_write)
+        wsc = WorksheetControl.instantiate(target=target, based_on=based_on, ws=self._ws, settings_obj=self._settings_obj, debug_write=debug_write)
 
-        # CSV読込
-        table = Table.from_csv(file_path=based_on)
-
-        # ツリードロワーを用意、描画（都合上、要らない罫線が付いています）
-        tree_drawer = TreeDrawer(table=table, ws=self._ws, settings_obj=self._settings_obj, debug_write=debug_write)
-        tree_drawer.render()
-
-
-        # 要らない罫線を消す
-        # DEBUG_TIPS: このコードを不活性にして、必要な線は全部描かれていることを確認してください
-        if True:
-            tree_eraser = TreeEraser(table=table, ws=self._ws, settings_obj=self._settings_obj, debug_write=debug_write)
-            tree_eraser.render()
-        else:
-            if self._debug_write:
-                print(f"[{datetime.datetime.now()}] eraser disabled")
+        # 木の描画
+        wsc.render_tree()
 
 
     def remove_worksheet(self, target):
@@ -159,17 +143,6 @@ class WorkbookControl():
 
 
         self._ws = self._wb[target]
-
-
-    def to_tree_structure(self):
-        """TODO 木構造モデルの作成
-        
-        Return
-        ------
-        root_node : TreeNode
-            根ノード
-        """
-        pass
 
 
     def get_worksheet(self, sheet_name):
