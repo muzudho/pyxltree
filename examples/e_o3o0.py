@@ -43,11 +43,11 @@ def execute():
     }
 
     # 出力先ワークブック指定
-    wbc = WorkbookControl(target='./examples/temp/no_3_uneven_coin.xlsx', mode='w', settings=settings)
+    wbc = WorkbookControl(target='./examples/temp/example_o3o0_uneven_coin.xlsx', mode='w', settings=settings)
 
     # ワークシート描画
     wbc.render_worksheet(target='UnevenCoin', based_on='./examples/data/uneven_coin.csv')
-    WorksheetDumpControl.dump(worksheet=wbc._ws, file='./examples/temp/actual/no_3_uneven_coin_UnevenCoin.txt')     # テスト用
+    WorksheetDumpControl.dump(worksheet=wbc._ws, file='./tests/diff_dump/actual/example_o3o0_uneven_coin_UnevenCoin.txt')     # テスト用
 
     # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
     wbc.remove_worksheet(target='Sheet')

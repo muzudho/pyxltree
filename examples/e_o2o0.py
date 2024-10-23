@@ -8,11 +8,11 @@ from tests.worksheets import WorksheetDumpControl
 def execute():
 
     # 出力先ワークブック指定
-    wbc = WorkbookControl(target='./examples/temp/no_2_word_chain_game.xlsx', mode='w')
+    wbc = WorkbookControl(target='./examples/temp/example_o2o0_word_chain_game.xlsx', mode='w')
 
     # ワークシート描画
     wbc.render_worksheet(target='WordChainGame', based_on='./examples/data/word_chain_game.csv')
-    WorksheetDumpControl.dump(worksheet=wbc._ws, file='./examples/temp/actual/no_2_word_chain_game_WordChainGame.txt')     # テスト用
+    WorksheetDumpControl.dump(worksheet=wbc._ws, file='./tests/diff_dump/actual/example_o2o0_word_chain_game_WordChainGame.txt')     # テスト用
 
     # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
     wbc.remove_worksheet(target='Sheet')
