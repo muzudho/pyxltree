@@ -37,7 +37,7 @@ class NodeInRecord():
         return self._text
 
 
-    def stringify_dump(self, indent):
+    def _stringify_dump(self, indent):
         succ_indent = indent + INDENT
         return f"""\
 {indent}NodeInRecord
@@ -124,12 +124,12 @@ class Record():
                 root_to_leaf_pathway=new_or_default(root_to_leaf_pathway, self._root_to_leaf_pathway))
 
 
-    def stringify_dump(self, indent):
+    def _stringify_dump(self, indent):
         succ_indent = indent + INDENT
 
         blocks = []
         for node in self._root_to_leaf_pathway:
-            blocks.append(node.stringify_dump(succ_indent))
+            blocks.append(node._stringify_dump(succ_indent))
 
         return f"""\
 {indent}Record

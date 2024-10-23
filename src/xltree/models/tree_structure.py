@@ -29,10 +29,10 @@ class TreeStructureBasedOnTable():
         # 先頭のレコードから順に読み込んでいけば作れる
         table.for_each(tree_structure.on_record_read)
 
-        # ダンプ
-        print("[read] マルチ根")
-        for root in tree_structure._multiple_root.values():
-            print(f"{root.stringify_like_tree('    ')}")
+        # # ダンプ
+        # print("[read] マルチ根")
+        # for root in tree_structure._multiple_root.values():
+        #     print(f"{root._stringify_like_tree('    ')}")
 
         return tree_structure._multiple_root
 
@@ -65,7 +65,7 @@ class TreeStructureBasedOnTable():
 
         def set_node(self, context, depth, node):
 #             print(f"""[set_node] {depth=}
-# {node.stringify_dump('')}""")
+# {node._stringify_dump('')}""")
 
             # 既存のマルチ根かもしれない
             if depth==0 and node.text in self._multiple_root:
@@ -119,9 +119,9 @@ class TreeStructureBasedOnTable():
 
 #         print(f"""レコード読取  {row_number=}
 # root_node:
-# {tree_node.stringify_dump('')}
+# {tree_node._stringify_dump('')}
 # record:
-# {record.stringify_dump('')}""")
+# {record._stringify_dump('')}""")
 
 
 ##############
@@ -178,16 +178,12 @@ class TreeNode():
         return self._child_nodes
 
 
-    def get_child_by_text(self, text):
-        return self._child_nodes.get(text)
-
-
-    def stringify_like_tree(self, indent):
+    def _stringify_like_tree(self, indent):
         succ_indent = indent + INDENT
 
         items = []
         for child_node in self._child_nodes.values():
-            items.append(child_node.stringify_like_tree(indent=succ_indent))
+            items.append(child_node._stringify_like_tree(indent=succ_indent))
 
         if self._edge_text is not None:
             edge_arrow = f"--{self._edge_text}-->"
@@ -199,12 +195,12 @@ class TreeNode():
 {''.join(items)}"""
 
 
-    def stringify_dump(self, indent):
+    def _stringify_dump(self, indent):
         succ_indent = indent + INDENT
 
         items = []
         for child_node in self._child_nodes.values():
-            items.append(child_node.stringify_dump(indent=succ_indent))
+            items.append(child_node._stringify_dump(indent=succ_indent))
 
         return f"""\
 {indent}TreeNode
