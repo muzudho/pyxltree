@@ -11,20 +11,20 @@
 
 * 📖 [Packaging Python Projects](https://packaging.python.org/en/latest/tutorials/packaging-projects/)
 
+👇　ディレクトリー階層は以下のようにする  
+
+```plaintext
+📁 {REPOSITORY_NAME}/    # GitHub のリポジトリー名に対応。詳しくはソースコードの現物参照
+└─ 📄 src/
+    └─ 📄 {PACKATE_NAME}/    # Python パッケージ名に対応。詳しくはソースコードの現物参照
+        ├─ 📄 __init__.py
+        └─ others...
+```
+
 👇　pip をアップデートする  
 
 ```shell
 py -m pip install --upgrade pip
-```
-
-👇　ディレクトリー階層は以下のようにする  
-
-```plaintext
-📁 pyxltree/    # GitHub のリポジトリー名に対応
-└─ 📄 src/
-    └─ 📄 xltree/    # Python パッケージ名に対応
-        ├─ 📄 __init__.py
-        └─ others...
 ```
 
 👇　pypi にアップロードできる形式にファイル圧縮してくれるパッケージをインストールする  
@@ -38,6 +38,12 @@ py -m pip install --upgrade build
 例では、ビルドツールに Hatchling を使っているので真似てみる  
 
 * 📖 [Hatchling > Build system](https://hatch.pypa.io/latest/config/build/#build-system)
+
+👇  インストールしておく必要があるパッケージを調べる方法はないが、以下のコマンドが利用できるので調べておくこと。関係ないパッケージ名も出てくるので、手動で選別する必要がある  
+
+```shell
+pip freeze
+```
 
 📄 `pyproject.toml` を書く。トップディレクトリーに置いてある現物を参照  
 
@@ -58,8 +64,8 @@ py -m build
 
 ```plaintext
 📁 dist/
-├─ 📄 xltree-0.0.1-py2.py3-none-any.whl
-└─ 📄 xltree-0.0.1.tar.gz
+├─ 📄 {PACKATE_NAME}-0.0.1-py2.py3-none-any.whl     # Python パッケージ名に対応。詳しくはソースコードの現物参照
+└─ 📄 {PACKATE_NAME}-0.0.1.tar.gz
 ```
 
 これが pypi にアップロードするファイルだ  
@@ -76,7 +82,7 @@ test.pypi.org にAPIトークンを追加する。スコープは `アカウン�
 py -m pip install --upgrade twine
 ```
 
-twine を実行する前に、 📄 `pyproject.toml` のバージョンの数を上げておくこと  
+twine を実行する前に、 📄 `pyproject.toml` のバージョンの数を設定（２回目以降なら上げる）しておくこと  
 
 👇 twine を実行する  
 

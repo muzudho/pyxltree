@@ -1,5 +1,5 @@
 #
-# python example.py 2
+# python example.py all
 #
 # 例を実行しよう
 #
@@ -7,10 +7,6 @@
 import traceback
 import datetime
 import sys
-
-from examples.no_1 import execute as execute_no_1
-from examples.no_2 import execute as execute_no_2
-from examples.no_3 import execute as execute_no_3
 
 
 ########################################
@@ -24,18 +20,18 @@ if __name__ == '__main__':
 
         if 1 < len(args):
             if args[1] == 'all':
-                execute_no_1()
-                execute_no_2()
-                execute_no_3()
+                from examples.o1o0 import *
+                from examples.o2o0 import *
+                from examples.o3o0 import *
 
             elif args[1] == '1':
-                execute_no_1()
+                from examples.o1o0 import *
 
             elif args[1] == '2':
-                execute_no_2()
+                from examples.o2o0 import *
 
             elif args[1] == '3':
-                execute_no_3()
+                from examples.o3o0 import *
 
             else:
                 raise ValueError(f'unsupported {args[1]=}')

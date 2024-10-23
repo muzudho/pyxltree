@@ -1,5 +1,5 @@
 import openpyxl as xl
-from ..database.library import TableControl
+from ..models.database.library import TableControl
 
 
 class StyleControl():

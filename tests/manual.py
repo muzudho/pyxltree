@@ -2,7 +2,16 @@ import traceback
 import os
 import datetime
 
-from src.xltree import WorkbookControl
+# 実際には、
+#
+#   import xltree as tr
+#
+# のように書きたい。
+# テストでは以下のように書く
+#
+#   パッケージを iport した場合は、 `from src.xltree`  の部分を `from xltree` に変えてください
+#
+from src.xltree import xltree_in_src as tr
 
 
 def execute():
@@ -51,15 +60,18 @@ Enter the export path to the Excel workbook(.xlsx) file
         'row_height_of_lower_side_padding':          13,      # 第２行。ツリー構造図の軸の番号が小さい側パティング
     }
 
-    # 出力先ワークブック指定
-    wbc = WorkbookControl(target=wb_file_path, mode='w', settings=settings)
+    # 出力先ワークブックを指定し、ワークブックハンドル取得
+    b = tr.prepare_workbook(target=wb_file_path, mode='w', settings=settings)
 
-    # ワークシート描画
-    wbc.render_worksheet(target='Tree', based_on=csv_file_path)
+    # 読取元CSVを指定し、ワークシートハンドル取得
+    with b.prepare_worksheet(target='Tree', based_on=csv_file_path) as s:
+
+        # ワークシートへ木構造図を描画
+        s.render_tree()
 
     # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
-    wbc.remove_worksheet(target='Sheet')
+    b.remove_worksheet(target='Sheet')
 
     # ワークブック保存
-    wbc.save_workbook()
-    print(f"[{datetime.datetime.now()}] Please look {wbc.workbook_file_path}")
+    b.save_workbook()
+    print(f"[{datetime.datetime.now()}] Please look {b.workbook_file_path}")

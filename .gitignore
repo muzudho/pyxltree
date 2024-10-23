@@ -1,9 +1,9 @@
 # PyXlTree
 /examples/temp/*
-/examples/temp/actual/*
 !/examples/temp/.gitkeep
+/tests/diff_dump/actual/*
+!/tests/diff_dump/actual/.gitkeep
 /tests/temp/*
-/tests/temp/actual/*
 !/tests/temp/.gitkeep
 *- コピー*
 

@@ -4,9 +4,9 @@ build-backend = "hatchling.build"
 
 [project]
 name = "xltree"
-version = "0.3.1"
+version = "0.4.0"
 authors = [
-  { name="Takahashi Satoshi", email="muzudho1@gmail.com" },
+  { name="Takahashi Satoshi (Handle Name:むずでょ)", email="muzudho1@gmail.com" },
 ]
 description = "Render tree structure diagram using border on Excel."
 readme = "README.md"
@@ -16,7 +16,7 @@ dependencies = [
   "pandas==2.2.2",
 ]
 maintainers = [
-  { name="Takahashi Satoshi", email="muzudho1@gmail.com" },
+  { name="Takahashi Satoshi (Handle Name:むずでょ)", email="muzudho1@gmail.com" },
 ]
 license = {file = "LICENSE"}
 keywords = ["tree structure diagram", "excel", "border"]
