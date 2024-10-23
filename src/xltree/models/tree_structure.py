@@ -19,6 +19,12 @@ class TableReaderLikeTree():
         """
         self._table = table
 
+        # マルチ根
+        self._multi_root = {}
+
+        # 現在ノード
+        self._cur_tree_node = None
+
 
     def read(self):
         """TODO テーブル読取
@@ -31,11 +37,26 @@ class TableReaderLikeTree():
         # 上のレコードから順に読み込んでいけば作れる
         self._table.for_each(self.on_record_read)
 
+        # ダンプ
+        for root in self._multi_root.values():
+            print(f"""[read] マルチ根
+root:
+{root.stringify_dump('')}
+""")
+
         return None # FIXME
 
 
     def on_record_read(self, row_number, record):
-        """TODO レコード読取"""
+        """TODO レコード読取
+        
+        例えば ^ をマルチ根の親とするとき、
+        ^, A, B, C
+        ^, A, B, D
+        という２レコードを読込むとき、 
+        ２行目では A, B というパスは既存。
+
+        """
 
         class Context():
             def __init__(self):
@@ -49,11 +70,20 @@ class TableReaderLikeTree():
             print(f"""[set_node] {depth=}
 {node.stringify_dump('')}""")
 
-            tree_node = TreeNode(
-                    parent_node=context._pre_parent_tree_node,
-                    edge_text=node.edge_text,
-                    text=node.text,
-                    child_nodes=[])    # 子要素は、子から戻ってきたときじゃないと分からない
+            # 未作成のノードなら
+            if context._pre_parent_tree_node is None or node.text not in context._pre_parent_tree_node.child_nodes:
+                tree_node = TreeNode(
+                        parent_node=context._pre_parent_tree_node,
+                        edge_text=node.edge_text,
+                        text=node.text,
+                        child_nodes={})    # 子要素は、子から戻ってきたときじゃないと分からない
+            
+            # 既存のノードなら
+            else:
+                tree_node = context._pre_parent_tree_node.child_nodes[node.text]
+
+            self._cur_tree_node = tree_node
+
             context._pre_parent_tree_node = tree_node
             context._stack.append(tree_node)
 
@@ -70,10 +100,11 @@ class TableReaderLikeTree():
         # 葉から根に向かってノードを読取
         while 0 < len(context._stack):
             tree_node = context._stack.pop()
+            self._cur_tree_node = tree_node
 
             # 子を、子要素として追加
             if prev_child_tree_node is not None:
-                tree_node.child_nodes.append(prev_child_tree_node)
+                tree_node.child_nodes[prev_child_tree_node.text] = prev_child_tree_node
 
             print(f"逆読み  {tree_node.edge_text=}  {tree_node.text=}")
             prev_child_tree_node = tree_node
@@ -81,6 +112,10 @@ class TableReaderLikeTree():
 
         if len(context._stack) != 0:
             raise ValueError(f"スタックのサイズが0でないのはおかしい  {len(context._stack)=}")
+
+
+        # ルートノードを記憶
+        self._multi_root[tree_node.text] = tree_node
 
 
         print(f"""レコード読取  {row_number=}
@@ -112,7 +147,7 @@ class TreeNode():
             エッジのテキスト
         text : str
             テキスト
-        child_nodes : list<TreeNode>
+        child_nodes : dict<text, TreeNode>
             子ノード
         """
         self._parent_node = parent_node
@@ -141,15 +176,19 @@ class TreeNode():
 
     @property
     def child_nodes(self):
-        """子ノードのリスト"""
+        """子ノードの辞書"""
         return self._child_nodes
+
+
+    def get_child_by_text(self, text):
+        return self._child_nodes.get(text)
 
 
     def stringify_dump(self, indent):
         succ_indent = indent + INDENT
 
         items = []
-        for node in self._child_nodes:
+        for node in self._child_nodes.values():
             items.append(node.stringify_dump(indent=succ_indent))
 
         return f"""\
