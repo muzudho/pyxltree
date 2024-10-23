@@ -46,16 +46,16 @@ settings = {
 }
 
 # 出力先ワークブックを指定し、ワークブックハンドル取得
-b = tr.prepare_workbook(target='./examples/temp/example_o3o0_uneven_coin.xlsx', mode='w', settings=settings)
+with tr.prepare_workbook(target='./examples/temp/example_o3o0_uneven_coin.xlsx', mode='w', settings=settings) as b:
 
-# 読取元CSVを指定し、ワークシートハンドル取得
-with b.prepare_worksheet(target='UnevenCoin', based_on='./examples/data/uneven_coin.csv') as s:
+    # 読取元CSVを指定し、ワークシートハンドル取得
+    with b.prepare_worksheet(target='UnevenCoin', based_on='./examples/data/uneven_coin.csv') as s:
 
-    # ワークシートへ木構造図を描画
-    s.render_tree()
+        # ワークシートへ木構造図を描画
+        s.render_tree()
 
-# 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
-b.remove_worksheet(target='Sheet')
+    # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
+    b.remove_worksheet(target='Sheet')
 
-# 保存
-b.save_workbook()
+    # 保存
+    b.save_workbook()
