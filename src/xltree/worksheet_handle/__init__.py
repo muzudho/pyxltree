@@ -53,7 +53,7 @@ class WorksheetHandle():
             ワークシート
         settings_obj : Settings
             各種設定
-        table : Table
+        table : .models.database.Table
             データテーブル
         multiple_root_node : dict<TreeNode>
             マルチ根

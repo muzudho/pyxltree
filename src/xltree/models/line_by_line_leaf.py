@@ -18,8 +18,20 @@ class LineByLineLeafModel():
             return False
 
         for cur_depth_th in range(0, depth_th + 1):
-            # 同じかどうかはノードテキストで決める
-            if curr_record.node_at(depth_th=cur_depth_th).text != prev_record.node_at(depth_th=cur_depth_th).text:
+            #
+            # NOTE 同じかどうかは、エッジテキストとノードテキストの両方が同じかどうかで判定する必要がある。以下のようなケースでは、ノードテキストだけでは識別できない
+            #
+            #          Alice
+            #   1 --+---------> 0.5
+            #       |
+            #       |  Bob
+            #       +---------> 0.5
+            #
+            # 同じでないケース
+            curr_node = curr_record.node_at(depth_th=cur_depth_th)  # 現件のノード
+            prev_node = prev_record.node_at(depth_th=cur_depth_th)  # 前件のノード
+            if curr_node.text != prev_node.text or\
+               curr_node.edge_text != prev_node.edge_text:
                 return False
 
         return True

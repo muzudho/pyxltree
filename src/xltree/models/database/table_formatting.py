@@ -68,9 +68,11 @@ class InputCompletion():
 
 
     @staticmethod
-    def fill_directory(df, end_th_of_node, debug_write=False):
+    def fill_directory(df, end_th_of_edge, end_th_of_node, debug_write=False):
         """ディレクトリーの空欄を埋めます
         
+        対象は、エッジテキスト、ノードテキスト列です
+
         Before:
             a,b,c,d,e,f,g,h,i
                 ,j,k,l, ,m,n,o
@@ -82,35 +84,40 @@ class InputCompletion():
             a,j,p,l,e,m,n
         """
 
-        last_node_th = end_th_of_node - 1
-
         if debug_write:
-            print(f"[{datetime.datetime.now()}] このテーブルは{end_th_of_node}個のノードがある。最終ノードは {last_node_th}")
+            print(f"[{datetime.datetime.now()}] このテーブルは{end_th_of_node}個のノードがある。最終ノードは {end_th_of_node - 1}")
 
         row_size = len(df)
 
         # ２行目から、１行ずつ行う
         for row_th in range(2, row_size + 1):
 
-            # この行について、最終ノード列を調べる
-            actual_last_node_th = last_node_th   # 最終ノードから開始
-            for node_th in reversed(range(0, end_th_of_node)):
-                column_name = f'node{node_th}'
-
-                # 縮めていく
-                actual_last_node_th = node_th
-
-                if not pd.isnull(df.at[row_th, column_name]):
-                    break
+            InputCompletion.copy(df=df, row_th=row_th, start_column_th=1, prefix='edge', end_th=end_th_of_edge, debug_write=debug_write)
+            InputCompletion.copy(df=df, row_th=row_th, start_column_th=0, prefix='node', end_th=end_th_of_node, debug_write=debug_write)
 
 
-            if debug_write:
-                print(f"[{datetime.datetime.now()}] 第{row_th}行は第{actual_last_node_th}ノードまで")
+    @staticmethod
+    def copy(df, row_th, start_column_th, prefix, end_th, debug_write):
 
-            # この行について、最終ノード列まで、ノードの空欄は上行をコピーする
-            for node_th in range(0, actual_last_node_th + 1):
+        # この行について、最終ノード列を調べる
+        actual_last_th = end_th - 1   # 最終ノードから開始
+        for element_th in reversed(range(start_column_th, end_th)):
+            column_name = f'{prefix}{element_th}'
 
-                column_name = f'node{node_th}'
+            # 縮めていく
+            actual_last_th = element_th
 
-                if pd.isnull(df.at[row_th, column_name]):
-                    df.at[row_th, column_name] = df.at[row_th - 1, column_name]
+            if not pd.isnull(df.at[row_th, column_name]):
+                break
+
+
+        if debug_write:
+            print(f"[{datetime.datetime.now()}] 第{row_th}行の{prefix}は第{actual_last_th}要素まで")
+
+        # この行について、最終要素列まで、要素の空欄は上行をコピーする
+        for element_th in range(start_column_th, actual_last_th + 1):
+
+            column_name = f'{prefix}{element_th}'
+
+            if pd.isnull(df.at[row_th, column_name]):
+                df.at[row_th, column_name] = df.at[row_th - 1, column_name]

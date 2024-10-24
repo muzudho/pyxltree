@@ -272,7 +272,7 @@ class Table():
 
 
         # 整形
-        InputCompletion.fill_directory(df=df, end_th_of_node=columns_sorting.end_th_of_node)
+        InputCompletion.fill_directory(df=df, end_th_of_edge=columns_sorting.end_th_of_edge, end_th_of_node=columns_sorting.end_th_of_node)
 
         return Table(
             df=df,

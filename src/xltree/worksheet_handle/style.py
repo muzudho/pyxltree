@@ -62,13 +62,12 @@ class StyleControl():
     @staticmethod
     def get_number_of_character_of_column(df, column_name):
         """指定の列の文字数を取得"""
-        column_th = TableControl.get_column_location_by_column_name(df=df, column_name=column_name) + 1
 
-        column_letter = xl.utils.get_column_letter(column_th)
         series = df[column_name]
         #print(f"{type(series)=}")
 
-        
+
+        # 📖 [pandasのSeriesの要素の中で最大の桁数・文字数を取得する](https://qiita.com/Maron_T/items/105966b489c110b90ebe)
         if series.dtype == 'int64':
             return int(series.abs().apply("log10").max()) + 1
 
