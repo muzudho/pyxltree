@@ -264,7 +264,7 @@ with tr.prepare_workbook(target='./examples/temp/example_o1o0_tree_drive.xlsx', 
                     et = '──'
                 
                 # 葉ノード
-                if len(child_node.child_nodes) < 1:                    
+                if len(child_node.child_nodes) < 1:
                     print(f"{indent}└{et} 📄 ({child_node.leaf_th}) {child_node.text}")
                 
                 # 中間ノード
