@@ -63,7 +63,7 @@ C,Users,Muzudho,OneDrive,Documents,GitHub,,,,2024/10/18 12:31,,
 Script:  
 
 ```py
-from xltree as tr
+import xltree as tr
 
 
 # 出力先ワークブックを指定し、ワークブックハンドル取得
@@ -116,7 +116,7 @@ no,node0,edge1,node1,edge2,node2,edge3,node3,edge4,node4,edge5,node5,edge6,node6
 Script:  
 
 ```py
-from xltree as tr
+import xltree as tr
 
 
 # 出力先ワークブックを指定し、ワークブックハンドル取得
@@ -146,10 +146,10 @@ Output:
 Input:  
 省略します  
 
-Scripts: 
+Script: 
 
 ```py
-from xltree as tr
+import xltree as tr
 
 
 # 各種設定
@@ -207,6 +207,78 @@ with tr.prepare_workbook(target='./examples/temp/example_o3o0_uneven_coin.xlsx',
 （`xltree>=0.1.0` から） settings は Dictionary 型になりました  
 （`xltree>=0.2.0` から） `column_width_of_row_header_separator` は `column_width_of_root_side_padding` に名称変更しました  
 （`xltree>=0.3.0` から） `row_height_of_column_header_separator` は `row_height_of_lower_side_padding` に名称変更しました  
+
+# 例４：ツリー構造モデルの作成
+
+(tree==0.4.2 から) ツリー構造のモデルを取得できます  
+
+👇　以下はターミナル表示  
+
+Output:  
+
+```plaintext
+📁 C
+└── 📁 Users
+    └── 📁 Muzudho
+        └── 📁 OneDrive
+            └── 📁 Documents
+                └── 📄 (1) GitHub
+                └── 📁 Tools
+                    └── 📁 Shogidokoro
+                        └── 📁 Engine
+                            └── 📄 (2) Lesserkai.exe
+                            └── 📄 (3) Lesserkai_ja.txt
+                            └── 📄 (4) public.bin
+                        └── 📁 ja
+                            └── 📄 (5) Shogidokoro.resources.dll
+                        └── 📄 (6) Engine.xml
+                        └── 📄 (7) GameResult.xml
+                        └── 📄 (8) Shogidokoro.exe
+                        └── 📄 (9) Shogidokoro.xml
+                        └── 📄 (10) お読みください.txt
+                    └── 📄 (11) Shogidokoro.zip
+                └── 📄 (12) Visual Studio 2022
+                └── 📄 (13) Default.rdp
+```
+
+Script:  
+
+```py
+import xltree as tr
+
+
+# 出力先ワークブックを指定し、ワークブックハンドル取得
+with tr.prepare_workbook(target='./examples/temp/example_o1o0_tree_drive.xlsx', mode='w') as b:
+
+    # 読取元CSVを指定し、ワークシートハンドル取得
+    with b.prepare_worksheet(target='Drive', based_on='./examples/data/drive_by_table.csv') as s:
+
+        def print_child(indent, node):
+            """再帰的に子ノードを表示"""
+            succ_indent = indent + '    '
+            for child_node in node.child_nodes.values():
+                # エッジテキスト
+                if child_node.edge_text is not None:
+                    et = f"─{child_node.edge_text}─"
+                else:
+                    et = '──'
+                
+                # 葉ノード
+                if len(child_node.child_nodes) < 1:
+                    print(f"{indent}└{et} 📄 ({child_node.leaf_th}) {child_node.text}")
+                
+                # 中間ノード
+                else:
+                    print(f"{indent}└{et} 📁 {child_node.text}")
+                    print_child(indent=succ_indent, node=child_node) # 再帰
+
+        # 木構造のターミナル表示
+        for root_node in s.multiple_root_node.values():
+            print(f"📁 {root_node.text}")
+            print_child(indent='', node=root_node)
+```
+
+👆　以上がこのライブラリに付属しているツリー構造の操作のインターフェースです。他に便利なツリー構造のライブラリーがあれば、そちらへ内容を移し替えてください  
 
 # その他
 

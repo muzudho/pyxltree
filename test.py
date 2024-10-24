@@ -11,6 +11,7 @@ import sys
 from tests.e_o1o0 import execute_example as execute_e_o1o0
 from tests.e_o2o0 import execute_example as execute_e_o2o0
 from tests.e_o3o0 import execute_example as execute_e_o3o0
+from tests.e_o4o0 import execute_example as execute_e_o4o0
 
 from tests.manual import execute as execute_manual
 from tests.t_o1o0 import execute as execute_t_o1o0
@@ -36,6 +37,7 @@ if __name__ == '__main__':
                 execute_e_o1o0()
                 execute_e_o2o0()
                 execute_e_o3o0()
+                execute_e_o4o0()
 
                 execute_t_o1o0()
                 execute_t_o2o0()
@@ -44,31 +46,34 @@ if __name__ == '__main__':
                 execute_t_o4o0()
                 execute_t_o5o0()
 
-            elif args[1] == 'e1':
+            elif args[1] == 'e_o1o0':
                 execute_e_o1o0()
 
-            elif args[1] == 'e2':
+            elif args[1] == 'e_o2o0':
                 execute_e_o2o0()
 
-            elif args[1] == 'e3':
+            elif args[1] == 'e_o3o0':
                 execute_e_o3o0()
 
-            elif args[1] == '1':
+            elif args[1] == 'e_o4o0':
+                execute_e_o4o0()
+
+            elif args[1] == 't_o1o0':
                 execute_t_o1o0()
 
-            elif args[1] == '2':
+            elif args[1] == 't_o2o0':
                 execute_t_o2o0()
 
-            elif args[1] == 'o3o1o0':
+            elif args[1] == 't_o3o1o0':
                 execute_t_o3o1o0()
 
-            elif args[1] == 'o3o2o0':
+            elif args[1] == 't_o3o2o0':
                 execute_t_o3o2o0()
 
-            elif args[1] == '4':
+            elif args[1] == 't_o4o0':
                 execute_t_o4o0()
 
-            elif args[1] == '5':
+            elif args[1] == 't_o5o0':
                 execute_t_o5o0()
             
             else:

@@ -1,0 +1,22 @@
+📁 C
+└── 📁 Users
+    └── 📁 Muzudho
+        └── 📁 OneDrive
+            └── 📁 Documents
+                └── 📄 (1) GitHub
+                └── 📁 Tools
+                    └── 📁 Shogidokoro
+                        └── 📁 Engine
+                            └── 📄 (2) Lesserkai.exe
+                            └── 📄 (3) Lesserkai_ja.txt
+                            └── 📄 (4) public.bin
+                        └── 📁 ja
+                            └── 📄 (5) Shogidokoro.resources.dll
+                        └── 📄 (6) Engine.xml
+                        └── 📄 (7) GameResult.xml
+                        └── 📄 (8) Shogidokoro.exe
+                        └── 📄 (9) Shogidokoro.xml
+                        └── 📄 (10) お読みください.txt
+                    └── 📄 (11) Shogidokoro.zip
+                └── 📄 (12) Visual Studio 2022
+                └── 📄 (13) Default.rdp
