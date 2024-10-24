@@ -9,7 +9,7 @@ import datetime
 # のように書きたい。
 # テストでは以下のように書く
 #
-#   パッケージを iport した場合は、 `from src.xltree`  の部分を `from xltree` に変えてください
+#   パッケージをインストールした場合は、 `from src.xltree`  の部分を `from xltree` に変えてください
 #
 from src.xltree import xltree_in_src as tr
 

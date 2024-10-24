@@ -63,7 +63,7 @@ class TreeStructureBasedOnTable():
         context = Context()
 
 
-        def set_node(self, context, depth, node):
+        def set_node(self, context, leaf_th, depth, node):
 #             print(f"""[set_node] {depth=}
 # {node._stringify_dump('')}""")
 
@@ -77,7 +77,8 @@ class TreeStructureBasedOnTable():
                         parent_node=context._pre_parent_tree_node,
                         edge_text=node.edge_text,
                         text=node.text,
-                        child_nodes={})    # 子要素は、子から戻ってきたときじゃないと分からない
+                        child_nodes={},     # 子要素は、子から戻ってきたときじゃないと分からない
+                        leaf_th=leaf_th)
             
             # 既存のノードなら
             else:
@@ -91,8 +92,12 @@ class TreeStructureBasedOnTable():
         # if row_number == 0:
         #     print("最初のレコードは、根ノードから葉ノードまで全部揃ってる")
 
+        def get_leaf_th(record, depth):
+            if depth<record.len_of_path_from_root_to_leaf:
+                return record.no
+            return None
 
-        record.for_each_node_in_path(set_node=lambda depth, node: set_node(self, context, depth, node))
+        record.for_each_node_in_path(set_node=lambda depth, node: set_node(self=self, context=context, leaf_th=get_leaf_th(record=record, depth=depth), depth=depth, node=node))
 
 
         prev_child_tree_node = None
@@ -134,7 +139,7 @@ class TreeNode():
     """
 
 
-    def __init__(self, parent_node, edge_text, text, child_nodes):
+    def __init__(self, parent_node, edge_text, text, child_nodes, leaf_th=None):
         """初期化
         
         Parameters
@@ -147,11 +152,14 @@ class TreeNode():
             テキスト
         child_nodes : dict<text, TreeNode>
             子ノード
+        leaf_th : int
+            有れば１から始まる葉番号、無ければナン
         """
         self._parent_node = parent_node
         self._edge_text = edge_text
         self._text = text
         self._child_nodes = child_nodes
+        self._leaf_th = leaf_th
 
 
     @property
@@ -176,6 +184,12 @@ class TreeNode():
     def child_nodes(self):
         """子ノードの辞書"""
         return self._child_nodes
+
+
+    @property
+    def leaf_th(self):
+        """有れば１から始まる葉番号、無ければナン"""
+        return self._leaf_th
 
 
     def _stringify_like_tree(self, indent):

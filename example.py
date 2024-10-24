@@ -23,15 +23,19 @@ if __name__ == '__main__':
                 from examples.o1o0 import *
                 from examples.o2o0 import *
                 from examples.o3o0 import *
+                from examples.o4o0_model import *
 
-            elif args[1] == '1':
+            elif args[1] == 'o1o0':
                 from examples.o1o0 import *
 
-            elif args[1] == '2':
+            elif args[1] == 'o2o0':
                 from examples.o2o0 import *
 
-            elif args[1] == '3':
+            elif args[1] == 'o3o0':
                 from examples.o3o0 import *
+
+            elif args[1] == 'o4o0':
+                from examples.o4o0_model import *
 
             else:
                 raise ValueError(f'unsupported {args[1]=}')

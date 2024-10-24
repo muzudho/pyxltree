@@ -5,7 +5,7 @@
 # のように書きたい。
 # テストでは以下のように書く
 #
-#   パッケージを iport した場合は、 `from src.xltree`  の部分を `from xltree` に変えてください
+#   パッケージをインストールした場合は、 `from src.xltree`  の部分を `from xltree` に変えてください
 #
 from src.xltree import xltree_in_src as tr
 
@@ -28,7 +28,7 @@ with tr.prepare_workbook(target='./examples/temp/example_o1o0_tree_drive.xlsx', 
                 
                 # 葉ノード
                 if len(child_node.child_nodes) < 1:                    
-                    print(f"{indent}└{et} 📄 {child_node.text}")
+                    print(f"{indent}└{et} 📄 ({child_node.leaf_th}) {child_node.text}")
                 
                 # 中間ノード
                 else:
@@ -39,9 +39,3 @@ with tr.prepare_workbook(target='./examples/temp/example_o1o0_tree_drive.xlsx', 
         for root_node in s.multiple_root_node.values():
             print(f"📁 {root_node.text}")
             print_child(indent='', node=root_node)
-
-    # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
-    b.remove_worksheet(target='Sheet')
-
-    # 保存
-    b.save_workbook()
