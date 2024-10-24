@@ -63,26 +63,26 @@ class TreeStructureBasedOnTable():
         context = Context()
 
 
-        def set_node(self, context, leaf_th, depth, node):
+        def set_node(self, context, leaf_th, depth, node_in_record):
 #             print(f"""[set_node] {depth=}
-# {node._stringify_dump('')}""")
+# {node_in_record._stringify_dump('')}""")
 
             # 既存のマルチ根かもしれない
-            if depth==0 and node.text in self._multiple_root:
-                tree_node = self._multiple_root[node.text]
+            if depth==0 and node_in_record.text in self._multiple_root:
+                tree_node = self._multiple_root[node_in_record.text]
 
             # 未作成のノードなら
-            elif context._pre_parent_tree_node is None or node.text not in context._pre_parent_tree_node.child_nodes:
+            elif context._pre_parent_tree_node is None or node_in_record._pack_key() not in context._pre_parent_tree_node.child_nodes:
                 tree_node = TreeNode(
                         parent_node=context._pre_parent_tree_node,
-                        edge_text=node.edge_text,
-                        text=node.text,
+                        edge_text=node_in_record.edge_text,
+                        text=node_in_record.text,
                         child_nodes={},     # 子要素は、子から戻ってきたときじゃないと分からない
                         leaf_th=leaf_th)
             
             # 既存のノードなら
             else:
-                tree_node = context._pre_parent_tree_node.child_nodes[node.text]
+                tree_node = context._pre_parent_tree_node.child_nodes[node_in_record._pack_key()]
 
 
             context._pre_parent_tree_node = tree_node
@@ -97,7 +97,7 @@ class TreeStructureBasedOnTable():
                 return record.no
             return None
 
-        record.for_each_node_in_path(set_node=lambda depth, node: set_node(self=self, context=context, leaf_th=get_leaf_th(record=record, depth=depth), depth=depth, node=node))
+        record.for_each_node_in_path(set_node=lambda depth, node_in_record: set_node(self=self, context=context, leaf_th=get_leaf_th(record=record, depth=depth), depth=depth, node_in_record=node_in_record))
 
 
         prev_child_tree_node = None
@@ -108,7 +108,7 @@ class TreeStructureBasedOnTable():
 
             # 子を、子要素として追加
             if prev_child_tree_node is not None:
-                tree_node.child_nodes[prev_child_tree_node.text] = prev_child_tree_node
+                tree_node.child_nodes[prev_child_tree_node._pack_key()] = prev_child_tree_node
 
             #print(f"逆読み  {tree_node.edge_text=}  {tree_node.text=}")
             prev_child_tree_node = tree_node
@@ -150,8 +150,9 @@ class TreeNode():
             エッジのテキスト
         text : str
             テキスト
-        child_nodes : dict<text, TreeNode>
-            子ノード
+        child_nodes : dict<tuple(str, str), TreeNode>
+            子ノードを格納した辞書。キーはエッジテキストとノードテキストのタプル
+            FIXME キーがメモリを消費しすぎていないか？仕方ない？
         leaf_th : int
             有れば１から始まる葉番号、無ければナン
         """
@@ -178,11 +179,12 @@ class TreeNode():
     def text(self):
         """テキスト"""
         return self._text
-    
+
 
     @property
     def child_nodes(self):
-        """子ノードの辞書"""
+        """子ノードを格納した辞書。キーはエッジテキストとノードテキストのタプル
+        FIXME キーがメモリを消費しすぎていないか？仕方ない？"""
         return self._child_nodes
 
 
@@ -190,6 +192,10 @@ class TreeNode():
     def leaf_th(self):
         """有れば１から始まる葉番号、無ければナン"""
         return self._leaf_th
+    
+
+    def _pack_key(self):
+        return (self._edge_text, self._text)
 
 
     def _stringify_like_tree(self, indent):

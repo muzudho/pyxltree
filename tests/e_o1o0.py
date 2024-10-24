@@ -12,7 +12,7 @@ import datetime
 from src.xltree import xltree_in_src as tr
 
 # テストツール
-from tests.worksheets import WorksheetDumpControl
+from tests.worksheets import WorksheetDumpHandle
 
 
 def execute():
@@ -47,4 +47,4 @@ def execute_example():
     ws = b.get_worksheet(sheet_name='Drive')
 
     # ワークシートのダンプを出力
-    WorksheetDumpControl.dump(worksheet=ws, file='./tests/diff_dump/actual/example_o1o0_tree_drive_Drive.txt')
+    WorksheetDumpHandle.dump(worksheet=ws, file='./tests/diff_dump/actual/example_o1o0_tree_drive_Drive.txt')

@@ -12,7 +12,7 @@ import datetime
 from src.xltree import xltree_in_src as tr
 
 # テスト用
-from tests.worksheets import WorksheetDumpControl
+from tests.worksheets import WorksheetDumpHandle
 
 
 def execute():
@@ -26,7 +26,7 @@ def execute():
 
             # ワークシートへ木構造図を描画
             s.render_tree()
-            WorksheetDumpControl.dump(worksheet=s._ws, file='./tests/diff_dump/actual/test_o5o0_multiple_root_by_table_Shiritori.txt')     # テスト用
+            WorksheetDumpHandle.dump(worksheet=s._ws, file='./tests/diff_dump/actual/test_o5o0_multiple_root_by_table_Shiritori.txt')     # テスト用
 
         # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
         b.remove_worksheet(target='Sheet')

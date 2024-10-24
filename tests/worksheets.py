@@ -1,7 +1,27 @@
 import openpyxl as xl
 
 
-class WorksheetDumpControl():
+def print_child(output_list, indent, node):
+    """再帰的に子ノードを表示"""
+    succ_indent = indent + '    '
+    for child_node in node.child_nodes.values():
+        # エッジテキスト
+        if child_node.edge_text is not None:
+            et = f"─{child_node.edge_text}─"
+        else:
+            et = '──'
+        
+        # 葉ノード
+        if len(child_node.child_nodes) < 1:
+            output_list.append(f"{indent}└{et} 📄 ({child_node.leaf_th}) {child_node.text}")
+        
+        # 中間ノード
+        else:
+            output_list.append(f"{indent}└{et} 📁 {child_node.text}")
+            print_child(output_list=output_list, indent=succ_indent, node=child_node) # 再帰
+
+
+class WorksheetDumpHandle():
 
 
     @staticmethod
@@ -47,16 +67,16 @@ class WorksheetDumpControl():
                     # --------------------
                     
                     # フォントを出力
-                    WorksheetDumpControl.nesting(name='font', items=items, sub_items=WorksheetDumpControl.parse_font(font=cell.font))
+                    WorksheetDumpHandle.nesting(name='font', items=items, sub_items=WorksheetDumpHandle.parse_font(font=cell.font))
 
                     # 罫線を出力
-                    WorksheetDumpControl.nesting(name='border', items=items, sub_items=WorksheetDumpControl.parse_border(border=cell.border))
+                    WorksheetDumpHandle.nesting(name='border', items=items, sub_items=WorksheetDumpHandle.parse_border(border=cell.border))
 
                     # 背景色を出力
-                    WorksheetDumpControl.nesting(name='fill', items=items, sub_items=WorksheetDumpControl.parse_fill(fill=cell.fill))
+                    WorksheetDumpHandle.nesting(name='fill', items=items, sub_items=WorksheetDumpHandle.parse_fill(fill=cell.fill))
 
                     # 文字寄せを出力
-                    WorksheetDumpControl.nesting(name='alignment', items=items, sub_items=WorksheetDumpControl.parse_alignment(alignment=cell.alignment))
+                    WorksheetDumpHandle.nesting(name='alignment', items=items, sub_items=WorksheetDumpHandle.parse_alignment(alignment=cell.alignment))
 
                     f.write(f"""\
 ({column_letter}{row_th}) {' '.join(items)}
@@ -81,25 +101,25 @@ class WorksheetDumpControl():
 
         if border is not None:
             if hasattr(border, 'left') and border.left is not None:
-                WorksheetDumpControl.nesting(name='left', items=items, sub_items=WorksheetDumpControl.parse_side(side=border.left))
+                WorksheetDumpHandle.nesting(name='left', items=items, sub_items=WorksheetDumpHandle.parse_side(side=border.left))
 
             if hasattr(border, 'right') and border.right is not None:
-                WorksheetDumpControl.nesting(name='right', items=items, sub_items=WorksheetDumpControl.parse_side(side=border.right))
+                WorksheetDumpHandle.nesting(name='right', items=items, sub_items=WorksheetDumpHandle.parse_side(side=border.right))
 
             if hasattr(border, 'top') and border.top is not None:
-                WorksheetDumpControl.nesting(name='top', items=items, sub_items=WorksheetDumpControl.parse_side(side=border.top))
+                WorksheetDumpHandle.nesting(name='top', items=items, sub_items=WorksheetDumpHandle.parse_side(side=border.top))
 
             if hasattr(border, 'bottom') and border.bottom is not None:
-                WorksheetDumpControl.nesting(name='bottom', items=items, sub_items=WorksheetDumpControl.parse_side(side=border.bottom))
+                WorksheetDumpHandle.nesting(name='bottom', items=items, sub_items=WorksheetDumpHandle.parse_side(side=border.bottom))
 
             if hasattr(border, 'diagonal') and border.diagonal is not None:
-                WorksheetDumpControl.nesting(name='diagonal', items=items, sub_items=WorksheetDumpControl.parse_side(side=border.diagonal))
+                WorksheetDumpHandle.nesting(name='diagonal', items=items, sub_items=WorksheetDumpHandle.parse_side(side=border.diagonal))
 
             if hasattr(border, 'vertical') and border.vertical is not None:
-                WorksheetDumpControl.nesting(name='vertical', items=items, sub_items=WorksheetDumpControl.parse_side(side=border.vertical))
+                WorksheetDumpHandle.nesting(name='vertical', items=items, sub_items=WorksheetDumpHandle.parse_side(side=border.vertical))
 
             if hasattr(border, 'horizontal') and border.horizontal is not None:
-                WorksheetDumpControl.nesting(name='horizontal', items=items, sub_items=WorksheetDumpControl.parse_side(side=border.horizontal))
+                WorksheetDumpHandle.nesting(name='horizontal', items=items, sub_items=WorksheetDumpHandle.parse_side(side=border.horizontal))
 
         return items
 
@@ -143,7 +163,7 @@ class WorksheetDumpControl():
 
             # fg色
             if fill.fgColor is not None:
-                WorksheetDumpControl.nesting(name='fgColor', items=items, sub_items=WorksheetDumpControl.parse_color(color=fill.fgColor))
+                WorksheetDumpHandle.nesting(name='fgColor', items=items, sub_items=WorksheetDumpHandle.parse_color(color=fill.fgColor))
 
         return items
 
@@ -182,7 +202,7 @@ class WorksheetDumpControl():
                 items.append(f"condense={font.condense}")
 
             # 色
-            WorksheetDumpControl.nesting(name='color', items=items, sub_items=WorksheetDumpControl.parse_color(color=font.color))
+            WorksheetDumpHandle.nesting(name='color', items=items, sub_items=WorksheetDumpHandle.parse_color(color=font.color))
 
         return items
 
@@ -194,6 +214,6 @@ class WorksheetDumpControl():
             items.append(f"{side.style}")
 
         # 色
-        WorksheetDumpControl.nesting(name='color', items=items, sub_items=WorksheetDumpControl.parse_color(color=side.color))
+        WorksheetDumpHandle.nesting(name='color', items=items, sub_items=WorksheetDumpHandle.parse_color(color=side.color))
 
         return items

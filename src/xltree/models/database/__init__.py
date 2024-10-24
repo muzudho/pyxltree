@@ -37,6 +37,10 @@ class NodeInRecord():
         return self._text
 
 
+    def _pack_key(self):
+        return (self._edge_text, self._text)
+
+
     def _stringify_dump(self, indent):
         succ_indent = indent + INDENT
         return f"""\

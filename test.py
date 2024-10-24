@@ -21,6 +21,7 @@ from tests.t_o3o2o0_do_not_merge_cells import execute as execute_t_o3o2o0
 from tests.t_o4o0 import execute as execute_t_o4o0
 from tests.t_o5o0 import execute as execute_t_o5o0
 from tests.t_o6o0 import execute as execute_t_o6o0
+from tests.t_o7o0 import execute as execute_t_o7o0
 
 
 ########################################
@@ -47,6 +48,7 @@ if __name__ == '__main__':
                 execute_t_o4o0()
                 execute_t_o5o0()
                 execute_t_o6o0()
+                execute_t_o7o0()
 
             elif args[1] == 'e_o1o0':
                 execute_e_o1o0()
@@ -80,6 +82,9 @@ if __name__ == '__main__':
 
             elif args[1] == 't_o6o0':
                 execute_t_o6o0()
+
+            elif args[1] == 't_o7o0':
+                execute_t_o7o0()
 
             else:
                 raise ValueError(f'unsupported {args[1]=}')
