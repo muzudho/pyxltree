@@ -346,6 +346,15 @@ class TreeEntry():
         return child_entry
 
 
+    def get_child(self, edge_text, node_text, default=None):
+        """子要素を取得。無ければデフォルト値を返します"""
+        pack_key = TreeEntry._pack_key_static(edge_text=edge_text, node_text=node_text)
+        if self.has_child(edge_text=edge_text, node_text=node_text):
+            return self.child_entries[pack_key]
+        else:
+            return default
+
+
     def has_child(self, edge_text, node_text):
         """子要素が既存か？"""
         pack_key = TreeEntry._pack_key_static(edge_text=edge_text, node_text=node_text)

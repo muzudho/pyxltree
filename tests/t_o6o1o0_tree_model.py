@@ -32,8 +32,17 @@ def execute():
         o360.grow('(2/3)', '120')
 
         # 既存チェック
-        if o360.has_child('(3/3)', '120'):
+        if o360.has_child(edge_text='(3/3)', node_text='120'):
             raise ValueError("既存チェック関数の不具合")
+
+        # 子要素取得のチェック
+        child_node = o360.get_child(edge_text='(3/3)', node_text='120')
+        if child_node is not None:
+            raise ValueError(f"子要素取得関数の不具合  {child_node=}")
+
+        child_node = o360.get_child(edge_text='(3/3)', node_text='120', default=123)
+        if child_node != 123:
+            raise ValueError(f"子要素取得関数の不具合  {child_node=}")
 
         o360.grow('(3/3)', '120')
 
@@ -41,7 +50,10 @@ def execute():
         if not o360.has_child('(3/3)', '120'):
             raise ValueError("既存チェック関数の不具合")
 
-
+        # 子要素取得のチェック
+        child_node = o360.get_child(edge_text='(3/3)', node_text='120')
+        if child_node is None:
+            raise ValueError(f"子要素取得関数の不具合  {child_node=}")
 
 
     # 余り列の出力順を指定する
