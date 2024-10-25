@@ -30,15 +30,7 @@ def execute():
                 items.append(f"📁 {root_node.text}")
                 print_child(output_list=items, indent='', node=root_node)
 
-    # テストに使用するために返す
-    return '\n'.join(items)
-
-
-def execute_example():
-
-    # サンプル実行、ログテキスト取得
-    log_text = execute()
 
     # ターミナル表示のダンプを出力
     with open('./tests/diff_dump/actual/example_o4o0_terminal.txt', mode='w', encoding='utf8') as f:
-        f.write(log_text)
+        f.write('\n'.join(items))

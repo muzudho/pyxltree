@@ -18,33 +18,19 @@ from tests.worksheets import WorksheetDumpHandle
 def execute():
 
     # 出力先ワークブックを指定し、ワークブックハンドル取得
-    b = tr.prepare_workbook(target='./examples/temp/example_o2o0_word_chain_game.xlsx', mode='w')
+    with tr.prepare_workbook(target='./examples/temp/example_o2o0_word_chain_game.xlsx', mode='w') as b:
 
-    # 読取元CSVを指定し、ワークシートハンドル取得
-    # あとでテストに使うので、メモリ解放しません
-    s = b.prepare_worksheet(target='WordChainGame', based_on='./examples/data/word_chain_game.csv')
+        # 読取元CSVを指定し、ワークシートハンドル取得
+        with b.prepare_worksheet(target='WordChainGame', based_on='./examples/data/word_chain_game.csv') as s:
 
-    # ワークシートへ木構造図を描画
-    s.render_tree()
+            # ワークシートへ木構造図を描画
+            s.render_tree()
+            # ワークシートのダンプを出力
+            WorksheetDumpHandle.dump(worksheet=s._ws, file='./tests/diff_dump/actual/example_o2o0_word_chain_game_WordChainGame.txt')
 
-    # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
-    b.remove_worksheet(target='Sheet')
+        # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
+        b.remove_worksheet(target='Sheet')
 
-    # 保存
-    b.save_workbook()
-    print(f"[{datetime.datetime.now()}] Please look {b.workbook_file_path}")
-
-    # テストに使用するために返す
-    return b
-
-
-def execute_example():
-
-    # サンプル実行
-    b = execute()
-
-    # ワークシート取得
-    ws = b.get_worksheet(sheet_name='WordChainGame')
-
-    # ワークシートのダンプを出力
-    WorksheetDumpHandle.dump(worksheet=ws, file='./tests/diff_dump/actual/example_o2o0_word_chain_game_WordChainGame.txt')
+        # 保存
+        b.save_workbook()
+        print(f"[{datetime.datetime.now()}] Please look {b.workbook_file_path}")

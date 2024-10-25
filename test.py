@@ -8,10 +8,10 @@ import traceback
 import datetime
 import sys
 
-from tests.e_o1o0 import execute_example as execute_e_o1o0
-from tests.e_o2o0 import execute_example as execute_e_o2o0
-from tests.e_o3o0 import execute_example as execute_e_o3o0
-from tests.e_o4o0 import execute_example as execute_e_o4o0
+from tests.e_o1o0 import execute as execute_e_o1o0
+from tests.e_o2o0 import execute as execute_e_o2o0
+from tests.e_o3o0 import execute as execute_e_o3o0
+from tests.e_o4o0 import execute as execute_e_o4o0
 
 from tests.manual import execute as execute_manual
 from tests.t_o1o0 import execute as execute_t_o1o0

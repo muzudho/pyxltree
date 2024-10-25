@@ -53,33 +53,19 @@ def execute():
     }
 
     # 出力先ワークブックを指定し、ワークブックハンドル取得
-    b = tr.prepare_workbook(target='./examples/temp/example_o3o0_uneven_coin.xlsx', mode='w', settings=settings)
+    with tr.prepare_workbook(target='./examples/temp/example_o3o0_uneven_coin.xlsx', mode='w', settings=settings) as b:
 
-    # 読取元CSVを指定し、ワークシートハンドル取得
-    # あとでテストに使うので、メモリ解放しません
-    s = b.prepare_worksheet(target='UnevenCoin', based_on='./examples/data/uneven_coin.csv')
+        # 読取元CSVを指定し、ワークシートハンドル取得
+        with b.prepare_worksheet(target='UnevenCoin', based_on='./examples/data/uneven_coin.csv') as s:
 
-    # ワークシートへ木構造図を描画
-    s.render_tree()
+            # ワークシートへ木構造図を描画
+            s.render_tree()
+            # ワークシートのダンプを出力
+            WorksheetDumpHandle.dump(worksheet=s._ws, file='./tests/diff_dump/actual/example_o3o0_uneven_coin_UnevenCoin.txt')
 
-    # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
-    b.remove_worksheet(target='Sheet')
+        # 何かワークシートを１つ作成したあとで、最初から入っている 'Sheet' を削除
+        b.remove_worksheet(target='Sheet')
 
-    # 保存
-    b.save_workbook()
-    print(f"[{datetime.datetime.now()}] Please look {b.workbook_file_path}")
-
-    # テストに使用するために返す
-    return b
-
-
-def execute_example():
-
-    # サンプル実行
-    b = execute()
-
-    # ワークシート取得
-    ws = b.get_worksheet(sheet_name='UnevenCoin')
-
-    # ワークシートのダンプを出力
-    WorksheetDumpHandle.dump(worksheet=ws, file='./tests/diff_dump/actual/example_o3o0_uneven_coin_UnevenCoin.txt')
+        # 保存
+        b.save_workbook()
+        print(f"[{datetime.datetime.now()}] Please look {b.workbook_file_path}")
