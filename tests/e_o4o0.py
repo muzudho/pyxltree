@@ -11,9 +11,6 @@ import datetime
 #
 from src.xltree import xltree_in_src as tr
 
-# テストツール
-from tests.worksheets import print_child
-
 
 def execute():
 
@@ -25,12 +22,7 @@ def execute():
         # 読取元CSVを指定し、ワークシートハンドル取得
         with b.prepare_worksheet(target='Drive', based_on='./examples/data/drive_by_table.csv') as s:
 
-            # 木構造のターミナル表示
-            for root_entry in s.forest.multiple_root_entry.values():
-                items.append(f"📁 {root_entry.node_text}")
-                print_child(output_list=items, indent='', node=root_entry)
-
-
-    # ターミナル表示のダンプを出力
-    with open('./tests/diff_dump/actual/example_o4o0_terminal.txt', mode='w', encoding='utf8') as f:
-        f.write('\n'.join(items))
+            # 木構造のターミナル表示のダンプを出力
+            terminal_text = s.forest._stringify_like_tree('')
+            with open('./tests/diff_dump/actual/test_o4o0_terminal.txt', mode='w', encoding='utf8') as f:
+                f.write(terminal_text)

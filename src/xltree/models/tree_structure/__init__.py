@@ -53,12 +53,10 @@ class Forest():
 
 
     def _stringify_like_tree(self, indent):
-        succ_indent = indent + INDENT
-
         items = []
         
         for root_entry in self._multiple_root_entry.values():
-            items.append(root_entry._stringify_like_tree(indent=succ_indent))
+            items.append(root_entry._stringify_like_tree(indent=indent, as_root=True))
 
         return f"""\
 {''.join(items)}"""
@@ -177,18 +175,22 @@ class TreeEntry():
         return (self._edge_text, self._node_text)
 
 
-    def _stringify_like_tree(self, indent):
+    def _stringify_like_tree(self, indent, as_root=False):
         succ_indent = indent + INDENT
 
 
-        if self._edge_text is not None:
-            et = f"└─{self._edge_text}─"
+        if as_root:
+            et = '──'
         else:
-            et = "└──"
+            et = '└─'
+
+
+        if self._edge_text is not None:
+            et += f"{self._edge_text}─"
 
 
         if len(self._child_entries) == 0:
-            icon = f'📄 ({self._leaf_th}) '
+            icon = f'📄 ({self._leaf_th})'
         else:
             icon = '📁'
 

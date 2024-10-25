@@ -1,29 +1,6 @@
 import openpyxl as xl
 
 
-def print_child(output_list, indent, node):
-    """再帰的に子ノードを表示
-    
-    TODO TreeEntry#_stringiry_like_tree() へ移行
-    """
-    succ_indent = indent + '    '
-    for child_entry in node.child_entries.values():
-        # エッジテキスト
-        if child_entry.edge_text is not None:
-            et = f"─{child_entry.edge_text}─"
-        else:
-            et = '──'
-        
-        # 葉ノード
-        if len(child_entry.child_entries) < 1:
-            output_list.append(f"{indent}└{et} 📄 ({child_entry.leaf_th}) {child_entry.node_text}")
-        
-        # 中間ノード
-        else:
-            output_list.append(f"{indent}└{et} 📁 {child_entry.node_text}")
-            print_child(output_list=output_list, indent=succ_indent, node=child_entry) # 再帰
-
-
 class WorksheetDumpHandle():
 
 
