@@ -2,11 +2,16 @@ import gc
 import os
 import datetime
 import openpyxl as xl
+from .models.tree_structure import Forest
 from .settings import Settings
 from .worksheet_handle import WorksheetHandle
 
 
-@staticmethod
+def planting():
+    """森を作成します"""
+    return Forest()
+
+
 def prepare_workbook(target, mode, settings={}, debug_write=False):
     """ワークブックを用意します
     
@@ -65,6 +70,16 @@ class XltreeInSrc():
         from src.xltree import xltree_in_src as tr
     
     """
+
+
+    @staticmethod
+    def planting():
+        """グローバル関数の planting() を呼び出す
+        """
+        global planting
+
+        return planting()
+
 
     @staticmethod
     def prepare_workbook(target, mode, settings={}, debug_write=False):

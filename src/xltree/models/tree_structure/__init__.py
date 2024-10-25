@@ -1,6 +1,37 @@
 from ...library import INDENT
 
 
+################
+# REMARK: Forest
+################
+class Forest():
+    """TODO 森"""
+
+
+    def __init__(self):
+        self._multiple_root = {}
+
+
+    def tree_root(edge_text, text):
+        """TODO 根ノードでのエッジテキストは未対応するか？"""
+        root_node = TreeNode(parent_node=None, edge_text=edge_text, text=text, child_nodes={}, leaf_th=None)
+
+        if root_node._pack_key() in self._multiple_root:
+            raise ValueError(f"key exists  {root_node._pack_key()=}")
+
+        self._multiple_root[root_node._pack_key()] = root_node
+
+
+    def _stringify_like_tree(self, indent):
+        items = []
+        
+        for root_node in self._multiple_root.values():
+            items.append(root_node._stringify_like_tree(indent=indent))
+
+        return f"""\
+{''.join(items)}"""
+
+
 ##############
 # REMARK: Node
 ##############
@@ -65,6 +96,11 @@ class TreeNode():
         """有れば１から始まる葉番号、無ければナン"""
         return self._leaf_th
     
+
+    def grow(self, edge_text, text):
+        # TODO
+        child_node = TreeNode(parent_node=self, edge_text=edge_text, text=text, child_nodes={})
+
 
     def _pack_key(self):
         return (self._edge_text, self._text)
