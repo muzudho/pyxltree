@@ -99,6 +99,18 @@ def execute():
         find_leaf(context, root_entry)
 
 
+    # TODO 余り列の名前
+    remainder_column_name_set = set()
+
+    for leaf in context._leaf_entries:
+        for name, value in leaf.remainder_columns.items():
+            remainder_column_name_set.add(name)
+
+
+    print(f"余り列の名前：{remainder_column_name_set=}")
+
+
+
     print(f"最大深さ：{context._max_depth=}")
 
     # テーブルの列を作成する
@@ -111,8 +123,8 @@ def execute():
         column_names.append(f'edge{i}')
         column_names.append(f'node{i}')
 
-    print(f"列名：{column_names=}")
-    print(f"列名の要素数：{len(column_names)=}")
+    # print(f"列名：{column_names=}")
+    # print(f"列名の要素数：{len(column_names)=}")
 
 
     df = pd.DataFrame(columns=column_names)
@@ -145,12 +157,12 @@ new df:
             column_values[entry_no * 2] = entry.edge_text
             column_values[entry_no * 2 + 1] = entry.node_text
 
-        print(f"""\
-列名の要素数：{len(column_names[1:])=}
-値の要素数　：{len(column_values)=}
-列名　　　　：{column_names[1:]=}
-値　　　　　：{column_values=}
-""")
+#         print(f"""\
+# 列名の要素数：{len(column_names[1:])=}
+# 値の要素数　：{len(column_values)=}
+# 列名　　　　：{column_names[1:]=}
+# 値　　　　　：{column_values=}
+# """)
 
         # 行の追加
         # if len(df) == 0:
