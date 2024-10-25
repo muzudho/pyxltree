@@ -12,7 +12,7 @@ class Forest():
         self._multiple_root = {}
 
 
-    def tree_root(edge_text, text):
+    def tree_root(self, edge_text, text):
         """TODO 根ノードでのエッジテキストは未対応するか？"""
         root_node = TreeNode(parent_node=None, edge_text=edge_text, text=text, child_nodes={}, leaf_th=None)
 
@@ -21,12 +21,16 @@ class Forest():
 
         self._multiple_root[root_node._pack_key()] = root_node
 
+        return root_node
+
 
     def _stringify_like_tree(self, indent):
+        succ_indent = indent + INDENT
+
         items = []
         
         for root_node in self._multiple_root.values():
-            items.append(root_node._stringify_like_tree(indent=indent))
+            items.append(root_node._stringify_like_tree(indent=succ_indent))
 
         return f"""\
 {''.join(items)}"""
@@ -98,8 +102,13 @@ class TreeNode():
     
 
     def grow(self, edge_text, text):
-        # TODO
+        """子要素を生やします"""
         child_node = TreeNode(parent_node=self, edge_text=edge_text, text=text, child_nodes={})
+
+        if child_node._pack_key() in self._child_nodes:
+            raise ValueError(f"key exists  {child_node._pack_key()=}")
+
+        self._child_nodes[child_node._pack_key()] = child_node
 
 
     def _pack_key(self):

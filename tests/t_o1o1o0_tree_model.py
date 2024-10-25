@@ -19,6 +19,8 @@ def execute():
 
     # 森作成
     forest = tr.planting()
+    root = forest.tree_root(None, 'C')
+    root.grow(None, 'Users')
 
     # TODO ツリーモデル作成
     #   documents = forest.tree_root('C').grow(None, 'Users').grow(None, 'Muzudho').grow(None, 'OneDrive').grow(None, 'Documents')
