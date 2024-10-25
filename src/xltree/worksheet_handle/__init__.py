@@ -1,7 +1,7 @@
 import gc
 import datetime
 from ..models.database import Table
-from ..models.tree_structure import TreeStructureBasedOnTable
+from ..models.tree_structure.converter import TreeStructureBasedOnTable
 from ..settings import Settings
 from .draw_tools import TreeDrawer, TreeEraser
 
