@@ -30,8 +30,19 @@ def execute():
             o360_1_120.grow('(3/4)', '30')
             o360_1_120.grow('(4/4)', '30')
         o360.grow('(2/3)', '120')
+
+        # 既存チェック
+        if o360.has_child('(3/3)', '120'):
+            raise ValueError("既存チェック関数の不具合")
+
         o360.grow('(3/3)', '120')
-    
+
+        # 既存チェック
+        if not o360.has_child('(3/3)', '120'):
+            raise ValueError("既存チェック関数の不具合")
+
+
+
 
     # 余り列の出力順を指定する
     #forest.remainder_column_name_list = []

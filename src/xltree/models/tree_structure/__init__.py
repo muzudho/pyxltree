@@ -346,8 +346,19 @@ class TreeEntry():
         return child_entry
 
 
+    def has_child(self, edge_text, node_text):
+        """子要素が既存か？"""
+        pack_key = TreeEntry._pack_key_static(edge_text=edge_text, node_text=node_text)
+        return pack_key in self._child_entries
+
+
+    @staticmethod
+    def _pack_key_static(edge_text, node_text):
+        return (edge_text, node_text)
+
+
     def _pack_key(self):
-        return (self._edge_text, self._node_text)
+        return TreeEntry._pack_key_static(edge_text=self._edge_text, node_text=self._node_text)
 
 
     def _stringify_like_tree(self, indent, as_root=False):
