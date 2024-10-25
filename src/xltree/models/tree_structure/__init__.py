@@ -110,6 +110,8 @@ class TreeNode():
 
         self._child_nodes[child_node._pack_key()] = child_node
 
+        return child_node
+
 
     def _pack_key(self):
         return (self._edge_text, self._text)

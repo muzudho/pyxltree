@@ -19,11 +19,11 @@ def execute():
 
     # 森作成
     forest = tr.planting()
-    root = forest.tree_root(None, 'C')
-    root.grow(None, 'Users')
+    # root = forest.tree_root(None, 'C')
+    # root.grow(None, 'Users')
+    documents = forest.tree_root(None, 'C').grow(None, 'Users').grow(None, 'Muzudho').grow(None, 'OneDrive').grow(None, 'Documents')
 
     # TODO ツリーモデル作成
-    #   documents = forest.tree_root('C').grow(None, 'Users').grow(None, 'Muzudho').grow(None, 'OneDrive').grow(None, 'Documents')
     #   if True: # I just want to indent
     #       documents.leaf(None, 'GitHub', {'last_modified':'2024/10/18  12:31:00'})
     #       tools = documents.grow(None, 'Tools')
