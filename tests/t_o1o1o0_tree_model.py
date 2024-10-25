@@ -12,20 +12,15 @@ import pandas as pd
 #
 from src.xltree import xltree_in_src as tr
 
-# テストツール
-from tests.worksheets import WorksheetDumpHandle
-
 
 def execute():
 
     # 森作成
+    # ------
     forest = tr.planting()
-    # root = forest.tree_root(None, 'C')
-    # root.grow(None, 'Users')
     documents = forest.tree_root(None, 'C').grow(None, 'Users').grow(None, 'Muzudho').grow(None, 'OneDrive').grow(None, 'Documents')
-    if True: # I just want to indent
+    if True: # インデントしたいだけ
         documents.leaf(None, 'GitHub', {'last_modified':'2024/10/18 12:31'})
-
         tools = documents.grow(None, 'Tools')
         if True:
             shogidokoro = tools.grow(None, 'Shogidokoro')
@@ -48,10 +43,10 @@ def execute():
     # 余り列の出力順を指定する
     forest.remainder_column_name_list = ['last_modified', 'size', 'comment']
 
-    # 葉要素に番号を振っていく
+    # 任意。葉要素に番号を振っていく。葉に連番を振る機能があって、 TreeEntry#leaf_th プロパティで取り出せます
     forest.renumbering()
 
-    # ターミナル用表示
+    # ターミナル用表示文字列
     terminal_text = forest._stringify_like_tree('')
 #       print(f"""\
 # 森表示：

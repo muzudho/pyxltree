@@ -21,12 +21,16 @@ if __name__ == '__main__':
         if 1 < len(args):
             if args[1] == 'all':
                 from examples.o1o0 import *
+                from examples.o1o1o0 import *
                 from examples.o2o0 import *
                 from examples.o3o0 import *
                 from examples.o4o0_model import *
 
             elif args[1] == 'o1o0':
                 from examples.o1o0 import *
+
+            elif args[1] == 'o1o1o0':
+                from examples.o1o1o0 import *
 
             elif args[1] == 'o2o0':
                 from examples.o2o0 import *
