@@ -10,6 +10,7 @@ class Forest():
 
     def __init__(self):
         self._multiple_root = {}
+        self._temp_leaf_th = None
 
 
     def tree_root(self, edge_text, text):
@@ -22,6 +23,26 @@ class Forest():
         self._multiple_root[root_node._pack_key()] = root_node
 
         return root_node
+
+
+    def renumbering(self):
+        """番号の振り直し"""
+
+        self._temp_leaf_th = 1
+
+        for root_node in self._multiple_root.values():
+            self.renumbering_child(root_node)
+
+
+    def renumbering_child(self, node):
+        # 葉
+        if len(node.child_nodes) == 0:
+            node.leaf_th = self._temp_leaf_th
+            self._temp_leaf_th += 1
+            return
+
+        for child_node in node._child_nodes.values():
+            self.renumbering_child(child_node)  # 再帰
 
 
     def _stringify_like_tree(self, indent):
@@ -102,7 +123,13 @@ class TreeNode():
     def leaf_th(self):
         """有れば１から始まる葉番号、無ければナン"""
         return self._leaf_th
-    
+
+
+    @leaf_th.setter
+    def leaf_th(self, value):
+        """有れば１から始まる葉番号、無ければナン"""
+        self._leaf_th = value
+
 
     @property
     def remainder_columns(self):
@@ -144,22 +171,32 @@ class TreeNode():
     def _stringify_like_tree(self, indent):
         succ_indent = indent + INDENT
 
-        items = []
-        for child_node in self._child_nodes.values():
-            items.append(child_node._stringify_like_tree(indent=succ_indent))
 
         if self._edge_text is not None:
-            edge_arrow = f"--{self._edge_text}-->"
+            et = f"└─{self._edge_text}─"
         else:
-            edge_arrow = "---->"
+            et = "└──"
+
+
+        if len(self._child_nodes) == 0:
+            icon = f'📄 ({self._leaf_th}) '
+        else:
+            icon = '📁'
+
 
         if self._remainder_columns is not None:
             remander_columns_text = f"  {self._remainder_columns}"
         else:
             remander_columns_text = ''
 
+
+        items = []
+        for child_node in self._child_nodes.values():
+            items.append(child_node._stringify_like_tree(indent=succ_indent))
+
+
         return f"""\
-{indent}{edge_arrow}{self._text}{remander_columns_text}
+{indent}{et} {icon} {self._text}{remander_columns_text}
 {''.join(items)}"""
 
 
