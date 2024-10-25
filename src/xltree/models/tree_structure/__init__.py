@@ -11,6 +11,8 @@ class Forest():
     def __init__(self):
         self._multiple_root_entry = {}
 
+        self._remainder_column_name_list = []
+
         # 探索時に使用する一時変数
         self._temp_leaf_th = None
 
@@ -18,6 +20,17 @@ class Forest():
     @property
     def multiple_root_entry(self):
         return self._multiple_root_entry
+
+
+    @property
+    def remainder_column_name_list(self):
+        """ツリー構造には含まないテーブル列の並び順を指定するのに使います"""
+        return self._remainder_column_name_list
+    
+
+    @remainder_column_name_list.setter
+    def remainder_column_name_list(self, value):
+        self._remainder_column_name_list = value
 
 
     def tree_root(self, edge_text, node_text):

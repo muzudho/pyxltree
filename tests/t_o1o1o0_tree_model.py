@@ -45,6 +45,9 @@ def execute():
         documents.leaf(None, 'Visual Studio 2022', {'last_modified':'2024/7/22  13:47:00'})
         documents.leaf(None, 'Default.rdp', {'last_modified':'2023/9/23  14:05:00'})
 
+    # 余り列の出力順を指定する
+    forest.remainder_column_name_list = ['last_modified', 'size', 'comment']
+
     # TODO ツリーモデル作成
     # 葉要素に番号を振っていく
     forest.renumbering()
@@ -107,10 +110,16 @@ def execute():
         for name, value in leaf.remainder_columns.items():
             remainder_column_name_set.add(name)
 
+    # 順序が指定されているものは消す
+    for name in forest.remainder_column_name_list:
+        if name in remainder_column_name_set:
+            remainder_column_name_set.remove(name)
 
     # 順序を固定する
-    remainder_column_name_list = list(remainder_column_name_set)
-    print(f"余り列の名前：{remainder_column_name_list=}")
+    remainder_column_name_list = forest.remainder_column_name_list.copy()
+    remainder_column_name_list.extend(list(remainder_column_name_set))
+    print(f"余り列の順序指定：{forest.remainder_column_name_list=}")
+    print(f"余り列の名前　　：{remainder_column_name_list=}")
 
 
 
