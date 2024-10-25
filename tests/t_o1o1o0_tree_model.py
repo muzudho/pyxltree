@@ -35,7 +35,7 @@ def execute():
                     engine.leaf(None, 'Lesserkai.exe', {'last_modified':'2022/3/7  21:03:00', 'size':'1 KB'})
                     engine.leaf(None, 'Lesserkai_ja.txt', {'last_modified':'2012/12/5  22:37:00', 'size':'1 KB'})
                     engine.leaf(None, 'public.bin', {'last_modified':'2002/5/11  22:12:00', 'size':'5,213 KB'})
-                shogidokoro.grow(None, 'js').leaf(None, 'Shogidokoro.resources.dll', {'last_modified':'2024/5/11  20:43:00', 'size':'257 KB'})
+                shogidokoro.grow(None, 'ja').leaf(None, 'Shogidokoro.resources.dll', {'last_modified':'2024/5/11  20:43:00', 'size':'257 KB'})
                 shogidokoro.leaf(None, 'Engine.xml', {'last_modified':'2024/9/13  20:20:00', 'size':'4 KB'})
                 shogidokoro.leaf(None, 'GameResult.xml', {'last_modified':'2024/9/13  20:20:00', 'size':'2,357 KB'})
                 shogidokoro.leaf(None, 'Shogidokoro.exe', {'last_modified':'2024/5/11  20:43:00', 'size':'4,902 KB', 'comment':'version 5.4.1'})
@@ -124,7 +124,7 @@ new df:
 
 
     # TODO 葉のすべての親を出力
-    for leaf_no, leaf in enumerate(context._leaf_entries):
+    for leaf_th, leaf in enumerate(context._leaf_entries, 1):
 
 
         cur_entry = leaf
@@ -158,11 +158,16 @@ new df:
         # else:
         #     new_row_no = -1
 
-        df.loc[leaf_no] = column_values
-        #df.insert(-1, column=dict(zip(column_names, column_values)))
+        df.loc[leaf_th] = column_values
 
+
+    # 全部欠損している列を削除
+    df.dropna(how='all', axis=1, inplace=True)
 
     print(f"""\
 df:
 {df}
 """)
+
+    # テーブルをCSV形式でファイルへ保存
+    df.to_csv('./tests/diff_dump/actual/test_o1o1o0_tree_model_table.txt', encoding='utf8')
