@@ -184,13 +184,13 @@ class Forest():
 
 
             # エッジ、ノードを交互に入れたリストを作る
-            #
-            #   TODO 余り列を作成したい
-            #
-            column_values = [None] * ((context._max_depth + 1) * 2 + len(remainder_column_name_list))
+            value_list = [None] * ((context._max_depth + 1) * 2 + len(remainder_column_name_list))
+            # NOTE Noneを入れると警告が出る？ 空文字列にしてみる ----> 結果が変わってしまう。欠損列を消すことができない
+            #value_list = [''] * ((context._max_depth + 1) * 2 + len(remainder_column_name_list))
+
             for entry_no, entry in enumerate(reversed(path)):
-                column_values[entry_no * 2] = entry.edge_text
-                column_values[entry_no * 2 + 1] = entry.node_text
+                value_list[entry_no * 2] = entry.edge_text
+                value_list[entry_no * 2 + 1] = entry.node_text
 
             # 余り列を追加
             column_no = (context._max_depth + 1) * 2
@@ -200,14 +200,14 @@ class Forest():
                 else: 
                     value = None
 
-                column_values[column_no] = value
+                value_list[column_no] = value
                 column_no += 1
 
 #           print(f"""\
 # 列名の要素数：{len(column_names[1:])=}
-# 値の要素数　：{len(column_values)=}
+# 値の要素数　：{len(value_list)=}
 # 列名　　　　：{column_names[1:]=}
-# 値　　　　　：{column_values=}
+# 値　　　　　：{value_list=}
 # """)
 
             # 行の追加
@@ -216,7 +216,8 @@ class Forest():
             # else:
             #     new_row_no = -1
 
-            df.loc[leaf_th] = column_values
+            # NOTE 空のテーブルに行を追加しようとすると警告が出る？よく分からない
+            df.loc[leaf_th] = value_list
 
 
         # 全部欠損している列を削除
