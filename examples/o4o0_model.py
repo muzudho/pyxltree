@@ -36,6 +36,6 @@ with tr.prepare_workbook(target='./examples/temp/example_o1o0_tree_drive.xlsx', 
                     print_child(indent=succ_indent, node=child_entry) # 再帰
 
         # 木構造のターミナル表示
-        for root_entry in s.multiple_root_entry.values():
+        for root_entry in s.forest.multiple_root_entry.values():
             print(f"📁 {root_entry.node_text}")
             print_child(indent='', node=root_entry)

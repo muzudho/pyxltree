@@ -26,7 +26,7 @@ def execute():
         with b.prepare_worksheet(target='Drive', based_on='./examples/data/drive_by_table.csv') as s:
 
             # 木構造のターミナル表示
-            for root_entry in s.multiple_root_entry.values():
+            for root_entry in s.forest.multiple_root_entry.values():
                 items.append(f"📁 {root_entry.node_text}")
                 print_child(output_list=items, indent='', node=root_entry)
 

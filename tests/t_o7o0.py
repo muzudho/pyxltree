@@ -27,7 +27,7 @@ def execute():
         with b.prepare_worksheet(target='SameNodeText', based_on='./tests/data/same_node_text.csv') as s:
 
             # 木構造のターミナル表示
-            for root_entry in s.multiple_root_entry.values():
+            for root_entry in s.forest.multiple_root_entry.values():
                 items.append(f"📁 {root_entry.node_text}")
                 print_child(output_list=items, indent='', node=root_entry)
 

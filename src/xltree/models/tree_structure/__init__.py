@@ -5,22 +5,29 @@ from ...library import INDENT
 # REMARK: Forest
 ################
 class Forest():
-    """TODO 森"""
+    """森"""
 
 
     def __init__(self):
-        self._multiple_root = {}
+        self._multiple_root_entry = {}
+
+        # 探索時に使用する一時変数
         self._temp_leaf_th = None
+
+
+    @property
+    def multiple_root_entry(self):
+        return self._multiple_root_entry
 
 
     def tree_root(self, edge_text, node_text):
         """TODO 根ノードでのエッジテキストは未対応するか？"""
         root_entry = TreeEntry(parent_entry=None, edge_text=edge_text, node_text=node_text, child_entries={}, leaf_th=None)
 
-        if root_entry._pack_key() in self._multiple_root:
+        if root_entry._pack_key() in self._multiple_root_entry:
             raise ValueError(f"key exists  {root_entry._pack_key()=}")
 
-        self._multiple_root[root_entry._pack_key()] = root_entry
+        self._multiple_root_entry[root_entry._pack_key()] = root_entry
 
         return root_entry
 
@@ -30,7 +37,7 @@ class Forest():
 
         self._temp_leaf_th = 1
 
-        for root_entry in self._multiple_root.values():
+        for root_entry in self._multiple_root_entry.values():
             self.renumbering_child(root_entry)
 
 
@@ -50,7 +57,7 @@ class Forest():
 
         items = []
         
-        for root_entry in self._multiple_root.values():
+        for root_entry in self._multiple_root_entry.values():
             items.append(root_entry._stringify_like_tree(indent=succ_indent))
 
         return f"""\

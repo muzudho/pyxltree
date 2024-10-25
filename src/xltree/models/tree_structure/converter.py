@@ -1,5 +1,5 @@
 from collections import deque
-from . import TreeEntry
+from . import Forest, TreeEntry
 
 
 #######################
@@ -10,7 +10,7 @@ class TreeStructureBasedOnTable():
 
 
     @staticmethod
-    def read_multiple_root(table):
+    def read_table_and_planting(table):
         """テーブル読取
 
         Parameters
@@ -20,8 +20,8 @@ class TreeStructureBasedOnTable():
 
         Returns
         -------
-        multiple_root_entry : dict<TreeEntry>
-            マルチ根
+        forest : Forest
+            森
         """
 
         tree_structure = TreeStructureBasedOnTable()
@@ -31,17 +31,17 @@ class TreeStructureBasedOnTable():
 
         # # ダンプ
         # print("[read] マルチ根")
-        # for root in tree_structure._multiple_root.values():
+        # for root in tree_structure._forest.multiple_root_entry.values():
         #     print(f"{root._stringify_like_tree('    ')}")
 
-        return tree_structure._multiple_root
+        return tree_structure._forest
 
 
     def __init__(self):
         """初期化"""
 
-        # マルチ根
-        self._multiple_root = {}
+        # 森
+        self._forest = Forest()
 
 
     def on_record_read(self, row_number, record):
@@ -68,8 +68,8 @@ class TreeStructureBasedOnTable():
 # {node_in_record._stringify_dump('')}""")
 
             # 既存のマルチ根かもしれない
-            if depth==0 and node_in_record.text in self._multiple_root:
-                tree_entry = self._multiple_root[node_in_record.text]
+            if depth==0 and node_in_record.text in self._forest.multiple_root_entry:
+                tree_entry = self._forest.multiple_root_entry[node_in_record.text]
 
             # 未作成のノードなら
             elif context._pre_parent_tree_entry is None or node_in_record._pack_key() not in context._pre_parent_tree_entry.child_entries:
@@ -119,7 +119,7 @@ class TreeStructureBasedOnTable():
 
 
         # ルートノードを記憶
-        self._multiple_root[tree_entry.node_text] = tree_entry
+        self._forest.multiple_root_entry[tree_entry.node_text] = tree_entry
 
 
 #         print(f"""レコード読取  {row_number=}

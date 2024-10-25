@@ -49,10 +49,16 @@ def execute():
     forest.renumbering()
 
     # デバッグ表示
+    terminal_text = forest._stringify_like_tree('')
     print(f"""\
 森表示：
-{forest._stringify_like_tree('')}""")
+{terminal_text}""")
+
+    # ターミナル表示のダンプを出力
+    with open('./tests/diff_dump/actual/test_o1o1o0_tree_model_terminal.txt', mode='w', encoding='utf8') as f:
+        f.write(terminal_text)
 
     # TODO ツリーモデルをCSV形式で保存 file='./tests/diff_dump/actual/example_o1o1o0_tree_model_Drive.txt'
+
     pass
 

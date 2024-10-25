@@ -273,10 +273,10 @@ with tr.prepare_workbook(target='./examples/temp/example_o1o0_tree_drive.xlsx', 
                     print_child(indent=succ_indent, node=child_entry) # 再帰
 
         # 木構造のターミナル表示
-        for root_entry in s.multiple_root_entry.values():
+        for root_entry in s.forest.multiple_root_entry.values():
             print(f"📁 {root_entry.node_text}")
             print_child(indent='', node=root_entry)
 ```
 
 👆　以上がこのライブラリに付属しているツリー構造の操作のインターフェースです。他に便利なツリー構造のライブラリーがあれば、そちらへ内容を移し替えてください  
-(xltree==0.5.0 から) `child_nodes` を `child_entries` へ名称変更。 `node.text` は `entry.node_text` へ名称変更
+(xltree==0.5.0 から) `child_nodes` を `child_entries` へ名称変更。 `node.text` は `entry.node_text` へ名称変更。 `s.multiple_root_entry` は `s.forest.multiple_root_entry` へ変更

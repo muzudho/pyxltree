@@ -35,12 +35,12 @@ class WorksheetHandle():
         #
         #   NOTE マルチ根にも対応していることに注意してください
         #
-        multiple_root_entry = TreeStructureBasedOnTable.read_multiple_root(table=table)
+        forest = TreeStructureBasedOnTable.read_table_and_planting(table=table)
 
-        return WorksheetHandle(target=target, based_on=based_on, ws=ws, settings_obj=settings_obj, table=table, multiple_root_entry=multiple_root_entry, debug_write=debug_write)
+        return WorksheetHandle(target=target, based_on=based_on, ws=ws, settings_obj=settings_obj, table=table, forest=forest, debug_write=debug_write)
 
 
-    def __init__(self, target, based_on, ws, settings_obj, table, multiple_root_entry, debug_write=False):
+    def __init__(self, target, based_on, ws, settings_obj, table, forest, debug_write=False):
         """初期化
 
         Parameters
@@ -55,8 +55,8 @@ class WorksheetHandle():
             各種設定
         table : .models.database.Table
             データテーブル
-        multiple_root_entry : dict<TreeEntry>
-            マルチ根
+        forest : Forest
+            森
         debug_write : bool
             デバッグライト
         """
@@ -65,7 +65,7 @@ class WorksheetHandle():
         self._ws = ws
         self._settings_obj = settings_obj
         self._table = table
-        self._multiple_root_entry = multiple_root_entry
+        self._forest = forest
         self._debug_write = debug_write
 
 
@@ -79,7 +79,7 @@ class WorksheetHandle():
         del self._ws
         del self._settings_obj
         del self._table
-        del self._multiple_root_entry
+        del self._forest
         del self._debug_write
 
         # メモリ解放
@@ -87,9 +87,9 @@ class WorksheetHandle():
 
 
     @property
-    def multiple_root_entry(self):
-        """ツリー構造。マルチ根に対応していることに注意してください"""
-        return self._multiple_root_entry
+    def forest(self):
+        """森"""
+        return self._forest
 
 
     def render_tree(self):
