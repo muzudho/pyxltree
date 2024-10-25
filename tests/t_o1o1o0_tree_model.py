@@ -99,7 +99,8 @@ def execute():
         find_leaf(context, root_entry)
 
 
-    # TODO 余り列の名前
+    # 余り列の名前
+    # ------------
     remainder_column_name_set = set()
 
     for leaf in context._leaf_entries:
@@ -107,7 +108,9 @@ def execute():
             remainder_column_name_set.add(name)
 
 
-    print(f"余り列の名前：{remainder_column_name_set=}")
+    # 順序を固定する
+    remainder_column_name_list = list(remainder_column_name_set)
+    print(f"余り列の名前：{remainder_column_name_list=}")
 
 
 
@@ -122,6 +125,10 @@ def execute():
     for i in range(0, context._max_depth + 1):
         column_names.append(f'edge{i}')
         column_names.append(f'node{i}')
+
+    # 余り列を追加
+    for remainder_column_name in remainder_column_name_list:
+        column_names.append(remainder_column_name)
 
     # print(f"列名：{column_names=}")
     # print(f"列名の要素数：{len(column_names)=}")
@@ -152,10 +159,21 @@ new df:
         #
         #   TODO 余り列を作成したい
         #
-        column_values = [None] * (context._max_depth + 1) * 2
+        column_values = [None] * ((context._max_depth + 1) * 2 + len(remainder_column_name_list))
         for entry_no, entry in enumerate(reversed(path)):
             column_values[entry_no * 2] = entry.edge_text
             column_values[entry_no * 2 + 1] = entry.node_text
+
+        # 余り列を追加
+        column_no = (context._max_depth + 1) * 2
+        for remainder_column_name in remainder_column_name_list:
+            if remainder_column_name in leaf.remainder_columns:
+                value = leaf.remainder_columns[remainder_column_name]
+            else: 
+                value = None
+
+            column_values[column_no] = value
+            column_no += 1
 
 #         print(f"""\
 # 列名の要素数：{len(column_names[1:])=}
