@@ -46,7 +46,7 @@ class TreeNode():
     """
 
 
-    def __init__(self, parent_node, edge_text, text, child_nodes, leaf_th=None):
+    def __init__(self, parent_node, edge_text, text, child_nodes, leaf_th=None, remainder_columns=None):
         """初期化
         
         Parameters
@@ -62,12 +62,15 @@ class TreeNode():
             FIXME キーがメモリを消費しすぎていないか？仕方ない？
         leaf_th : int
             有れば１から始まる葉番号、無ければナン
+        remainder_columns : dict
+            有れば、ツリー構造に含まれなかった列の辞書。無ければナン
         """
         self._parent_node = parent_node
         self._edge_text = edge_text
         self._text = text
         self._child_nodes = child_nodes
         self._leaf_th = leaf_th
+        self._remainder_columns = remainder_columns
 
 
     @property
@@ -101,6 +104,27 @@ class TreeNode():
         return self._leaf_th
     
 
+    @property
+    def remainder_columns(self):
+        """有れば、ツリー構造に含まれなかった列の辞書。無ければナン"""
+        return self._remainder_columns
+
+
+    @remainder_columns.setter
+    def remainder_columns(self, value):
+        """有れば、ツリー構造に含まれなかった列の辞書。無ければナン"""
+        self._remainder_columns = value
+
+
+    def leaf(self, edge_text, text, remainder_columns):
+        """葉要素を生やします"""
+        leaf_node = self.grow(edge_text=edge_text, text=text)
+
+        leaf_node.remainder_columns = remainder_columns
+
+        return leaf_node
+
+
     def grow(self, edge_text, text):
         """子要素を生やします"""
         child_node = TreeNode(parent_node=self, edge_text=edge_text, text=text, child_nodes={})
@@ -129,8 +153,13 @@ class TreeNode():
         else:
             edge_arrow = "---->"
 
+        if self._remainder_columns is not None:
+            remander_columns_text = f"  {self._remainder_columns}"
+        else:
+            remander_columns_text = ''
+
         return f"""\
-{indent}{edge_arrow}{self._text}
+{indent}{edge_arrow}{self._text}{remander_columns_text}
 {''.join(items)}"""
 
 
