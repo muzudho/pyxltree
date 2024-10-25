@@ -43,7 +43,7 @@ class Forest():
 
     def renumbering_child(self, node):
         # 葉
-        if len(node.child_entries) == 0:
+        if not node.has_children():
             node.leaf_th = self._temp_leaf_th
             self._temp_leaf_th += 1
             return
@@ -150,6 +150,11 @@ class TreeEntry():
         self._remainder_columns = value
 
 
+    def has_children(self):
+        """子エントリーを持つか？"""
+        return 0 < len(self._child_entries)
+
+
     def leaf(self, edge_text, node_text, remainder_columns):
         """葉要素を生やします"""
         leaf_entry = self.grow(edge_text=edge_text, node_text=node_text)
@@ -189,7 +194,7 @@ class TreeEntry():
             et += f"{self._edge_text}─"
 
 
-        if len(self._child_entries) == 0:
+        if not self.has_children():
             icon = f'📄 ({self._leaf_th})'
         else:
             icon = '📁'
