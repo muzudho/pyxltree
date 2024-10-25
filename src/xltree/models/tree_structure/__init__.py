@@ -2,9 +2,9 @@ import pandas as pd
 from ...library import INDENT
 
 
-################
-# REMARK: Forest
-################
+##############
+# MARK: Forest
+##############
 class Forest():
     """森"""
 
@@ -125,8 +125,9 @@ class Forest():
         remainder_column_name_set = set()
 
         for leaf in context._leaf_entries:
-            for name, value in leaf.remainder_columns.items():
-                remainder_column_name_set.add(name)
+            if leaf.remainder_columns is not None:
+                for name, value in leaf.remainder_columns.items():
+                    remainder_column_name_set.add(name)
 
         # 順序が指定されているものは消す
         for name in self.remainder_column_name_list:
@@ -231,9 +232,9 @@ class Forest():
 
 
 
-###############
-# REMARK: Entry
-###############
+#############
+# MARK: Entry
+#############
 class TreeEntry():
     """ツリー・エントリー
 
@@ -324,7 +325,7 @@ class TreeEntry():
         return 0 < len(self._child_entries)
 
 
-    def leaf(self, edge_text, node_text, remainder_columns):
+    def leaf(self, edge_text, node_text, remainder_columns=None):
         """葉要素を生やします"""
         leaf_entry = self.grow(edge_text=edge_text, node_text=node_text)
 
