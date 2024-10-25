@@ -19,23 +19,23 @@ with tr.prepare_workbook(target='./examples/temp/example_o1o0_tree_drive.xlsx', 
         def print_child(indent, node):
             """再帰的に子ノードを表示"""
             succ_indent = indent + '    '
-            for child_node in node.child_nodes.values():
+            for child_entry in node.child_entries.values():
                 # エッジテキスト
-                if child_node.edge_text is not None:
-                    et = f"─{child_node.edge_text}─"
+                if child_entry.edge_text is not None:
+                    et = f"─{child_entry.edge_text}─"
                 else:
                     et = '──'
                 
                 # 葉ノード
-                if len(child_node.child_nodes) < 1:
-                    print(f"{indent}└{et} 📄 ({child_node.leaf_th}) {child_node.text}")
+                if len(child_entry.child_entries) < 1:
+                    print(f"{indent}└{et} 📄 ({child_entry.leaf_th}) {child_entry.node_text}")
                 
                 # 中間ノード
                 else:
-                    print(f"{indent}└{et} 📁 {child_node.text}")
-                    print_child(indent=succ_indent, node=child_node) # 再帰
+                    print(f"{indent}└{et} 📁 {child_entry.node_text}")
+                    print_child(indent=succ_indent, node=child_entry) # 再帰
 
         # 木構造のターミナル表示
-        for root_node in s.multiple_root_node.values():
-            print(f"📁 {root_node.text}")
-            print_child(indent='', node=root_node)
+        for root_entry in s.multiple_root_entry.values():
+            print(f"📁 {root_entry.node_text}")
+            print_child(indent='', node=root_entry)

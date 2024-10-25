@@ -148,7 +148,7 @@ class Record():
             set_node(depth, node)
 
 
-    def get_th_of_leaf_node(self):
+    def get_th_of_leaf_entry(self):
         """葉要素の層番号を取得。
         th は forth や fifth の th。
         葉要素は、次の層がない要素"""

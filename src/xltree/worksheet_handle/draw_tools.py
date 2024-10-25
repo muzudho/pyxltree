@@ -247,13 +247,13 @@ class TreeDrawer():
         # 余り列
         # ------
         # 最終層以降の列
-        column_name_of_leaf_node = self._table.analyzer.get_column_name_of_last_node()
+        column_name_of_leaf_entry = self._table.analyzer.get_column_name_of_last_node()
         is_remaining = False
         target_column_th = self._table.analyzer.end_th_of_node * StyleControl.ONE_NODE_COLUMNS + 2   # 空列を１つ挟む
         for column_name in self._table.df.columns:
 
             # ツリー区は無視
-            if column_name == column_name_of_leaf_node:
+            if column_name == column_name_of_leaf_entry:
                 #print(f'ツリー区 {row_th=}  {column_name=}')
                 is_remaining = True
                 continue

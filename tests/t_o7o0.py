@@ -27,9 +27,9 @@ def execute():
         with b.prepare_worksheet(target='SameNodeText', based_on='./tests/data/same_node_text.csv') as s:
 
             # 木構造のターミナル表示
-            for root_node in s.multiple_root_node.values():
-                items.append(f"📁 {root_node.text}")
-                print_child(output_list=items, indent='', node=root_node)
+            for root_entry in s.multiple_root_entry.values():
+                items.append(f"📁 {root_entry.node_text}")
+                print_child(output_list=items, indent='', node=root_entry)
 
 
     # ターミナル表示のダンプを出力

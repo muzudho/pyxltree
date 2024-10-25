@@ -13,16 +13,16 @@ class Forest():
         self._temp_leaf_th = None
 
 
-    def tree_root(self, edge_text, text):
+    def tree_root(self, edge_text, node_text):
         """TODO 根ノードでのエッジテキストは未対応するか？"""
-        root_node = TreeNode(parent_node=None, edge_text=edge_text, text=text, child_nodes={}, leaf_th=None)
+        root_entry = TreeEntry(parent_entry=None, edge_text=edge_text, node_text=node_text, child_entries={}, leaf_th=None)
 
-        if root_node._pack_key() in self._multiple_root:
-            raise ValueError(f"key exists  {root_node._pack_key()=}")
+        if root_entry._pack_key() in self._multiple_root:
+            raise ValueError(f"key exists  {root_entry._pack_key()=}")
 
-        self._multiple_root[root_node._pack_key()] = root_node
+        self._multiple_root[root_entry._pack_key()] = root_entry
 
-        return root_node
+        return root_entry
 
 
     def renumbering(self):
@@ -30,19 +30,19 @@ class Forest():
 
         self._temp_leaf_th = 1
 
-        for root_node in self._multiple_root.values():
-            self.renumbering_child(root_node)
+        for root_entry in self._multiple_root.values():
+            self.renumbering_child(root_entry)
 
 
     def renumbering_child(self, node):
         # 葉
-        if len(node.child_nodes) == 0:
+        if len(node.child_entries) == 0:
             node.leaf_th = self._temp_leaf_th
             self._temp_leaf_th += 1
             return
 
-        for child_node in node._child_nodes.values():
-            self.renumbering_child(child_node)  # 再帰
+        for child_entry in node._child_entries.values():
+            self.renumbering_child(child_entry)  # 再帰
 
 
     def _stringify_like_tree(self, indent):
@@ -50,35 +50,37 @@ class Forest():
 
         items = []
         
-        for root_node in self._multiple_root.values():
-            items.append(root_node._stringify_like_tree(indent=succ_indent))
+        for root_entry in self._multiple_root.values():
+            items.append(root_entry._stringify_like_tree(indent=succ_indent))
 
         return f"""\
 {''.join(items)}"""
 
 
-##############
-# REMARK: Node
-##############
-class TreeNode():
-    """ツリーノード
+###############
+# REMARK: Entry
+###############
+class TreeEntry():
+    """ツリー・エントリー
+
+    エッジとノードのペア
     
     イミュータブルにすると生成が難しいので、ミュータブルとする
     """
 
 
-    def __init__(self, parent_node, edge_text, text, child_nodes, leaf_th=None, remainder_columns=None):
+    def __init__(self, parent_entry, edge_text, node_text, child_entries, leaf_th=None, remainder_columns=None):
         """初期化
         
         Parameters
         ----------
-        parent_node : TreeNode
+        parent_entry : TreeEntry
             親ノード
         edge_text : str
             エッジのテキスト
-        text : str
-            テキスト
-        child_nodes : dict<tuple(str, str), TreeNode>
+        node_text : str
+            ノードのテキスト
+        child_entries : dict<tuple(str, str), TreeEntry>
             子ノードを格納した辞書。キーはエッジテキストとノードテキストのタプル
             FIXME キーがメモリを消費しすぎていないか？仕方ない？
         leaf_th : int
@@ -86,37 +88,37 @@ class TreeNode():
         remainder_columns : dict
             有れば、ツリー構造に含まれなかった列の辞書。無ければナン
         """
-        self._parent_node = parent_node
+        self._parent_entry = parent_entry
         self._edge_text = edge_text
-        self._text = text
-        self._child_nodes = child_nodes
+        self._node_text = node_text
+        self._child_entries = child_entries
         self._leaf_th = leaf_th
         self._remainder_columns = remainder_columns
 
 
     @property
-    def parent_node(self):
+    def parent_entry(self):
         """親ノード"""
-        return self._parent_node
+        return self._parent_entry
 
 
     @property
     def edge_text(self):
-        """エッジ・テキスト"""
+        """エッジのテキスト"""
         return self._edge_text
 
 
     @property
-    def text(self):
-        """テキスト"""
-        return self._text
+    def node_text(self):
+        """ノードのテキスト"""
+        return self._node_text
 
 
     @property
-    def child_nodes(self):
+    def child_entries(self):
         """子ノードを格納した辞書。キーはエッジテキストとノードテキストのタプル
         FIXME キーがメモリを消費しすぎていないか？仕方ない？"""
-        return self._child_nodes
+        return self._child_entries
 
 
     @property
@@ -143,29 +145,29 @@ class TreeNode():
         self._remainder_columns = value
 
 
-    def leaf(self, edge_text, text, remainder_columns):
+    def leaf(self, edge_text, node_text, remainder_columns):
         """葉要素を生やします"""
-        leaf_node = self.grow(edge_text=edge_text, text=text)
+        leaf_entry = self.grow(edge_text=edge_text, node_text=node_text)
 
-        leaf_node.remainder_columns = remainder_columns
+        leaf_entry.remainder_columns = remainder_columns
 
-        return leaf_node
+        return leaf_entry
 
 
-    def grow(self, edge_text, text):
+    def grow(self, edge_text, node_text):
         """子要素を生やします"""
-        child_node = TreeNode(parent_node=self, edge_text=edge_text, text=text, child_nodes={})
+        child_entry = TreeEntry(parent_entry=self, edge_text=edge_text, node_text=node_text, child_entries={})
 
-        if child_node._pack_key() in self._child_nodes:
-            raise ValueError(f"key exists  {child_node._pack_key()=}")
+        if child_entry._pack_key() in self._child_entries:
+            raise ValueError(f"key exists  {child_entry._pack_key()=}")
 
-        self._child_nodes[child_node._pack_key()] = child_node
+        self._child_entries[child_entry._pack_key()] = child_entry
 
-        return child_node
+        return child_entry
 
 
     def _pack_key(self):
-        return (self._edge_text, self._text)
+        return (self._edge_text, self._node_text)
 
 
     def _stringify_like_tree(self, indent):
@@ -178,7 +180,7 @@ class TreeNode():
             et = "└──"
 
 
-        if len(self._child_nodes) == 0:
+        if len(self._child_entries) == 0:
             icon = f'📄 ({self._leaf_th}) '
         else:
             icon = '📁'
@@ -191,12 +193,12 @@ class TreeNode():
 
 
         items = []
-        for child_node in self._child_nodes.values():
-            items.append(child_node._stringify_like_tree(indent=succ_indent))
+        for child_entry in self._child_entries.values():
+            items.append(child_entry._stringify_like_tree(indent=succ_indent))
 
 
         return f"""\
-{indent}{et} {icon} {self._text}{remander_columns_text}
+{indent}{et} {icon} {self._node_text}{remander_columns_text}
 {''.join(items)}"""
 
 
@@ -204,12 +206,13 @@ class TreeNode():
         succ_indent = indent + INDENT
 
         items = []
-        for child_node in self._child_nodes.values():
-            items.append(child_node._stringify_dump(indent=succ_indent))
+        for child_entry in self._child_entries.values():
+            items.append(child_entry._stringify_dump(indent=succ_indent))
 
         return f"""\
-{indent}TreeNode
-{indent}--------
+{indent}TreeEntry
+{indent}---------
 {succ_indent}{self._edge_text=}
-{succ_indent}{self._text=}
+{succ_indent}{self._node_text=}
+{succ_indent}{self._remainder_columns=}
 {''.join(items)}"""
