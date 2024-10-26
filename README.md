@@ -123,7 +123,7 @@ if True: # インデントしたいだけ
     documents.leaf(None, 'Default.rdp', {'last_modified':'2023/09/23 14:05'})
 
 # 任意。余り列の出力順を指定する
-forest.remainder_column_name_list = ['last_modified', 'size', 'comment']
+forest.order_of_remainder_columns = ['last_modified', 'size', 'comment']
 
 # 任意。葉要素に番号を振っていく。葉に連番を振る機能があって、 TreeEntry#leaf_th プロパティで取り出せます
 #forest.renumbering()
@@ -133,6 +133,8 @@ forest.remainder_column_name_list = ['last_modified', 'size', 'comment']
 # ---------------------------
 forest.to_csv(csv_file_path='./tests/diff_dump/actual/example_o1o1o0_tree_model_table.txt')
 ```
+
+👆　(xltree==0.6.0 から) `forest.remainder_column_name_list` プロパティは `forest.order_of_remainder_columns` に名称変更  
 
 # 例２：しりとり
 
