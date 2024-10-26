@@ -107,19 +107,19 @@ class Forest():
             return end - start
 
 
-        def make_return_value(timeup, erapsed_secs, timeup_location):
+        def make_return_value(erapsed_secs, timeup, timeup_location):
             """戻り値の作成
             
             Parameters
             ----------
-            timeup : bool
-                タイムアップしたか？
             erapsed_secs : float
                 消費秒
+            timeup : bool
+                タイムアップしたか？
             timeup_location : str
                 タイムアップが発生した箇所のデバッグ用情報
             """
-            return {'timeup':timeup, 'erapsed_secs':erapsed_secs, 'timeup_location':timeup_location}
+            return {'erapsed_secs':erapsed_secs, 'timeup':timeup, 'timeup_location':timeup_location}
 
 
         class Context():
@@ -137,7 +137,7 @@ class Forest():
 
             erapsed_secs = look_time(start)
             if timeup_secs <= erapsed_secs:
-                return make_return_value(timeup=True, erapsed_secs=erapsed_secs, timeup_location='recursive find_leaf > head of function')
+                return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='recursive find_leaf > head of function')
 
             context._cur_depth += 1
 
@@ -156,7 +156,7 @@ class Forest():
 
                     erapsed_secs = look_time(start)
                     if timeup_secs <= erapsed_secs:
-                        return make_return_value(timeup=True, erapsed_secs=erapsed_secs, timeup_location='recursive find_leaf > child in loop')
+                        return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='recursive find_leaf > child in loop')
 
                     find_leaf(context, child_entry) # 再帰
 
@@ -169,7 +169,7 @@ class Forest():
 
             erapsed_secs = look_time(start)
             if timeup_secs <= erapsed_secs:
-                return make_return_value(timeup=True, erapsed_secs=erapsed_secs, timeup_location='root_entry in loop')
+                return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='root_entry in loop')
 
             find_leaf(context, root_entry)
 
@@ -182,14 +182,14 @@ class Forest():
 
             erapsed_secs = look_time(start)
             if timeup_secs <= erapsed_secs:
-                return make_return_value(timeup=True, erapsed_secs=erapsed_secs, timeup_location='leaf_entry in loop for find remainder columns')
+                return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='leaf_entry in loop for find remainder columns')
 
             if leaf.remainder_columns is not None:
                 for name, value in leaf.remainder_columns.items():
 
                     erapsed_secs = look_time(start)
                     if timeup_secs <= erapsed_secs:
-                        return make_return_value(timeup=True, erapsed_secs=erapsed_secs, timeup_location='remainder column in loop')
+                        return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='remainder column in loop')
 
                     remainder_column_name_set.add(name)
 
@@ -199,7 +199,7 @@ class Forest():
 
             erapsed_secs = look_time(start)
             if timeup_secs <= erapsed_secs:
-                return make_return_value(timeup=True, erapsed_secs=erapsed_secs, timeup_location='order of remainder column in loop')
+                return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='order of remainder column in loop')
 
             if name in remainder_column_name_set:
                 remainder_column_name_set.remove(name)
@@ -222,7 +222,7 @@ class Forest():
 
             erapsed_secs = look_time(start)
             if timeup_secs <= erapsed_secs:
-                return make_return_value(timeup=True, erapsed_secs=erapsed_secs, timeup_location='search depth')
+                return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='search depth')
 
             order_of_column_names.append(f'edge{i}')
             order_of_column_names.append(f'node{i}')
@@ -233,7 +233,7 @@ class Forest():
 
             erapsed_secs = look_time(start)
             if timeup_secs <= erapsed_secs:
-                return make_return_value(timeup=True, erapsed_secs=erapsed_secs, timeup_location='append remainder column')
+                return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='append remainder column')
 
             order_of_column_names.append(remainder_column_name)
 
@@ -249,7 +249,7 @@ class Forest():
 
             erapsed_secs = look_time(start)
             if timeup_secs <= erapsed_secs:
-                return make_return_value(timeup=True, erapsed_secs=erapsed_secs, timeup_location='leaf entry in loop for make record')
+                return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='leaf entry in loop for make record')
 
             cur_entry = leaf
             path = [cur_entry]
@@ -261,7 +261,7 @@ class Forest():
 
                 erapsed_secs = look_time(start)
                 if timeup_secs <= erapsed_secs:
-                    return make_return_value(timeup=True, erapsed_secs=erapsed_secs, timeup_location='find parent entry')
+                    return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='find parent entry')
 
 
             record = {'no':leaf_th}
@@ -271,7 +271,7 @@ class Forest():
 
                 erapsed_secs = look_time(start)
                 if timeup_secs <= erapsed_secs:
-                    return make_return_value(timeup=True, erapsed_secs=erapsed_secs, timeup_location='entry in path')
+                    return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='entry in path')
 
                 if entry.edge_text is not None:
                     record[f'edge{entry_no}'] = entry.edge_text
@@ -286,7 +286,7 @@ class Forest():
 
                     erapsed_secs = look_time(start)
                     if timeup_secs <= erapsed_secs:
-                        return make_return_value(timeup=True, erapsed_secs=erapsed_secs, timeup_location='append remainder column to record')
+                        return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='append remainder column to record')
 
                     record[name] = value
 
@@ -304,7 +304,7 @@ class Forest():
 
                 erapsed_secs = look_time(start)
                 if timeup_secs <= erapsed_secs:
-                    return make_return_value(timeup=True, erapsed_secs=erapsed_secs, timeup_location='append column to data frame')
+                    return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='append column to data frame')
 
                 if column_name not in df.columns.values:
                     df[column_name] = None
@@ -355,7 +355,7 @@ class Forest():
 
             erapsed_secs = look_time(start)
             if timeup_secs <= erapsed_secs:
-                return make_return_value(timeup=True, erapsed_secs=erapsed_secs, timeup_location='remove column name from no order column names')
+                return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='remove column name from no order column names')
 
             if column_name in no_order_of_column_names:
                 no_order_of_column_names.remove(column_name)
@@ -368,7 +368,7 @@ class Forest():
 
             erapsed_secs = look_time(start)
             if timeup_secs <= erapsed_secs:
-                return make_return_value(timeup=True, erapsed_secs=erapsed_secs, timeup_location='append column name to reorder of column names')
+                return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='append column name to reorder of column names')
 
             if column_name in df.columns.values:
                 reorder_of_column_names.append(column_name)
@@ -396,7 +396,7 @@ class Forest():
         # メモリ解放
         gc.collect()
 
-        return make_return_value(timeup=False, erapsed_secs=erapsed_secs, timeup_location=None)
+        return make_return_value(erapsed_secs=erapsed_secs, timeup=False, timeup_location=None)
 
 
 #############
