@@ -57,7 +57,7 @@ def execute():
 
 
     # 余り列の出力順を指定する
-    #forest.remainder_column_name_list = []
+    #forest.order_of_remainder_columns = []
 
     # 任意。葉要素に番号を振っていく。葉に連番を振る機能があって、 TreeEntry#leaf_th プロパティで取り出せます
     forest.renumbering()

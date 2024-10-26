@@ -13,7 +13,7 @@ class Forest():
     def __init__(self):
         self._multiple_root_entry = {}
 
-        self._remainder_column_name_list = []
+        self._order_of_remainder_columns = []
 
         # 探索時に使用する一時変数
         self._temp_leaf_th = None
@@ -25,14 +25,14 @@ class Forest():
 
 
     @property
-    def remainder_column_name_list(self):
+    def order_of_remainder_columns(self):
         """ツリー構造には含まないテーブル列の並び順を指定するのに使います"""
-        return self._remainder_column_name_list
+        return self._order_of_remainder_columns
     
 
-    @remainder_column_name_list.setter
-    def remainder_column_name_list(self, value):
-        self._remainder_column_name_list = value
+    @order_of_remainder_columns.setter
+    def order_of_remainder_columns(self, value):
+        self._order_of_remainder_columns = value
 
 
     def tree_root(self, edge_text, node_text):
@@ -131,15 +131,15 @@ class Forest():
                     remainder_column_name_set.add(name)
 
         # 順序が指定されているものは消す
-        for name in self.remainder_column_name_list:
+        for name in self.order_of_remainder_columns:
             if name in remainder_column_name_set:
                 remainder_column_name_set.remove(name)
 
         # 順序を固定する
-        remainder_column_name_list = self.remainder_column_name_list.copy()
-        remainder_column_name_list.extend(list(remainder_column_name_set))
-        #print(f"余り列の順序指定：{self.remainder_column_name_list=}")
-        #print(f"余り列の名前　　：{remainder_column_name_list=}")
+        order_of_remainder_columns = self.order_of_remainder_columns.copy()
+        order_of_remainder_columns.extend(list(remainder_column_name_set))
+        #print(f"余り列の順序指定：{self.order_of_remainder_columns=}")
+        #print(f"余り列の名前　　：{order_of_remainder_columns=}")
 
 
 
@@ -153,7 +153,7 @@ class Forest():
             order_of_column_names.append(f'node{i}')
 
         # 余り列を追加
-        for remainder_column_name in remainder_column_name_list:
+        for remainder_column_name in order_of_remainder_columns:
             order_of_column_names.append(remainder_column_name)
 
         # print(f"列名の並び順：{order_of_column_names=}")
