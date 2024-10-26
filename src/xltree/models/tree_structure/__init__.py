@@ -203,7 +203,10 @@ class Forest():
                 value_list[column_no] = value
                 column_no += 1
 
-#           print(f"""\
+#                 print(f"""\
+# df:
+# {df}
+# {leaf_th=}
 # 列名の要素数：{len(column_names[1:])=}
 # 値の要素数　：{len(value_list)=}
 # 列名　　　　：{column_names[1:]=}
