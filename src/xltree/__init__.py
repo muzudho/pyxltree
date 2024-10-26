@@ -167,7 +167,6 @@ class WorkbookHandle():
         return WorksheetHandle.instantiate(target=target, based_on=based_on, ws=ws, settings_obj=self._settings_obj, debug_write=debug_write)
 
 
-
     def render_worksheet(self, target, based_on, debug_write=False):
         """ワークシートへ木構造図を描画
 

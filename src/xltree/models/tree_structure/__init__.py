@@ -144,33 +144,27 @@ class Forest():
 
         #print(f"最大深さ：{context._max_depth=}")
 
-        # テーブルの列を作成する
-        #
-        #   TODO 余り列を作成したい
-        #
-        column_names = ['no']
+        # 出力する順番に列名を並べる（存在しない列が含まれても構わない。存在する列が含まれていなくても構わない）
+        order_of_column_names = ['no']
 
         for i in range(0, context._max_depth + 1):
-            column_names.append(f'edge{i}')
-            column_names.append(f'node{i}')
+            order_of_column_names.append(f'edge{i}')
+            order_of_column_names.append(f'node{i}')
 
         # 余り列を追加
         for remainder_column_name in remainder_column_name_list:
-            column_names.append(remainder_column_name)
+            order_of_column_names.append(remainder_column_name)
 
-        # print(f"列名：{column_names=}")
-        # print(f"列名の要素数：{len(column_names)=}")
+        # print(f"列名の並び順：{order_of_column_names=}")
+        # print(f"列名の並び順の要素数：{len(order_of_column_names)=}")
 
-
-        df = pd.DataFrame(columns=column_names)
-        df.set_index('no', inplace=True)
-#       print(f"""\
-# new df:
-# {df}
-# """)
+        #
+        #   NOTE 使っていない列を作ると pandas から警告が出ることがある
+        #
+        df = pd.DataFrame()
 
 
-        # TODO 葉のすべての親を出力
+        # 葉のすべての親を出力
         for leaf_th, leaf in enumerate(context._leaf_entries, 1):
 
 
@@ -183,51 +177,87 @@ class Forest():
                 path.append(cur_entry)
 
 
-            # エッジ、ノードを交互に入れたリストを作る
-            value_list = [None] * ((context._max_depth + 1) * 2 + len(remainder_column_name_list))
-            # NOTE Noneを入れると警告が出る？ 空文字列にしてみる ----> 結果が変わってしまう。欠損列を消すことができない
-            #value_list = [''] * ((context._max_depth + 1) * 2 + len(remainder_column_name_list))
+            #
+            # NOTE あとで使うからといって、 None しかない列を先に作ると pandas が警告を出してしまう。必要になってから列を作ること
+            #
+            record = {'no':leaf_th}
 
+            # * `entry_no` - 根を 0 とする連番
             for entry_no, entry in enumerate(reversed(path)):
-                value_list[entry_no * 2] = entry.edge_text
-                value_list[entry_no * 2 + 1] = entry.node_text
+                if entry.edge_text is not None:
+                    record[f'edge{entry_no}'] = entry.edge_text
+                
+                if entry.node_text is not None:
+                    record[f'node{entry_no}'] = entry.node_text
 
             # 余り列を追加
-            column_no = (context._max_depth + 1) * 2
-            for remainder_column_name in remainder_column_name_list:
-                if remainder_column_name in leaf.remainder_columns:
-                    value = leaf.remainder_columns[remainder_column_name]
-                else: 
-                    value = None
+            if leaf.remainder_columns is not None:
+                for name, value in leaf.remainder_columns.items():
+                    record[name] = value
 
-                value_list[column_no] = value
-                column_no += 1
-
-#                 print(f"""\
+#                   print(f"""\
 # df:
 # {df}
 # {leaf_th=}
-# 列名の要素数：{len(column_names[1:])=}
-# 値の要素数　：{len(value_list)=}
-# 列名　　　　：{column_names[1:]=}
-# 値　　　　　：{value_list=}
+# 列名の並び順の要素数：{len(order_of_column_names[1:])=}
+# 列名の並び順　　　　：{order_of_column_names[1:]=}
+# レコード　　　　　　：{record}
 # """)
 
-            # NOTE 空のテーブルに配列で行を追加しようとすると警告が出る？よく分からない。配列ではなく辞書にしてみる
-            #df.loc[leaf_th] = value_list
-            df.loc[leaf_th] = dict(zip(column_names[1:], value_list))
+            # テーブルに存在しない列は追加する
+            for column_name in record.keys():
+                if column_name not in df.columns.values:
+                    df[column_name] = None
+
+            df.loc[leaf_th] = record
 
 
         # 全部欠損している列を削除
         df.dropna(how='all', axis=1, inplace=True)
 
-#        print(f"""\
+
+#         print(f"""\
 # df:
 # {df}
+# 実際の列名の要素数　：{len(df.columns.values)}
+# 実際の列名一覧　　　：{df.columns.values}
+# 列名の並び順の要素数：{len(order_of_column_names[1:])}
+# 列名の並び順　　　　：{order_of_column_names[1:]}
 # """)
 
+        # ［実際の列名一覧］をコピーして［順序の指定されていない列名一連］を作る
+        no_order_of_column_names = list(df.columns.values)
+        # print(f"(1) ［実際の列名一覧］={df.columns.values}")
+        # print(f"(2) ［列名の並び順］={order_of_column_names}")
+
+        # ［列名の並び順］に有る列名が、［順序の指定されていない列名一連］にあれば、［順序の指定されていない列名一連］から削除する
+        for column_name in order_of_column_names:
+            if column_name in no_order_of_column_names:
+                no_order_of_column_names.remove(column_name)
+        #print(f"(3) ［順序の指定されていない列名一連］={no_order_of_column_names}")
+
+        # ［列名の並び順］から、［実際の列名一覧］に有る列名だけを残し、［再：列名の並び順］とする。このとき 'no' インデックスが消える
+        reorder_of_column_names = []
+        for column_name in order_of_column_names:
+            if column_name in df.columns.values:
+                reorder_of_column_names.append(column_name)
+        #print(f"(4) ［再：列名の並び順］={reorder_of_column_names}")
+
+        # ［再：列名の並び順］と［順序の指定されていない列名一連］を連結して、［出力する列名一連］とする
+        output_column_names = reorder_of_column_names + no_order_of_column_names
+        #print(f"(5) ［出力する列名一連］={output_column_names}")
+
+
+#         print(f"""\
+# f:
+# {df}""")
+
         # テーブルをCSV形式でファイルへ保存
-        df.to_csv(csv_file_path, encoding='utf8')
+        df.to_csv(
+                csv_file_path,
+                encoding='utf8',
+                columns=output_column_names,
+                index=False)
 
 
 
