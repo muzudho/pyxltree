@@ -314,9 +314,15 @@ class Forest():
             #   NOTE ここで、空テーブルや、空列と連結すると、 pandas から警告が出ることがある
             #   FutureWarning: The behavior of DataFrame concatenation with empty or all-NA entries is deprecated. In a future version, this will no longer exclude empty or all-NA columns when determining the result dtypes. To retain the old behavior, exclude the relevant entries before the concat operation.
             #
+            # NOTE 以下、エラーの状況を分ける
+            #
             # データフレームが空のとき
             if df.empty:
                 # データフレームにレコード追加
+                df.loc[leaf_th] = record
+
+            elif record == {}:
+                # 空の辞書を追加しようとしたとき
                 df.loc[leaf_th] = record
 
             # データフレームが空でないとき
