@@ -210,14 +210,9 @@ class Forest():
 # 値　　　　　：{value_list=}
 # """)
 
-            # 行の追加
-            # if len(df) == 0:
-            #     new_row_no = 0
-            # else:
-            #     new_row_no = -1
-
-            # NOTE 空のテーブルに行を追加しようとすると警告が出る？よく分からない
-            df.loc[leaf_th] = value_list
+            # NOTE 空のテーブルに配列で行を追加しようとすると警告が出る？よく分からない。配列ではなく辞書にしてみる
+            #df.loc[leaf_th] = value_list
+            df.loc[leaf_th] = dict(zip(column_names[1:], value_list))
 
 
         # 全部欠損している列を削除

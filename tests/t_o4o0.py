@@ -64,4 +64,4 @@ def execute():
 
         # 保存
         b.save_workbook()
-        print(f"[{datetime.datetime.now()}] Please look {b.workbook_file_path}")
+        print(f"[{datetime.datetime.now()}] please look {b.workbook_file_path}")

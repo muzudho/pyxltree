@@ -61,4 +61,4 @@ def execute():
     # -----------------------------------
     csv_file_path = './tests/diff_dump/actual/test_o1o1o0_tree_model_table.txt'
     forest.to_csv(csv_file_path=csv_file_path)
-    print(f"[{datetime.datetime.now()}] Please look {csv_file_path}")
+    print(f"[{datetime.datetime.now()}] please look {csv_file_path}")

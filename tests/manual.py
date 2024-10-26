@@ -74,4 +74,4 @@ Enter the export path to the Excel workbook(.xlsx) file
 
     # ワークブック保存
     b.save_workbook()
-    print(f"[{datetime.datetime.now()}] Please look {b.workbook_file_path}")
+    print(f"[{datetime.datetime.now()}] please look {b.workbook_file_path}")
