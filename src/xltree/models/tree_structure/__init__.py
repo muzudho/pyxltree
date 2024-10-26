@@ -1,3 +1,4 @@
+import gc
 import pandas as pd
 from ...library import INDENT
 
@@ -158,9 +159,6 @@ class Forest():
         # print(f"列名の並び順：{order_of_column_names=}")
         # print(f"列名の並び順の要素数：{len(order_of_column_names)=}")
 
-        #
-        #   NOTE 使っていない列を作ると pandas から警告が出ることがある
-        #
         df = pd.DataFrame()
 
 
@@ -177,9 +175,6 @@ class Forest():
                 path.append(cur_entry)
 
 
-            #
-            # NOTE あとで使うからといって、 None しかない列を先に作ると pandas が警告を出してしまう。必要になってから列を作ること
-            #
             record = {'no':leaf_th}
 
             # * `entry_no` - 根を 0 とする連番
@@ -209,7 +204,23 @@ class Forest():
                 if column_name not in df.columns.values:
                     df[column_name] = None
 
-            df.loc[leaf_th] = record
+
+            def insert_record(df, leaf_th, record):
+                """データフレームにレコード追加"""
+                df.loc[leaf_th] = record
+
+
+            #
+            #   NOTE ここで、空テーブルや、空列と連結すると、 pandas から警告が出ることがある
+            #   FutureWarning: The behavior of DataFrame concatenation with empty or all-NA entries is deprecated. In a future version, this will no longer exclude empty or all-NA columns when determining the result dtypes. To retain the old behavior, exclude the relevant entries before the concat operation.
+            #
+            # データフレームが空のとき
+            if df.empty:
+                insert_record(df=df, leaf_th=leaf_th, record=record)
+
+            # データフレームが空でないとき
+            else:
+                insert_record(df=df, leaf_th=leaf_th, record=record)
 
 
         # 全部欠損している列を削除
@@ -259,6 +270,11 @@ class Forest():
                 columns=output_column_names,
                 index=False)
 
+
+        # オブジェクトの破棄
+        del df
+        # メモリ解放
+        gc.collect()
 
 
 #############
