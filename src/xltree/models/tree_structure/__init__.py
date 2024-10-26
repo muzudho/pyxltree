@@ -1,4 +1,5 @@
 import gc
+import time
 import pandas as pd
 from ...library import INDENT
 
@@ -77,11 +78,33 @@ class Forest():
 {''.join(items)}"""
 
 
-    def to_csv(self, csv_file_path):
-        """CSV形式でファイルへ出力します"""
+    def to_csv(self, csv_file_path, timeup_secs=2100000000):
+        """CSV形式でファイルへ出力します
+        
+        Parameters
+        ----------
+        csv_file_path : str
+            CSVファイルへのパス
+        timeup_secs : float
+            指定秒を経過したら中止します
+        
+        Returns
+        -------
+        result_list : dict
+            * `timeup` - bool
+            * `timeup_location` - タイムアップが発生した箇所のデバッグ用情報
+        """
 
         # # 葉要素に番号を振っていく
         # self.renumbering()
+
+
+        start = time.time()
+
+
+        def is_timeup(timeup_secs, start):
+            end = time.time()
+            return timeup_secs <= end - start
 
 
         class Context():
@@ -97,6 +120,9 @@ class Forest():
         def find_leaf(context, entry):
             """葉を収集する。葉の最大深さも調べる"""
 
+            if is_timeup(timeup_secs=timeup_secs, start=start):
+                return {'timeup':True, 'timeup_location':'recursive find_leaf > head of function'}
+
             context._cur_depth += 1
 
 
@@ -108,8 +134,13 @@ class Forest():
             # 葉要素
             if not entry.has_children():
                 context._leaf_entries.append(entry)
+
             else:
                 for child_entry in entry.child_entries.values():
+
+                    if is_timeup(timeup_secs=timeup_secs, start=start):
+                        return {'timeup':True, 'timeup_location':'recursive find_leaf > child in loop'}
+
                     find_leaf(context, child_entry) # 再帰
 
 
@@ -118,6 +149,10 @@ class Forest():
 
         # 全ての葉を収集
         for root_entry in self.multiple_root_entry.values():
+
+            if is_timeup(timeup_secs=timeup_secs, start=start):
+                return {'timeup':True, 'timeup_location':'root_entry in loop'}
+
             find_leaf(context, root_entry)
 
 
@@ -126,14 +161,28 @@ class Forest():
         remainder_column_name_set = set()
 
         for leaf in context._leaf_entries:
+
+            if is_timeup(timeup_secs=timeup_secs, start=start):
+                return {'timeup':True, 'timeup_location':'recursive find_leaf > leaf_entry in loop for find remainder columns'}
+
             if leaf.remainder_columns is not None:
                 for name, value in leaf.remainder_columns.items():
+
+                    if is_timeup(timeup_secs=timeup_secs, start=start):
+                        return {'timeup':True, 'timeup_location':'recursive find_leaf > remainder column in loop'}
+
                     remainder_column_name_set.add(name)
+
 
         # 順序が指定されているものは消す
         for name in self.order_of_remainder_columns:
+
+            if is_timeup(timeup_secs=timeup_secs, start=start):
+                return {'timeup':True, 'timeup_location':'recursive find_leaf > order of remainder column in loop'}
+
             if name in remainder_column_name_set:
                 remainder_column_name_set.remove(name)
+
 
         # 順序を固定する
         order_of_remainder_columns = self.order_of_remainder_columns.copy()
@@ -149,12 +198,22 @@ class Forest():
         order_of_column_names = ['no']
 
         for i in range(0, context._max_depth + 1):
+
+            if is_timeup(timeup_secs=timeup_secs, start=start):
+                return {'timeup':True, 'timeup_location':'recursive find_leaf > search depth'}
+
             order_of_column_names.append(f'edge{i}')
             order_of_column_names.append(f'node{i}')
 
+
         # 余り列を追加
         for remainder_column_name in order_of_remainder_columns:
+
+            if is_timeup(timeup_secs=timeup_secs, start=start):
+                return {'timeup':True, 'timeup_location':'recursive find_leaf > append remainder column'}
+
             order_of_column_names.append(remainder_column_name)
+
 
         # print(f"列名の並び順：{order_of_column_names=}")
         # print(f"列名の並び順の要素数：{len(order_of_column_names)=}")
@@ -165,6 +224,8 @@ class Forest():
         # 葉のすべての親を出力
         for leaf_th, leaf in enumerate(context._leaf_entries, 1):
 
+            if is_timeup(timeup_secs=timeup_secs, start=start):
+                return {'timeup':True, 'timeup_location':'recursive find_leaf > leaf entry in loop for make record'}
 
             cur_entry = leaf
             path = [cur_entry]
@@ -174,20 +235,32 @@ class Forest():
                 cur_entry = cur_entry.parent_entry
                 path.append(cur_entry)
 
+                if is_timeup(timeup_secs=timeup_secs, start=start):
+                    return {'timeup':True, 'timeup_location':'recursive find_leaf > find parent entry'}
+
 
             record = {'no':leaf_th}
 
             # * `entry_no` - 根を 0 とする連番
             for entry_no, entry in enumerate(reversed(path)):
+
+                if is_timeup(timeup_secs=timeup_secs, start=start):
+                    return {'timeup':True, 'timeup_location':'recursive find_leaf > entry in path'}
+
                 if entry.edge_text is not None:
                     record[f'edge{entry_no}'] = entry.edge_text
                 
                 if entry.node_text is not None:
                     record[f'node{entry_no}'] = entry.node_text
 
+
             # 余り列を追加
             if leaf.remainder_columns is not None:
                 for name, value in leaf.remainder_columns.items():
+
+                    if is_timeup(timeup_secs=timeup_secs, start=start):
+                        return {'timeup':True, 'timeup_location':'recursive find_leaf > append remainder column to record'}
+
                     record[name] = value
 
 #                   print(f"""\
@@ -201,6 +274,10 @@ class Forest():
 
             # テーブルに存在しない列は追加する
             for column_name in record.keys():
+
+                if is_timeup(timeup_secs=timeup_secs, start=start):
+                    return {'timeup':True, 'timeup_location':'recursive find_leaf > append column to data frame'}
+
                 if column_name not in df.columns.values:
                     df[column_name] = None
 
@@ -243,13 +320,22 @@ class Forest():
 
         # ［列名の並び順］に有る列名が、［順序の指定されていない列名一連］にあれば、［順序の指定されていない列名一連］から削除する
         for column_name in order_of_column_names:
+
+            if is_timeup(timeup_secs=timeup_secs, start=start):
+                return {'timeup':True, 'timeup_location':'recursive find_leaf > remove column name from no order column names'}
+
             if column_name in no_order_of_column_names:
                 no_order_of_column_names.remove(column_name)
         #print(f"(3) ［順序の指定されていない列名一連］={no_order_of_column_names}")
 
+
         # ［列名の並び順］から、［実際の列名一覧］に有る列名だけを残し、［再：列名の並び順］とする。このとき 'no' インデックスが消える
         reorder_of_column_names = []
         for column_name in order_of_column_names:
+
+            if is_timeup(timeup_secs=timeup_secs, start=start):
+                return {'timeup':True, 'timeup_location':'recursive find_leaf > append column name to reorder of column names'}
+
             if column_name in df.columns.values:
                 reorder_of_column_names.append(column_name)
         #print(f"(4) ［再：列名の並び順］={reorder_of_column_names}")
@@ -275,6 +361,8 @@ class Forest():
         del df
         # メモリ解放
         gc.collect()
+
+        return {'timeup':False, 'timeup_location':None}
 
 
 #############
