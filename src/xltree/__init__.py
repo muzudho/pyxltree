@@ -3,6 +3,7 @@ import os
 import datetime
 import openpyxl as xl
 from .models.tree_structure import Forest
+from .models.timeout import Timeout
 from .settings import Settings
 from .worksheet_handle import WorksheetHandle
 
@@ -55,6 +56,17 @@ def prepare_workbook(target, mode, settings={}, debug_write=False):
 
 
     return WorkbookHandle(target=target, mode=mode, wb=wb, settings=settings, debug_write=debug_write)
+
+
+def timeout(seconds):
+    """処理を中止させるタイマーを作成します
+    
+    Parameters
+    ----------
+    seconds : float
+        この時間（秒）を経過すると処理を中止
+    """
+    return Timeout(seconds=seconds)
 
 
 class XltreeInSrc():

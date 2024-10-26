@@ -2,6 +2,7 @@ import gc
 import time
 import pandas as pd
 from ...library import INDENT
+from ...models.timeout import Timeout
 
 
 ##############
@@ -78,14 +79,14 @@ class Forest():
 {''.join(items)}"""
 
 
-    def to_csv(self, csv_file_path, timeup_secs=2100000000):
+    def to_csv(self, csv_file_path, timeout=Timeout(seconds=864000.0)):
         """CSV形式でファイルへ出力します
         
         Parameters
         ----------
         csv_file_path : str
             CSVファイルへのパス
-        timeup_secs : float
+        timeout : Timeout
             指定秒を経過したら中止します
         
         Returns
@@ -107,19 +108,15 @@ class Forest():
             return end - start
 
 
-        def make_return_value(erapsed_secs, timeup, timeup_location):
+        def make_return_value(timeout):
             """戻り値の作成
             
             Parameters
             ----------
-            erapsed_secs : float
-                消費秒
-            timeup : bool
-                タイムアップしたか？
-            timeup_location : str
-                タイムアップが発生した箇所のデバッグ用情報
+            timeout : Timeout
+                タイムアウト
             """
-            return {'erapsed_secs':erapsed_secs, 'timeup':timeup, 'timeup_location':timeup_location}
+            return {'timeout':timeout}
 
 
         class Context():
@@ -135,9 +132,8 @@ class Forest():
         def find_leaf(context, entry):
             """葉を収集する。葉の最大深さも調べる"""
 
-            erapsed_secs = look_time(start)
-            if timeup_secs <= erapsed_secs:
-                return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='recursive find_leaf > head of function')
+            if timeout.is_expired('recursive find_leaf > head of function'):
+                return make_return_value(timeout=timeout)
 
             context._cur_depth += 1
 
@@ -154,9 +150,8 @@ class Forest():
             else:
                 for child_entry in entry.child_entries.values():
 
-                    erapsed_secs = look_time(start)
-                    if timeup_secs <= erapsed_secs:
-                        return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='recursive find_leaf > child in loop')
+                    if timeout.is_expired('recursive find_leaf > child in loop'):
+                        return make_return_value(timeout=timeout)
 
                     find_leaf(context, child_entry) # 再帰
 
@@ -167,9 +162,8 @@ class Forest():
         # 全ての葉を収集
         for root_entry in self.multiple_root_entry.values():
 
-            erapsed_secs = look_time(start)
-            if timeup_secs <= erapsed_secs:
-                return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='root_entry in loop')
+            if timeout.is_expired('root_entry in loop'):
+                return make_return_value(timeout=timeout)
 
             find_leaf(context, root_entry)
 
@@ -180,16 +174,14 @@ class Forest():
 
         for leaf in context._leaf_entries:
 
-            erapsed_secs = look_time(start)
-            if timeup_secs <= erapsed_secs:
-                return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='leaf_entry in loop for find remainder columns')
+            if timeout.is_expired('leaf_entry in loop for find remainder columns'):
+                return make_return_value(timeout=timeout)
 
             if leaf.remainder_columns is not None:
                 for name, value in leaf.remainder_columns.items():
 
-                    erapsed_secs = look_time(start)
-                    if timeup_secs <= erapsed_secs:
-                        return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='remainder column in loop')
+                    if timeout.is_expired('remainder column in loop'):
+                        return make_return_value(timeout=timeout)
 
                     remainder_column_name_set.add(name)
 
@@ -197,9 +189,8 @@ class Forest():
         # 順序が指定されているものは消す
         for name in self.order_of_remainder_columns:
 
-            erapsed_secs = look_time(start)
-            if timeup_secs <= erapsed_secs:
-                return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='order of remainder column in loop')
+            if timeout.is_expired('order of remainder column in loop'):
+                return make_return_value(timeout=timeout)
 
             if name in remainder_column_name_set:
                 remainder_column_name_set.remove(name)
@@ -220,9 +211,8 @@ class Forest():
 
         for i in range(0, context._max_depth + 1):
 
-            erapsed_secs = look_time(start)
-            if timeup_secs <= erapsed_secs:
-                return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='search depth')
+            if timeout.is_expired('search depth'):
+                return make_return_value(timeout=timeout)
 
             order_of_column_names.append(f'edge{i}')
             order_of_column_names.append(f'node{i}')
@@ -231,9 +221,8 @@ class Forest():
         # 余り列を追加
         for remainder_column_name in order_of_remainder_columns:
 
-            erapsed_secs = look_time(start)
-            if timeup_secs <= erapsed_secs:
-                return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='append remainder column')
+            if timeout.is_expired('append remainder column'):
+                return make_return_value(timeout=timeout)
 
             order_of_column_names.append(remainder_column_name)
 
@@ -247,9 +236,8 @@ class Forest():
         # 葉のすべての親を出力
         for leaf_th, leaf in enumerate(context._leaf_entries, 1):
 
-            erapsed_secs = look_time(start)
-            if timeup_secs <= erapsed_secs:
-                return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='leaf entry in loop for make record')
+            if timeout.is_expired('leaf entry in loop for make record'):
+                return make_return_value(timeout=timeout)
 
             cur_entry = leaf
             path = [cur_entry]
@@ -259,9 +247,8 @@ class Forest():
                 cur_entry = cur_entry.parent_entry
                 path.append(cur_entry)
 
-                erapsed_secs = look_time(start)
-                if timeup_secs <= erapsed_secs:
-                    return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='find parent entry')
+                if timeout.is_expired('find parent entry'):
+                    return make_return_value(timeout=timeout)
 
 
             record = {'no':leaf_th}
@@ -269,9 +256,8 @@ class Forest():
             # * `entry_no` - 根を 0 とする連番
             for entry_no, entry in enumerate(reversed(path)):
 
-                erapsed_secs = look_time(start)
-                if timeup_secs <= erapsed_secs:
-                    return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='entry in path')
+                if timeout.is_expired('entry in path'):
+                    return make_return_value(timeout=timeout)
 
                 if entry.edge_text is not None:
                     record[f'edge{entry_no}'] = entry.edge_text
@@ -284,9 +270,8 @@ class Forest():
             if leaf.remainder_columns is not None:
                 for name, value in leaf.remainder_columns.items():
 
-                    erapsed_secs = look_time(start)
-                    if timeup_secs <= erapsed_secs:
-                        return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='append remainder column to record')
+                    if timeout.is_expired('append remainder column to record'):
+                        return make_return_value(timeout=timeout)
 
                     record[name] = value
 
@@ -302,9 +287,8 @@ class Forest():
             # テーブルに存在しない列は追加する
             for column_name in record.keys():
 
-                erapsed_secs = look_time(start)
-                if timeup_secs <= erapsed_secs:
-                    return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='append column to data frame')
+                if timeout.is_expired('append column to data frame'):
+                    return make_return_value(timeout=timeout)
 
                 if column_name not in df.columns.values:
                     df[column_name] = None
@@ -353,9 +337,8 @@ class Forest():
         # ［列名の並び順］に有る列名が、［順序の指定されていない列名一連］にあれば、［順序の指定されていない列名一連］から削除する
         for column_name in order_of_column_names:
 
-            erapsed_secs = look_time(start)
-            if timeup_secs <= erapsed_secs:
-                return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='remove column name from no order column names')
+            if timeout.is_expired('remove column name from no order column names'):
+                return make_return_value(timeout=timeout)
 
             if column_name in no_order_of_column_names:
                 no_order_of_column_names.remove(column_name)
@@ -366,9 +349,8 @@ class Forest():
         reorder_of_column_names = []
         for column_name in order_of_column_names:
 
-            erapsed_secs = look_time(start)
-            if timeup_secs <= erapsed_secs:
-                return make_return_value(erapsed_secs=erapsed_secs, timeup=True, timeup_location='append column name to reorder of column names')
+            if timeout.is_expired('append column name to reorder of column names'):
+                return make_return_value(timeout=timeout)
 
             if column_name in df.columns.values:
                 reorder_of_column_names.append(column_name)
@@ -396,7 +378,7 @@ class Forest():
         # メモリ解放
         gc.collect()
 
-        return make_return_value(erapsed_secs=erapsed_secs, timeup=False, timeup_location=None)
+        return make_return_value(timeout=timeout)
 
 
 #############
