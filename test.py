@@ -1,7 +1,7 @@
 #
 # python test.py all
 #
-# エクセルで樹形図を描こう
+# テスト
 #
 
 import traceback

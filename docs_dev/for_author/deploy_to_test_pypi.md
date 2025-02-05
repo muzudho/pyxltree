@@ -27,6 +27,8 @@ Microsoft Authentication などを使って、二要素認証を行います。
 
 ```shell
 py -m pip install --upgrade pip
+py -m pip install --upgrade build
+py -m pip install --upgrade twine
 ```
 
 👇　ディレクトリー階層は以下のようにする  
@@ -144,7 +146,7 @@ twine を実行する前に、 📄 `pyproject.toml` のバージョンの数を
 👇 twine を実行する  
 
 ```shell
-py -m twine upload --repository testpypi dist/*
+py -m twine upload --repository testpypi --verbose dist/*
 ```
 
 APIトークンを尋ねられるので、 `pypi-` プレフィックスを付けたまま入力する  
