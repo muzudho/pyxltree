@@ -21,15 +21,9 @@ Microsoft Authentication などを使って、二要素認証を行います。
 
 # 第３節：　test.pypi.org へのデプロイについて
 
-とりあえずこれを読め  
+とりあえずこれを読め。詳しくは後述する。  
 
 * 📖 [Packaging Python Projects](https://packaging.python.org/en/latest/tutorials/packaging-projects/)
-
-```shell
-py -m pip install --upgrade pip
-py -m pip install --upgrade build
-py -m pip install --upgrade twine
-```
 
 👇　ディレクトリー階層は以下のようにする  
 
@@ -126,12 +120,14 @@ py -m pip install --upgrade twine
 
 ```shell
 pip install --upgrade pkginfo
-#pip install --upgrade twine
 ```
 
 👇　書式チェック
 
 ```shell
+# Uninstall. 古いから。
+pip install -U packaging
+
 twine check dist/*
 ```
 
@@ -146,7 +142,10 @@ twine を実行する前に、 📄 `pyproject.toml` のバージョンの数を
 👇 twine を実行する  
 
 ```shell
-py -m twine upload --repository testpypi --verbose dist/*
+py -m twine upload --repository testpypi dist/*
+
+# 細かいログが見たいとき
+#py -m twine upload --repository testpypi --verbose dist/*
 ```
 
 APIトークンを尋ねられるので、 `pypi-` プレフィックスを付けたまま入力する  
