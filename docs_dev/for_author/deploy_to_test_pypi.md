@@ -19,11 +19,7 @@ Microsoft Authentication などを使って、二要素認証を行います。
 画像は相対パスではなくURLを指定すること  
 
 
-# 第３節：　test.pypi.org へのデプロイについて
-
-とりあえずこれを読め。詳しくは後述する。  
-
-* 📖 [Packaging Python Projects](https://packaging.python.org/en/latest/tutorials/packaging-projects/)
+# 第３節：　ディレクトリー階層の例
 
 👇　ディレクトリー階層は以下のようにする  
 
@@ -36,42 +32,7 @@ Microsoft Authentication などを使って、二要素認証を行います。
 ```
 
 
-# 第４節：　環境のアップデート
-
-👇　pip をアップデートする  
-
-```shell
-py -m pip install --upgrade pip
-```
-
-👇　pypi にアップロードできる形式にファイル圧縮してくれるパッケージをインストールする  
-
-```shell
-py -m pip install --upgrade build
-```
-
-👆 `build` は、 📄 `pyproject.toml` ファイルで指定したビルドツールを使ってくれる  
-
-
-# 第５節：　環境の確認
-
-例では、ビルドツールに Hatchling を使っているので真似てみる  
-
-* 📖 [Hatchling > Build system](https://hatch.pypa.io/latest/config/build/#build-system)
-
-👇  インストールしておく必要があるパッケージを調べる方法はないが、以下のコマンドが利用できるので調べておくこと。関係ないパッケージ名も出てくるので、手動で選別する必要がある  
-
-```shell
-pip freeze
-```
-
-
-# 第６節：　📄［pyproject.toml］ファイルを更新
-
-📄 `pyproject.toml` を書く。トップディレクトリーに置いてある現物を参照  
-
-
-# 第７節：　build 実行
+# 第４節：　build 実行
 
 `build` を**実行する前**に:  
 
@@ -98,7 +59,7 @@ py -m build
 これが pypi にアップロードするファイルだ  
 
 
-# 第８節：　test.pypi.org にログイン
+# 第５節：　test.pypi.org にログイン
 
 [test.pypi.org](https://test.pypi.org/) に Fire Fox でログインする（Google Chrome や Edge では二要素認証が通らないことがあった）  
 
@@ -108,7 +69,7 @@ https://test.pypi.org/account/login/
 スコープは `アカウント全体` を選ぶ。発行されたAPIトークンは再発行されないので、どこかに記憶しておく  
 
 
-# 第９節：　twine をインストール
+# 第６節：　twine をインストール
 
 👇 twine をインストールする
 
@@ -135,7 +96,7 @@ twine check dist/*
     * 📖 [Writing your pyproject.toml](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/)
 
 
-# 第１０節：　twine を実行する
+# 第７節：　twine を実行する
 
 twine を実行する前に、 📄 `pyproject.toml` のバージョンの数を設定（２回目以降なら上げる）しておくこと  
 
@@ -151,7 +112,7 @@ py -m twine upload --repository testpypi dist/*
 APIトークンを尋ねられるので、 `pypi-` プレフィックスを付けたまま入力する  
 
 
-# 第１１節：　アップロードされたものを確認しにいく
+# 第８節：　アップロードされたものを確認しにいく
 
 👇 アップロードされたら、test.pypi.org を見に行く  
 
