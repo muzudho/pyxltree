@@ -3,7 +3,7 @@
 * [test.pypi.org](https://test.pypi.org/) にアカウントを開設、２要素認証も設定
 
 
-## 第１節：　確認
+## 第１節：　設計時の確認
 
 ### 第１項：　README.md について
 
@@ -24,13 +24,18 @@
 ```
 
 
-# 第２節：　build 実行
+## 第２節：　build 実行
+
+### 第１項：　事前確認
 
 `build` を**実行する前**に:  
 
 * 📄 `pyproject.toml` のバージョンを設定したか確認しておくこと
 * デプロイしたいファイルで、GitHub にプッシュし忘れているファイルが残っていれば、プッシュしてください
 * ファイルの保存のし忘れがあれば、ファイルの保存をしてください
+
+
+### 第２項：　実行
 
 👇 pyproject.toml を書き上げたら、 `build` を実行する  
 
@@ -51,19 +56,11 @@ py -m build
 これが pypi にアップロードするファイルだ  
 
 
-# 第３節：　test.pypi.org にログイン
+## 第３節：　アップロード
 
-[test.pypi.org](https://test.pypi.org/) に Fire Fox でログインする（Google Chrome や Edge では二要素認証が通らないことがあった）  
+### 第１項：　書式チェック
 
-https://test.pypi.org/account/login/
-
-**test.pypi.org の［アカウント設定］の［API トークン］の欄から、［APIトークンの追加］ボタンをクリックする。**  
-スコープは `アカウント全体` を選ぶ。発行されたAPIトークンは再発行されないので、どこかに記憶しておく  
-
-
-# 第４節：
-
-👇　書式チェック
+👇　書式チェック。圧縮ファイルに対して行う  
 
 ```shell
 twine check dist/*
@@ -73,7 +70,7 @@ twine check dist/*
     * 📖 [Writing your pyproject.toml](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/)
 
 
-# 第５節：　twine を実行する
+### 第２項：　twine を実行する
 
 twine を実行する前に、 📄 `pyproject.toml` のバージョンの数を設定（２回目以降なら上げる）しておくこと  
 
@@ -89,14 +86,21 @@ py -m twine upload --repository testpypi dist/*
 APIトークンを尋ねられるので、 `pypi-` プレフィックスを付けたまま入力する  
 
 
-# 第６節：　アップロードされたものを確認しにいく
+## 第３節：　アップロードされたものを確認しにいく
+
+### 第１項：　test.pypi.org にログイン
 
 👇 アップロードされたら、test.pypi.org を見に行く  
 
-https://test.pypi.org/project/xltree/0.0.1/  
+[test.pypi.org](https://test.pypi.org/) に Fire Fox でログインする（Google Chrome や Edge では二要素認証が通らないことがあった）  
+
+https://test.pypi.org/account/login/
+
+**test.pypi.org の［アカウント設定］の［API トークン］の欄から、［APIトークンの追加］ボタンをクリックする。**  
+スコープは `アカウント全体` を選ぶ。発行されたAPIトークンは再発行されないので、どこかに記憶しておく  
 
 
-## デプロイのための参考記事
+## 第４節：　デプロイのための参考記事
 
 * 📖 [【Python】PyPIに自作ライブラリを登録する](https://qiita.com/gsy0911/items/702f43100e5abdefd318)
     * 📖 [PyPIパッケージ定義ファイル作成方法 - __init__.py setup.py MANIFEST.in の書き方](https://qiita.com/shinichi-takii/items/6d1063e0aa3f79e599f0)
